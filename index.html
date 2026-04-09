@@ -22,84 +22,64 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .header-sub { font-size: 12px; color: #a89fc7; flex: 1; display: none; }
 @media (min-width: 700px) { .header-sub { display: block; } }
 
-/* Preceptor toggle */
-.preceptor-toggle {
+/* Design toggles */
+.design-toggle {
   display: flex; align-items: center; gap: 8px; flex-shrink: 0;
   background: rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 12px;
   cursor: pointer; user-select: none; transition: background 0.15s;
   border: 1px solid rgba(255,255,255,0.1); touch-action: manipulation;
 }
-.preceptor-toggle:hover { background: rgba(255,255,255,0.12); }
-.preceptor-toggle.active { background: rgba(127,100,220,0.3); border-color: rgba(160,140,255,0.45); }
-.pt-label { font-size: 12px; font-weight: 600; color: #b0a8d8; white-space: nowrap; }
-.preceptor-toggle.active .pt-label { color: #ddd8ff; }
+.design-toggle:hover { background: rgba(255,255,255,0.12); }
+.design-toggle.preceptor.active { background: rgba(127,100,220,0.3); border-color: rgba(160,140,255,0.45); }
+.design-toggle.balancer.active  { background: rgba(30,140,100,0.3);  border-color: rgba(80,200,150,0.45); }
+.dt-label { font-size: 12px; font-weight: 600; color: #b0a8d8; white-space: nowrap; }
+.design-toggle.balancer .dt-label { color: #a8d8c0; }
+.design-toggle.preceptor.active .dt-label { color: #ddd8ff; }
+.design-toggle.balancer.active .dt-label  { color: #d8fff0; }
 .toggle-pip {
   width: 32px; height: 18px; border-radius: 9px; background: #444;
   position: relative; transition: background 0.2s; flex-shrink: 0;
 }
-.preceptor-toggle.active .toggle-pip { background: #8f7fdd; }
+.design-toggle.preceptor.active .toggle-pip { background: #8f7fdd; }
+.design-toggle.balancer.active  .toggle-pip { background: #2a9e72; }
 .toggle-pip::after {
   content: ''; position: absolute; top: 3px; left: 3px;
   width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.2s;
 }
-.preceptor-toggle.active .toggle-pip::after { transform: translateX(14px); }
+.design-toggle.active .toggle-pip::after { transform: translateX(14px); }
 
 /* ── APP LAYOUT ── */
 .app { display: flex; flex: 1; overflow: hidden; }
 
-/* ── LEFT PANEL — desktop sidebar / mobile drawer ── */
+/* ── LEFT PANEL ── */
 .panel-left {
   width: 300px; flex-shrink: 0; background: #fff;
   border-right: 1px solid #e2e0da; display: flex; flex-direction: column; overflow: hidden;
 }
-/* Mobile: hide sidebar, shown as drawer */
 @media (max-width: 699px) {
   .panel-left {
     position: fixed; inset: 0 0 0 0; width: 100%; z-index: 200;
     transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1);
     border-right: none; border-top: 1px solid #e2e0da;
     border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
-    /* Show only bottom 80% */
     top: 20dvh;
   }
   .panel-left.open { transform: translateY(0); }
 }
-
-/* Drawer handle (mobile only) */
-.drawer-handle {
-  display: none;
-  width: 40px; height: 5px; border-radius: 3px; background: #ccc;
-  margin: 10px auto 6px; flex-shrink: 0; cursor: pointer;
-}
+.drawer-handle { display: none; width: 40px; height: 5px; border-radius: 3px; background: #ccc; margin: 10px auto 6px; flex-shrink: 0; cursor: pointer; }
 @media (max-width: 699px) { .drawer-handle { display: block; } }
-
 .search-wrap { padding: 10px 12px; border-bottom: 1px solid #e2e0da; flex-shrink: 0; }
-.search-wrap input {
-  width: 100%; padding: 9px 12px; border: 1px solid #d0cec8;
-  border-radius: 8px; font-size: 14px; background: #f9f8f6; outline: none;
-}
+.search-wrap input { width: 100%; padding: 9px 12px; border: 1px solid #d0cec8; border-radius: 8px; font-size: 14px; background: #f9f8f6; outline: none; }
 .search-wrap input:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.15); }
-
-.filter-row { padding: 8px 12px; display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid #e2e0da; flex-shrink: 0; overflow-x: auto; flex-wrap: nowrap; }
+.filter-row { padding: 8px 12px; display: flex; gap: 6px; border-bottom: 1px solid #e2e0da; flex-shrink: 0; overflow-x: auto; flex-wrap: nowrap; }
 .filter-row::-webkit-scrollbar { display: none; }
-.filter-btn {
-  font-size: 12px; padding: 5px 11px; border-radius: 14px; white-space: nowrap;
-  border: 1px solid #d0cec8; background: #f5f4f0; cursor: pointer; color: #555; transition: all 0.15s;
-  flex-shrink: 0; touch-action: manipulation; min-height: 32px;
-}
+.filter-btn { font-size: 12px; padding: 5px 11px; border-radius: 14px; white-space: nowrap; border: 1px solid #d0cec8; background: #f5f4f0; cursor: pointer; color: #555; transition: all 0.15s; flex-shrink: 0; touch-action: manipulation; min-height: 32px; }
 .filter-btn:hover { border-color: #7f77dd; color: #534ab7; }
 .filter-btn.active { background: #534ab7; border-color: #534ab7; color: #fff; }
-
 .quality-list { overflow-y: auto; flex: 1; padding: 8px; -webkit-overflow-scrolling: touch; }
 .category-group { margin-bottom: 10px; }
 .category-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #999; padding: 4px 6px 2px; }
-.quality-card {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 12px; border-radius: 8px; border: 1px solid #e8e6e0;
-  background: #faf9f7; margin-bottom: 5px; cursor: pointer;
-  transition: all 0.12s; user-select: none; touch-action: manipulation;
-  min-height: 44px;
-}
+.quality-card { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; border: 1px solid #e8e6e0; background: #faf9f7; margin-bottom: 5px; cursor: pointer; transition: all 0.12s; user-select: none; touch-action: manipulation; min-height: 44px; }
 .quality-card:hover, .quality-card:active { border-color: #b0a9e8; background: #f0eefb; }
 .quality-card.dragging { opacity: 0.4; }
 .quality-card .q-name { font-size: 13px; font-weight: 500; color: #1a1a1a; flex: 1; }
@@ -107,50 +87,28 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .q-cost.positive { background: #eeedfe; color: #534ab7; }
 .q-cost.negative { background: #fceaea; color: #a32d2d; }
 .quality-card .q-cat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-right: 8px; }
-
-/* Drawer overlay */
-.drawer-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-  z-index: 199; opacity: 0; transition: opacity 0.25s;
-}
+.drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199; opacity: 0; transition: opacity 0.25s; }
 .drawer-overlay.visible { opacity: 1; }
 @media (max-width: 699px) { .drawer-overlay { display: block; pointer-events: none; } }
 @media (max-width: 699px) { .drawer-overlay.visible { pointer-events: auto; } }
 
 /* ── RIGHT PANEL ── */
 .panel-right { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 12px; gap: 10px; min-width: 0; }
-
-/* ── ABILITY META ── */
-.ability-meta {
-  background: #fff; border-radius: 10px; border: 1px solid #e2e0da;
-  padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
-}
+.ability-meta { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
 .meta-row-1 { display: flex; align-items: center; gap: 10px; }
 .meta-row-2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ability-meta input { flex: 1; font-size: 17px; font-weight: 600; border: none; outline: none; color: #1a1a1a; background: transparent; min-width: 0; }
 .ability-meta input::placeholder { color: #bbb; }
-
-@media (min-width: 700px) {
-  .ability-meta { flex-direction: row; align-items: center; gap: 14px; padding: 12px 16px; }
-  .meta-row-1 { flex: 1; gap: 14px; }
-  .meta-row-2 { gap: 14px; }
-}
-
+@media (min-width: 700px) { .ability-meta { flex-direction: row; align-items: center; gap: 14px; padding: 12px 16px; } .meta-row-1 { flex: 1; gap: 14px; } .meta-row-2 { gap: 14px; } }
 .cr-display { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .cr-label { font-size: 12px; color: #888; white-space: nowrap; }
-.cr-select {
-  font-size: 14px; font-weight: 700; color: #1a1a1a;
-  background: #f5f4f0; border: 1px solid #d0cec8; border-radius: 6px;
-  padding: 4px 8px; outline: none; cursor: pointer; min-height: 36px;
-}
+.cr-select { font-size: 14px; font-weight: 700; color: #1a1a1a; background: #f5f4f0; border: 1px solid #d0cec8; border-radius: 6px; padding: 4px 8px; outline: none; cursor: pointer; min-height: 36px; }
 .ap-display { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .ap-label { font-size: 12px; color: #888; white-space: nowrap; }
 .ap-value { font-size: 20px; font-weight: 700; color: #534ab7; min-width: 28px; text-align: right; }
 .ap-value.negative { color: #e24b4a; }
 .meta-divider { width: 1px; height: 24px; background: #e2e0da; flex-shrink: 0; }
 @media (max-width: 699px) { .meta-divider { display: none; } }
-
-/* Flaw budget */
 .flaw-budget { font-size: 12px; color: #888; white-space: nowrap; flex-shrink: 0; }
 .flaw-budget .fb-nums { font-weight: 700; color: #534ab7; }
 .flaw-budget.over .fb-nums { color: #e24b4a; }
@@ -159,137 +117,78 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .builder-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
 
 /* ── TARGET BLOCK ── */
-.target-block {
-  background: #fff; border-radius: 10px; border: 2px dashed #d0cec8;
-  padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
-  transition: border-color 0.15s, background 0.15s; cursor: pointer;
-}
+.target-block { background: #fff; border-radius: 10px; border: 2px dashed #d0cec8; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.15s, background 0.15s; cursor: pointer; }
 .target-block.drag-over { border-color: #7f77dd; background: #f4f2fd; }
 .target-block.has-target { border-style: solid; border-color: #c5c0e8; cursor: default; }
 .target-block.active-block { border-color: #534ab7 !important; border-style: solid !important; box-shadow: 0 0 0 3px rgba(83,74,183,0.12); }
 .block-header { display: flex; align-items: center; gap: 8px; }
 .block-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #999; }
 .block-label.compound { color: #7f77dd; }
-.block-active-badge {
-  font-size: 10px; font-weight: 700; color: #534ab7; background: #eeedfe;
-  border-radius: 8px; padding: 1px 7px; letter-spacing: 0.04em;
-}
+.block-active-badge { font-size: 10px; font-weight: 700; color: #534ab7; background: #eeedfe; border-radius: 8px; padding: 1px 7px; letter-spacing: 0.04em; }
 .block-delete { margin-left: auto; cursor: pointer; color: #ccc; font-size: 16px; transition: color 0.1s; padding: 4px 6px; min-width: 32px; min-height: 32px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
 .block-delete:hover { color: #e24b4a; }
 .block-phase { font-size: 11px; color: #bbb; font-style: italic; padding: 2px 0; }
 
 /* Groups */
-.q-group {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
-  padding: 6px 8px; border-radius: 8px; border: 1px solid #eeece6; background: #fafaf8;
-}
+.q-group { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; padding: 6px 8px; border-radius: 8px; border: 1px solid #eeece6; background: #fafaf8; }
 .q-group.has-duration { border-color: color-mix(in srgb,#7f77dd 30%,#e2e0da); background: color-mix(in srgb,#7f77dd 4%,#fff); }
-.q-group.sub-link { margin-left: 20px; border-color: color-mix(in srgb,#b5590c 25%,#e2e0da); background: color-mix(in srgb,#b5590c 4%,#fff); }
+/* Accumulation group — green tint to match Status */
+.q-group.has-accumulation { border-color: color-mix(in srgb,#639922 35%,#e2e0da); background: color-mix(in srgb,#639922 5%,#fff); }
 
 /* Chips */
-.q-chip {
-  display: inline-flex; align-items: center; gap: 5px;
-  padding: 5px 10px; border-radius: 7px; border: 1px solid #e2e0da;
-  background: #f9f8f6; font-size: 13px; font-weight: 500;
-  cursor: default; white-space: nowrap; animation: popIn 0.12s ease;
-  min-height: 32px;
-}
+.q-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid #e2e0da; background: #f9f8f6; font-size: 13px; font-weight: 500; cursor: default; white-space: nowrap; animation: popIn 0.12s ease; min-height: 32px; }
 @keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
 .q-chip .chip-name { color: #1a1a1a; }
 .q-chip .chip-stack { font-size: 11px; font-weight: 700; }
-.q-chip .chip-remove {
-  cursor: pointer; color: #bbb; font-size: 16px; line-height: 1; transition: color 0.1s; margin-left: 3px;
-  /* Larger tap target */
-  padding: 4px; margin: -4px -4px -4px 0; border-radius: 4px; touch-action: manipulation;
-  display: flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px;
-}
+.q-chip .chip-remove { cursor: pointer; color: #bbb; font-size: 16px; line-height: 1; transition: color 0.1s; margin-left: 3px; padding: 4px; margin: -4px -4px -4px 0; border-radius: 4px; touch-action: manipulation; display: flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; }
 .q-chip .chip-remove:hover, .q-chip .chip-remove:active { color: #e24b4a; background: rgba(226,75,74,0.08); }
 .q-chip.duration-head { border-color: color-mix(in srgb,#7f77dd 40%,#e2e0da); background: color-mix(in srgb,#7f77dd 10%,#fff); }
+.q-chip.accum-head { border-color: color-mix(in srgb,#639922 45%,#e2e0da); background: color-mix(in srgb,#639922 12%,#fff); }
 .q-chip { border-color: color-mix(in srgb,var(--cat,#e2e0da) 25%,#e2e0da); }
 .q-chip .chip-stack { color: var(--cat,#888); }
-
 .link-dash { font-size: 16px; font-weight: 700; color: #aaa; padding: 0 2px; }
 
 /* Link-target buttons */
-.link-target {
-  display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px;
-  border: 1px dashed #7f77dd; color: #7f77dd; font-size: 12px;
-  cursor: pointer; transition: background 0.12s; background: transparent; white-space: nowrap;
-  min-height: 32px; touch-action: manipulation;
-}
+.link-target { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px; border: 1px dashed #7f77dd; color: #7f77dd; font-size: 12px; cursor: pointer; transition: background 0.12s; background: transparent; white-space: nowrap; min-height: 32px; touch-action: manipulation; }
 .link-target:hover, .link-target:active, .link-target.drag-hover { background: color-mix(in srgb,#7f77dd 12%,#fff); border-style: solid; }
 .link-target.pending { background: color-mix(in srgb,#7f77dd 18%,#fff); border-style: solid; color: #534ab7; }
+/* Accumulation link button — green */
+.link-target.accum-lt { border-color: #639922; color: #3b6d11; }
+.link-target.accum-lt:hover, .link-target.accum-lt:active, .link-target.accum-lt.drag-hover { background: color-mix(in srgb,#639922 10%,#fff); border-style: solid; }
+.link-target.accum-lt.pending { background: color-mix(in srgb,#639922 16%,#fff); border-style: solid; color: #27500a; }
+/* Contagious sub-link button — amber */
 .link-target.sub-lt { border-color: #b5590c; color: #b5590c; }
 .link-target.sub-lt:hover, .link-target.sub-lt:active, .link-target.sub-lt.drag-hover { background: color-mix(in srgb,#b5590c 10%,#fff); border-style: solid; }
 .link-target.sub-lt.pending { background: color-mix(in srgb,#b5590c 16%,#fff); border-style: solid; color: #7a3a08; }
 
-.q-group .group-delete {
-  margin-left: auto; cursor: pointer; color: #ccc; font-size: 15px; transition: color 0.1s;
-  flex-shrink: 0; padding: 4px 6px; min-width: 30px; min-height: 30px;
-  display: flex; align-items: center; justify-content: center; touch-action: manipulation;
-}
+.q-group .group-delete { margin-left: auto; cursor: pointer; color: #ccc; font-size: 15px; transition: color 0.1s; flex-shrink: 0; padding: 4px 6px; min-width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
 .q-group .group-delete:hover, .q-group .group-delete:active { color: #e24b4a; }
 
-/* ── BOTTOM BAR (mobile) ── */
-.bottom-bar {
-  display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 8px 12px;
-  background: #fff; border-top: 1px solid #e2e0da;
-}
-/* On desktop the compound button and summary bar are inline */
+/* Bottom bar / buttons */
+.bottom-bar { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 8px 12px; background: #fff; border-top: 1px solid #e2e0da; }
 @media (min-width: 700px) { .bottom-bar { display: none; } }
-
-/* Compound button — desktop */
-.btn-compound-desktop {
-  font-size: 12px; padding: 8px 16px; border-radius: 8px; border: 1px dashed #534ab7;
-  background: transparent; cursor: pointer; color: #534ab7; transition: all 0.12s;
-  align-self: flex-start; flex-shrink: 0; touch-action: manipulation; display: none;
-}
+.btn-compound-desktop { font-size: 12px; padding: 8px 16px; border-radius: 8px; border: 1px dashed #534ab7; background: transparent; cursor: pointer; color: #534ab7; transition: all 0.12s; align-self: flex-start; flex-shrink: 0; touch-action: manipulation; display: none; }
 @media (min-width: 700px) { .btn-compound-desktop { display: block; } }
 .btn-compound-desktop:hover { background: color-mix(in srgb,#534ab7 8%,#fff); border-style: solid; }
-
-/* Summary bar */
-.summary-bar {
-  background: #fff; border-radius: 10px; border: 1px solid #e2e0da;
-  padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-}
+.summary-bar { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 @media (max-width: 699px) { .summary-bar { display: none; } }
 .summary-bar .breakdown { flex: 1; font-size: 12px; color: #777; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .btn-clear { font-size: 12px; padding: 6px 12px; border-radius: 6px; border: 1px solid #d0cec8; background: transparent; cursor: pointer; color: #555; transition: all 0.1s; min-height: 36px; touch-action: manipulation; }
 .btn-clear:hover, .btn-clear:active { border-color: #e24b4a; color: #e24b4a; }
 .btn-export { font-size: 12px; padding: 6px 14px; border-radius: 6px; border: 1px solid #534ab7; background: #534ab7; cursor: pointer; color: #fff; transition: background 0.1s; min-height: 36px; touch-action: manipulation; }
 .btn-export:hover, .btn-export:active { background: #3c3489; }
-
-/* Mobile bottom bar buttons */
-.bb-btn {
-  flex: 1; font-size: 13px; font-weight: 600; padding: 10px 8px; border-radius: 9px;
-  border: 1px solid #d0cec8; background: #f5f4f0; cursor: pointer; color: #444;
-  transition: all 0.12s; touch-action: manipulation; text-align: center;
-  min-height: 44px;
-}
+.bb-btn { flex: 1; font-size: 13px; font-weight: 600; padding: 10px 8px; border-radius: 9px; border: 1px solid #d0cec8; background: #f5f4f0; cursor: pointer; color: #444; transition: all 0.12s; touch-action: manipulation; text-align: center; min-height: 44px; }
 .bb-btn:active { background: #e8e6f0; }
 .bb-btn.primary { background: #534ab7; border-color: #534ab7; color: #fff; }
 .bb-btn.primary:active { background: #3c3489; }
-.bb-btn.danger { color: #e24b4a; border-color: #e2d0cf; }
-.bb-btn.danger:active { background: #fceaea; }
 
-/* FAB — "Add Quality" floating action button on mobile */
-.fab {
-  display: none; position: fixed; right: 16px; bottom: 72px;
-  width: 56px; height: 56px; border-radius: 50%;
-  background: #534ab7; color: #fff; font-size: 28px; font-weight: 300;
-  border: none; cursor: pointer; box-shadow: 0 4px 18px rgba(83,74,183,0.45);
-  align-items: center; justify-content: center; z-index: 100;
-  transition: transform 0.15s, box-shadow 0.15s; touch-action: manipulation;
-}
+/* FAB */
+.fab { display: none; position: fixed; right: 16px; bottom: 72px; width: 56px; height: 56px; border-radius: 50%; background: #534ab7; color: #fff; font-size: 28px; font-weight: 300; border: none; cursor: pointer; box-shadow: 0 4px 18px rgba(83,74,183,0.45); align-items: center; justify-content: center; z-index: 100; transition: transform 0.15s, box-shadow 0.15s; touch-action: manipulation; }
 .fab:active { transform: scale(0.93); box-shadow: 0 2px 10px rgba(83,74,183,0.35); }
 @media (max-width: 699px) { .fab { display: flex; } }
 
-/* Pending-link banner */
-.pending-banner {
-  display: none; background: #534ab7; color: #fff;
-  padding: 8px 14px; font-size: 13px; font-weight: 500; text-align: center;
-  flex-shrink: 0; border-radius: 8px; margin: 0; cursor: pointer; touch-action: manipulation;
-}
+/* Pending banner */
+.pending-banner { display: none; background: #534ab7; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 500; text-align: center; flex-shrink: 0; border-radius: 8px; margin: 0; cursor: pointer; touch-action: manipulation; }
 .pending-banner.visible { display: block; }
 
 /* Category colours */
@@ -301,12 +200,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .q-cat-dot { background: var(--cat,#ccc); }
 
 /* Toast */
-.toast {
-  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
-  color: #fff; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,.25); opacity: 0; transition: opacity .2s, transform .2s;
-  pointer-events: none; z-index: 300; background: #2c2950; max-width: 90vw; text-align: center;
-}
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); color: #fff; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.25); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 300; background: #2c2950; max-width: 90vw; text-align: center; }
 .toast.error { background: #c0392b; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (min-width: 700px) { .toast { bottom: 28px; } }
@@ -320,17 +214,19 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 <header>
   <h1>Exemplar Ability Builder</h1>
   <span class="header-sub">Drag or tap qualities to build your ability</span>
-  <div class="preceptor-toggle" id="preceptor-toggle" title="Preceptors may link two Conditions to a single Duration quality">
-    <span class="pt-label">Preceptor Design</span>
+  <div class="design-toggle preceptor" id="preceptor-toggle" title="Preceptors can link two Conditions to a single Duration quality">
+    <span class="dt-label">Preceptor Design</span>
+    <div class="toggle-pip"></div>
+  </div>
+  <div class="design-toggle balancer" id="balancer-toggle" title="Balancers can link two Status Effects to a single Duration or Accumulation quality">
+    <span class="dt-label">Balancer Design</span>
     <div class="toggle-pip"></div>
   </div>
 </header>
 
-<!-- Drawer overlay (mobile) -->
 <div class="drawer-overlay" id="drawer-overlay"></div>
 
 <div class="app">
-  <!-- LEFT PANEL / DRAWER -->
   <div class="panel-left" id="panel-left">
     <div class="drawer-handle" id="drawer-handle"></div>
     <div class="search-wrap"><input type="text" id="search" placeholder="Search qualities..." autocomplete="off" autocorrect="off"></div>
@@ -338,17 +234,11 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
     <div class="quality-list" id="quality-list"></div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <div class="panel-right">
-    <!-- Pending link banner -->
-    <div class="pending-banner" id="pending-banner">
-      Tap a quality to link it — or tap here to cancel
-    </div>
+    <div class="pending-banner" id="pending-banner">Tap a quality to link it — or tap here to cancel</div>
 
     <div class="ability-meta">
-      <div class="meta-row-1">
-        <input type="text" id="ability-name" placeholder="Name your ability...">
-      </div>
+      <div class="meta-row-1"><input type="text" id="ability-name" placeholder="Name your ability..."></div>
       <div class="meta-row-2">
         <div class="cr-display">
           <span class="cr-label">Crown Rank:</span>
@@ -381,7 +271,6 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
       <button class="btn-export" onclick="exportAbility()">Export</button>
     </div>
 
-    <!-- Mobile bottom bar -->
     <div class="bottom-bar">
       <button class="bb-btn" onclick="clearAll()">Clear</button>
       <button class="bb-btn" onclick="addCompoundBlock()">＋ Compound</button>
@@ -390,13 +279,18 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
   </div>
 </div>
 
-<!-- FAB: open quality drawer on mobile -->
 <button class="fab" id="fab" aria-label="Add quality">＋</button>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Quality data ──────────────────────────────────────────────────────────────
+//
+// isDuration      – creates a Duration group when dragged to zone
+// isAccumulation  – creates an Accumulation group when dragged to zone
+// isSubLink       – Contagious: must be sub-linked to a Condition inside a Duration group
+// durationLinkable – can be linked to a Duration head
+// accumLinkable   – can be linked to an Accumulation head (Status Effects)
+
 const QUALITIES = [
   { id:'single',       name:'Single',        cat:'Target',   cost:1,  flaw:false },
   { id:'multi-target', name:'Multi-Target',  cat:'Target',   cost:3,  flaw:false },
@@ -412,12 +306,14 @@ const QUALITIES = [
   { id:'repel',        name:'Repel',         cat:'General',  cost:2,  flaw:false, durationLinkable:true },
   { id:'hidden',       name:'Hidden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true },
   { id:'abjured',      name:'Abjured',       cat:'General',  cost:3,  flaw:false, durationLinkable:true },
-  { id:'accumulation', name:'Accumulation',  cat:'General',  cost:3,  flaw:false, isSubLink:true, subLinkTarget:'Status' },
+  // Accumulation: creates its own linked group
+  { id:'accumulation', name:'Accumulation',  cat:'General',  cost:3,  flaw:false, isAccumulation:true },
   { id:'artifice',     name:'Artifice',      cat:'Modifier', cost:1,  flaw:false },
   { id:'cleave',       name:'Cleave',        cat:'Modifier', cost:1,  flaw:false },
   { id:'cleave-15',    name:'Cleave Range 15',cat:'Modifier',cost:1,  flaw:false },
   { id:'cleave-30',    name:'Cleave Range 30',cat:'Modifier',cost:2,  flaw:false },
   { id:'concentrate',  name:'Concentrate',   cat:'Modifier', cost:1,  flaw:false },
+  // Contagious: sub-link only, must attach to a Condition inside a Duration group
   { id:'contagious',   name:'Contagious',    cat:'Modifier', cost:1,  flaw:false, isSubLink:true, subLinkTarget:'Condition' },
   { id:'defensive',    name:'Defensive',     cat:'Modifier', cost:1,  flaw:false },
   { id:'disperse',     name:'Disperse',      cat:'Modifier', cost:3,  flaw:false },
@@ -436,22 +332,22 @@ const QUALITIES = [
   { id:'animated',     name:'Animated',      cat:'Animation',cost:1,  flaw:false },
   { id:'attach',       name:'Attach',        cat:'Animation',cost:2,  flaw:false },
   { id:'detonate',     name:'Detonate',      cat:'Animation',cost:3,  flaw:false },
-  // Status — Boons
-  { id:'empower',      name:'Empower',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'hearten',      name:'Hearten',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'magnify',      name:'Magnify',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'protection',   name:'Protection',    cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
-  { id:'attrition',    name:'Attrition',     cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'inoculate',    name:'Inoculate',     cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  // Status — Banes
-  { id:'weaken',       name:'Weaken',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'wither',       name:'Wither',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'quell',        name:'Quell',         cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'amplification',name:'Amplification', cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
-  { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  // Status Effects — Boons (durationLinkable + accumLinkable)
+  { id:'empower',      name:'Empower',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
+  { id:'hearten',      name:'Hearten',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
+  { id:'magnify',      name:'Magnify',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
+  { id:'protection',   name:'Protection',    cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true,accumLinkable:true },
+  { id:'attrition',    name:'Attrition',     cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
+  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
+  { id:'inoculate',    name:'Inoculate',     cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
+  // Status Effects — Banes
+  { id:'weaken',       name:'Weaken',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
+  { id:'wither',       name:'Wither',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
+  { id:'quell',        name:'Quell',         cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
+  { id:'amplification',name:'Amplification', cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true,accumLinkable:true },
+  { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
+  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
+  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
   // Conditions — Glories
   { id:'invigorate',   name:'Invigorate',    cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'galvanize',    name:'Galvanize',     cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
@@ -478,12 +374,14 @@ const QUALITIES = [
   { id:'strain',       name:'Strain',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'restrain',     name:'Restrain',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'disparage',    name:'Disparage',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  // Design Actions
   { id:'emp-limited',  name:'Employ Limited Design Action',  cat:'Design',cost:1,flaw:false },
   { id:'emp-charge',   name:'Employ Charge Design Action',   cat:'Design',cost:2,flaw:false },
   { id:'add-employ',   name:'Additional Employ',             cat:'Design',cost:3,flaw:false },
   { id:'gain-limited', name:'Gain Limited Design Action',    cat:'Design',cost:2,flaw:false },
   { id:'gain-charge',  name:'Gain Charge Design Action',     cat:'Design',cost:3,flaw:false },
   { id:'gain-add-use', name:'Design Action Additional Use',  cat:'Design',cost:3,flaw:false },
+  // Flaws
   { id:'flaw-suffer',  name:'Ends on Suffering Action',    cat:'Flaw',cost:-3,flaw:true },
   { id:'flaw-malady',  name:'Ends on Receiving Malady',    cat:'Flaw',cost:-2,flaw:true },
   { id:'flaw-glory',   name:'Ends on Receiving Glory',     cat:'Flaw',cost:-3,flaw:true },
@@ -512,13 +410,23 @@ const CAT_CSS = {
 const CATEGORIES = [...new Set(QUALITIES.map(q => q.cat))];
 
 // ─── State ─────────────────────────────────────────────────────────────────────
+//
+// groups[] can be one of three types:
+//   Standalone:   { gid, isDuration:false, isAccumulation:false, items:[{id,count}] }
+//   Duration:     { gid, isDuration:true,  isAccumulation:false, durCount, linked:[{id,count,subLinks:[]}] }
+//   Accumulation: { gid, isDuration:false, isAccumulation:true,  accumCount, linked:[{id,count}] }
+//
+// Balancer: can link 2 Status Effects to Duration or Accumulation
+// Preceptor: can link 2 Conditions to Duration
+
 let blocks = [];
 let nextBid = 1, nextGid = 1;
 let dragId = null;
-let pendingLinkCtx = null;  // { type:'link'|'sublink', gid, [linkedId] }
-let activeBlockId = null;   // which block taps go to on mobile
+let pendingLinkCtx = null;
+let activeBlockId = null;
 let activeFilter = 'All', searchText = '';
 let isPreceptor = false;
+let isBalancer = false;
 let isDrawerOpen = false;
 let toastTimer = null;
 
@@ -536,50 +444,49 @@ function showToast(msg, err=false) {
 }
 
 // ─── Drawer ─────────────────────────────────────────────────────────────────────
-function openDrawer() {
-  isDrawerOpen = true;
-  document.getElementById('panel-left').classList.add('open');
-  const ov = document.getElementById('drawer-overlay');
-  ov.classList.add('visible');
-}
-function closeDrawer() {
-  isDrawerOpen = false;
-  document.getElementById('panel-left').classList.remove('open');
-  const ov = document.getElementById('drawer-overlay');
-  ov.classList.remove('visible');
-}
-document.getElementById('fab').addEventListener('click', () => {
-  isDrawerOpen ? closeDrawer() : openDrawer();
-});
+function openDrawer()  { isDrawerOpen=true;  document.getElementById('panel-left').classList.add('open');    document.getElementById('drawer-overlay').classList.add('visible'); }
+function closeDrawer() { isDrawerOpen=false; document.getElementById('panel-left').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('visible'); }
+document.getElementById('fab').addEventListener('click', () => isDrawerOpen ? closeDrawer() : openDrawer());
 document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
 document.getElementById('drawer-handle').addEventListener('click', closeDrawer);
 
-// ─── Preceptor toggle ──────────────────────────────────────────────────────────
+// ─── Design toggles ─────────────────────────────────────────────────────────────
 document.getElementById('preceptor-toggle').addEventListener('click', () => {
   isPreceptor = !isPreceptor;
   document.getElementById('preceptor-toggle').classList.toggle('active', isPreceptor);
-  showToast(isPreceptor ? 'Preceptor Design enabled.' : 'Preceptor Design disabled.');
+  showToast(isPreceptor ? 'Preceptor Design enabled: Duration can link two Conditions.' : 'Preceptor Design disabled.');
+  renderAll();
+});
+document.getElementById('balancer-toggle').addEventListener('click', () => {
+  isBalancer = !isBalancer;
+  document.getElementById('balancer-toggle').classList.toggle('active', isBalancer);
+  showToast(isBalancer ? 'Balancer Design enabled: Duration and Accumulation can link two Status Effects.' : 'Balancer Design disabled.');
   renderAll();
 });
 
-// ─── Pending banner ────────────────────────────────────────────────────────────
+// ─── Pending banner ─────────────────────────────────────────────────────────────
 function updatePendingBanner() {
   const banner = document.getElementById('pending-banner');
   if (pendingLinkCtx) {
-    const msg = pendingLinkCtx.type === 'link'
-      ? 'Tap a quality to link it to Duration — or tap here to cancel'
-      : `Tap ${pendingLinkCtx.subLinkTarget==='Condition'?'Contagious':'Accumulation'} to sub-link — or tap here to cancel`;
+    let msg;
+    if (pendingLinkCtx.type === 'link') {
+      msg = 'Tap a quality to link it to Duration — or tap here to cancel';
+    } else if (pendingLinkCtx.type === 'accum-link') {
+      msg = 'Tap a Status Effect to link it to Accumulation — or tap here to cancel';
+    } else if (pendingLinkCtx.type === 'sublink-pending') {
+      msg = `Tap + ${Q[pendingLinkCtx.qid]?.name} next to the ${pendingLinkCtx.subLinkTarget} quality to attach it — or tap here to cancel`;
+    } else {
+      msg = 'Tap a quality to link — or tap here to cancel';
+    }
     banner.textContent = msg;
     banner.classList.add('visible');
   } else {
     banner.classList.remove('visible');
   }
 }
-document.getElementById('pending-banner').addEventListener('click', () => {
-  pendingLinkCtx = null; updatePendingBanner(); renderAll();
-});
+document.getElementById('pending-banner').addEventListener('click', () => { pendingLinkCtx=null; updatePendingBanner(); renderAll(); });
 
-// ─── Global counts ─────────────────────────────────────────────────────────────
+// ─── Global counts ──────────────────────────────────────────────────────────────
 function globalCount(id) {
   let n = 0;
   for (const b of blocks) {
@@ -592,16 +499,20 @@ function globalCount(id) {
           if (lk.id === id) n += lk.count;
           for (const sl of (lk.subLinks||[])) if (sl.id === id) n += sl.count;
         }
-      } else { for (const it of g.items) if (it.id === id) n += it.count; }
+      } else if (g.isAccumulation) {
+        if (id === 'accumulation') n += g.accumCount;
+        for (const lk of g.linked) if (lk.id === id) n += lk.count;
+      } else {
+        for (const it of g.items) if (it.id === id) n += it.count;
+      }
     }
   }
   return n;
 }
-function totalDurCount() {
-  let n=0; for (const b of blocks) for (const g of b.groups) if (g.isDuration) n+=g.durCount; return n;
-}
+function totalDurCount() { let n=0; for (const b of blocks) for (const g of b.groups) if (g.isDuration) n+=g.durCount; return n; }
+function totalAccumCount() { let n=0; for (const b of blocks) for (const g of b.groups) if (g.isAccumulation) n+=g.accumCount; return n; }
 
-// ─── Validation ────────────────────────────────────────────────────────────────
+// ─── Validation ─────────────────────────────────────────────────────────────────
 function flawBudgetOk(qdef) {
   const {baseCost,flawCost} = calcCosts();
   const flawMax = Math.round(baseCost * 0.333);
@@ -611,27 +522,20 @@ function flawBudgetOk(qdef) {
   return true;
 }
 
-function canAddToBlock(qdef, bid) 
-{
+function canAddToBlock(qdef, bid) {
   if (qdef.flaw && !flawBudgetOk(qdef)) return false;
-  const cr = getCR();
-  const b = blocks.find(x => x.bid === bid);
-
+  const cr = getCR(), b = blocks.find(x => x.bid === bid);
   if (qdef.cat === 'Target') {
-    if (qdef.id === 'single' && b && b.targetId === 'single') { showToast('Only one Single target quality per block.', true); return false; }
-    if (qdef.id === 'area') {
-      const n = (b && b.targetId === 'area') ? (b.targetCount||1) : 0;
-      if (n >= 5) { showToast('Area maximum is 5 per ability.', true); return false; }
-    }
-    if (globalCount(qdef.id) >= cr) { showToast(`Crown Rank limit reached for ${qdef.name}.`, true); return false; }
+    if (qdef.id === 'single' && b?.targetId === 'single') { showToast('Only one Single target per block.', true); return false; }
+    if (qdef.id === 'area' && b?.targetId === 'area' && (b.targetCount||1) >= 5) { showToast('Area maximum is 5.', true); return false; }
+    if (globalCount(qdef.id) >= cr) { showToast(`CR limit reached for ${qdef.name}.`, true); return false; }
     return true;
   }
   if (qdef.cat === 'Range') { if (b?.rangeId) { showToast('Only one Range per block.', true); return false; } return true; }
-  if (qdef.isDuration) { if (totalDurCount() >= cr) { showToast('CR limit reached for Duration.', true); return false; } return true; }
+  if (qdef.isDuration)     { if (totalDurCount() >= cr)   { showToast('CR limit reached for Duration.', true); return false; } return true; }
+  if (qdef.isAccumulation) { if (totalAccumCount() >= cr) { showToast('CR limit reached for Accumulation.', true); return false; } return true; }
   if (qdef.isStatus) {
-    if (qdef.statusMax != null && globalCount(qdef.id) >= qdef.statusMax) {
-      showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`, true); return false;
-    }
+    if (qdef.statusMax != null && globalCount(qdef.id) >= qdef.statusMax) { showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`, true); return false; }
     return true;
   }
   if (qdef.flaw) return true;
@@ -639,16 +543,54 @@ function canAddToBlock(qdef, bid)
   return true;
 }
 
+// How many Status Effects can be linked to a Duration/Accumulation group?
+function maxStatusLinks() { return isBalancer ? 2 : 1; }
+// How many Conditions can be linked to a Duration group?
+function maxConditionLinks() { return isPreceptor ? 2 : 1; }
+
 function canLinkToDuration(qdef, g) {
   if (!qdef.durationLinkable) { showToast(`${qdef.name} cannot link directly to Duration.`, true); return false; }
   if (g.linked.length === 0) return true;
-  if (isPreceptor) {
-    if (g.linked.length >= 2) { showToast('Duration can only link two qualities (Preceptor rule).', true); return false; }
-    if (qdef.cat !== 'Condition') { showToast('Preceptors can only double-link Conditions.', true); return false; }
-    if (Q[g.linked[0].id]?.cat !== 'Condition') { showToast('First linked quality must also be a Condition.', true); return false; }
+  // Balancer: up to 2 Status Effects on Duration
+  if (qdef.cat === 'Status') {
+    const statusLinked = g.linked.filter(lk => Q[lk.id]?.cat === 'Status').length;
+    if (statusLinked >= maxStatusLinks()) {
+      showToast(isBalancer ? 'Duration can only link two Status Effects (Balancer rule).' : 'Duration can only link one Status Effect. Enable Balancer Design for two.', true); return false;
+    }
+    // Can't mix Status and non-Status in same group
+    const hasNonStatus = g.linked.some(lk => Q[lk.id]?.cat !== 'Status');
+    if (hasNonStatus) { showToast('Cannot mix Status Effects with other qualities on the same Duration.', true); return false; }
+    if (g.linked.length >= maxStatusLinks()) { showToast('Duration link slots full.', true); return false; }
     return true;
   }
-  showToast('Duration can only link one quality. Enable Preceptor Design for two Conditions.', true); return false;
+  // Preceptor: up to 2 Conditions on Duration
+  if (qdef.cat === 'Condition') {
+    const condLinked = g.linked.filter(lk => Q[lk.id]?.cat === 'Condition').length;
+    if (condLinked >= maxConditionLinks()) {
+      showToast(isPreceptor ? 'Duration can only link two Conditions (Preceptor rule).' : 'Duration can only link one Condition. Enable Preceptor Design for two.', true); return false;
+    }
+    const hasNonCond = g.linked.some(lk => Q[lk.id]?.cat !== 'Condition');
+    if (hasNonCond) { showToast('Cannot mix Conditions with other qualities on the same Duration.', true); return false; }
+    if (g.linked.length >= maxConditionLinks()) { showToast('Duration link slots full.', true); return false; }
+    return true;
+  }
+  // Any other durationLinkable quality: only 1 allowed, no mixing
+  if (g.linked.length >= 1) {
+    showToast('Duration can only link one quality of this type.', true); return false;
+  }
+  return true;
+}
+
+function canLinkToAccumulation(qdef, g) {
+  if (!qdef.accumLinkable) { showToast(`${qdef.name} cannot be linked to Accumulation.`, true); return false; }
+  if (qdef.cat !== 'Status') { showToast('Accumulation can only link to Status Effects (Boons and Banes).', true); return false; }
+  if (g.linked.length === 0) return true;
+  const statusLinked = g.linked.filter(lk => Q[lk.id]?.cat === 'Status').length;
+  if (statusLinked >= maxStatusLinks()) {
+    showToast(isBalancer ? 'Accumulation can only link two Status Effects (Balancer rule).' : 'Accumulation can only link one Status Effect. Enable Balancer Design for two.', true); return false;
+  }
+  if (g.linked.length >= maxStatusLinks()) { showToast('Accumulation link slots full.', true); return false; }
+  return true;
 }
 
 function canSubLink(qdef, parentId) {
@@ -659,14 +601,10 @@ function canSubLink(qdef, parentId) {
   return true;
 }
 
-// ─── Block phase ───────────────────────────────────────────────────────────────
-function blockPhase(b) {
-  if (!b.targetId) return 'target';
-  if (!b.rangeId) return 'range';
-  return 'effects';
-}
+// ─── Block phase ────────────────────────────────────────────────────────────────
+function blockPhase(b) { if (!b.targetId) return 'target'; if (!b.rangeId) return 'range'; return 'effects'; }
 
-// ─── Cost calculation ──────────────────────────────────────────────────────────
+// ─── Cost calculation ────────────────────────────────────────────────────────────
 function calcCosts() {
   let baseCost=0, flawCost=0;
   for (const b of blocks) {
@@ -675,53 +613,88 @@ function calcCosts() {
     for (const g of b.groups) {
       if (g.isDuration) {
         baseCost += 2*g.durCount;
-        for (const lk of g.linked) {
-          const qd=Q[lk.id]; if (qd) baseCost += qd.cost*lk.count;
-          for (const sl of (lk.subLinks||[])) { const sq=Q[sl.id]; if (sq) baseCost += sq.cost*sl.count; }
-        }
+        for (const lk of g.linked) { const qd=Q[lk.id]; if(qd) baseCost+=qd.cost*lk.count; for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)baseCost+=sq.cost*sl.count;} }
+      } else if (g.isAccumulation) {
+        baseCost += 3*g.accumCount; // Accumulation costs 3
+        for (const lk of g.linked) { const qd=Q[lk.id]; if(qd) baseCost+=qd.cost*lk.count; }
       } else {
-        for (const it of g.items) { const qd=Q[it.id]; if (!qd) continue; qd.flaw ? flawCost+=Math.abs(qd.cost)*it.count : baseCost+=qd.cost*it.count; }
+        for (const it of g.items) { const qd=Q[it.id]; if(!qd) continue; qd.flaw ? flawCost+=Math.abs(qd.cost)*it.count : baseCost+=qd.cost*it.count; }
       }
     }
   }
-  return { baseCost, flawCost, total: baseCost - flawCost };
+  return { baseCost, flawCost, total: baseCost-flawCost };
 }
 
-// ─── Mutations ─────────────────────────────────────────────────────────────────
+// ─── Mutations ──────────────────────────────────────────────────────────────────
 function addToBlock(bid, qid) {
-  const b = blocks.find(x => x.bid === bid), qdef = Q[qid];
-  if (!b || !qdef) return;
-  const phase = blockPhase(b);
-  if (phase === 'target' && qdef.cat !== 'Target') { showToast('Choose a Target quality first.', true); return; }
-  if (qdef.isSubLink) { showToast(`${qdef.name} must sub-link to a ${qdef.subLinkTarget} quality inside a Duration row.`, true); return; }
-  if (!canAddToBlock(qdef, bid)) return;
-  if (qdef.cat === 'Target') {
+  const b=blocks.find(x=>x.bid===bid), qdef=Q[qid];
+  if (!b||!qdef) return;
+  const phase=blockPhase(b);
+  if (phase==='target' && qdef.cat!=='Target') { showToast('Choose a Target quality first.', true); return; }
+
+  // Accumulation: opens a new Accumulation group
+  if (qdef.isAccumulation) {
+    if (!canAddToBlock(qdef,bid)) return;
+    b.groups.push({gid:nextGid++,isDuration:false,isAccumulation:true,accumCount:1,linked:[]});
+    renderAll(); return;
+  }
+
+  // Contagious: sub-link to a Condition inside a Duration group
+  if (qdef.isSubLink) {
+    const matches=[];
+    for (const bl of blocks) for (const g of bl.groups) { if (!g.isDuration) continue; for (const lk of g.linked) { const lkDef=Q[lk.id]; if (lkDef&&lkDef.cat===qdef.subLinkTarget) matches.push({gid:g.gid,linkedId:lk.id}); } }
+    if (matches.length===0) { showToast(`${qdef.name} must be linked to a ${qdef.subLinkTarget} inside a Duration row. Add a ${qdef.subLinkTarget} to a Duration first.`, true); }
+    else { pendingLinkCtx={type:'sublink-pending',qid:qdef.id,subLinkTarget:qdef.subLinkTarget}; updatePendingBanner(); renderAll(); }
+    return;
+  }
+
+  if (!canAddToBlock(qdef,bid)) return;
+  if (qdef.cat==='Target') {
     if (!b.targetId) { b.targetId=qid; b.targetCount=1; }
-    else if (b.targetId===qid && qid!=='single') b.targetCount++;
+    else if (b.targetId===qid&&qid!=='single') b.targetCount++;
     else { showToast('Only one Target type per block.', true); return; }
     renderAll(); return;
   }
-  if (qdef.cat === 'Range') { b.rangeId=qid; renderAll(); return; }
-  if (qdef.isDuration) { b.groups.push({gid:nextGid++,isDuration:true,durCount:1,linked:[]}); renderAll(); return; }
-  for (let i=b.groups.length-1;i>=0;i--) {
-    const g=b.groups[i];
-    if (!g.isDuration) { const it=g.items.find(x=>x.id===qid); if (it) { it.count++; renderAll(); return; } }
-  }
-  const last=[...b.groups].reverse().find(g=>!g.isDuration);
+  if (qdef.cat==='Range') { b.rangeId=qid; renderAll(); return; }
+  if (qdef.isDuration) { b.groups.push({gid:nextGid++,isDuration:true,isAccumulation:false,durCount:1,linked:[]}); renderAll(); return; }
+  // Standard quality — stack
+  for (let i=b.groups.length-1;i>=0;i--) { const g=b.groups[i]; if (!g.isDuration&&!g.isAccumulation) { const it=g.items.find(x=>x.id===qid); if(it){it.count++;renderAll();return;} } }
+  const last=[...b.groups].reverse().find(g=>!g.isDuration&&!g.isAccumulation);
   if (last) last.items.push({id:qid,count:1});
-  else b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1}]});
+  else b.groups.push({gid:nextGid++,isDuration:false,isAccumulation:false,items:[{id:qid,count:1}]});
   renderAll();
 }
 
 function linkToGroup(gid, qid) {
   const qdef=Q[qid]; if (!qdef) return;
   for (const b of blocks) {
-    const g=b.groups.find(x=>x.gid===gid); if (!g||!g.isDuration) continue;
-    if (qdef.isDuration) { if (!canAddToBlock(qdef,b.bid)) return; g.durCount++; renderAll(); return; }
-    if (!canLinkToDuration(qdef,g)) return;
+    const g=b.groups.find(x=>x.gid===gid); if (!g) continue;
+    if (g.isDuration) {
+      if (qdef.isDuration) { if (!canAddToBlock(qdef,b.bid)) return; g.durCount++; renderAll(); return; }
+      if (!canLinkToDuration(qdef,g)) return;
+      if (!canAddToBlock(qdef,b.bid)) return;
+      const ex=g.linked.find(x=>x.id===qid); if(ex) ex.count++; else g.linked.push({id:qid,count:1,subLinks:[]});
+      renderAll(); return;
+    }
+    if (g.isAccumulation) {
+      if (qdef.isAccumulation) { if (!canAddToBlock(qdef,b.bid)) return; g.accumCount++; renderAll(); return; }
+      if (!canLinkToAccumulation(qdef,g)) return;
+      if (!canAddToBlock(qdef,b.bid)) return;
+      const ex=g.linked.find(x=>x.id===qid); if(ex) ex.count++; else g.linked.push({id:qid,count:1});
+      renderAll(); return;
+    }
+  }
+}
+
+function linkAccumToGroup(gid, qid) {
+  // Called when user taps a Status Effect while pendingLinkCtx.type === 'accum-link'
+  const qdef=Q[qid]; if (!qdef) return;
+  if (qdef.cat!=='Status') { showToast('Accumulation can only link to Status Effects.', true); return; }
+  for (const b of blocks) {
+    const g=b.groups.find(x=>x.gid===gid); if (!g||!g.isAccumulation) continue;
+    if (!canLinkToAccumulation(qdef,g)) return;
     if (!canAddToBlock(qdef,b.bid)) return;
-    const ex=g.linked.find(x=>x.id===qid);
-    if (ex) ex.count++; else g.linked.push({id:qid,count:1,subLinks:[]});
+    const ex=g.linked.find(x=>x.id===qid); if(ex) ex.count++; else g.linked.push({id:qid,count:1});
     renderAll(); return;
   }
 }
@@ -733,196 +706,180 @@ function subLinkToLinked(gid, linkedId, qid) {
     const g=b.groups.find(x=>x.gid===gid); if (!g||!g.isDuration) continue;
     const lk=g.linked.find(x=>x.id===linkedId); if (!lk) continue;
     if (!lk.subLinks) lk.subLinks=[];
-    const ex=lk.subLinks.find(x=>x.id===qid); if (ex) ex.count++; else lk.subLinks.push({id:qid,count:1});
+    const ex=lk.subLinks.find(x=>x.id===qid); if(ex) ex.count++; else lk.subLinks.push({id:qid,count:1});
     renderAll(); return;
   }
 }
 
-function decrementInBlock(bid,gid,itemId,isLinked,parentLinkedId) {
+function decrementInBlock(bid,gid,itemId,mode,parentLinkedId) {
+  // mode: 'item' | 'durHead' | 'accumHead' | 'linked' | 'sublink'
   const b=blocks.find(x=>x.bid===bid); if (!b) return;
   const g=b.groups.find(x=>x.gid===gid); if (!g) return;
-  if (parentLinkedId) {
+  if (mode==='durHead') {
+    g.durCount--; if (g.durCount<=0) b.groups=b.groups.filter(x=>x.gid!==gid);
+  } else if (mode==='accumHead') {
+    g.accumCount--; if (g.accumCount<=0) b.groups=b.groups.filter(x=>x.gid!==gid);
+  } else if (mode==='sublink') {
     const lk=g.linked.find(x=>x.id===parentLinkedId); if (!lk||!lk.subLinks) return;
     const sl=lk.subLinks.find(x=>x.id===itemId); if (!sl) return;
     sl.count--; if (sl.count<=0) lk.subLinks=lk.subLinks.filter(x=>x.id!==itemId);
-  } else if (g.isDuration&&!isLinked) {
-    g.durCount--; if (g.durCount<=0) b.groups=b.groups.filter(x=>x.gid!==gid);
+  } else if (mode==='linked') {
+    const arr=g.linked; const it=arr.find(x=>x.id===itemId); if (!it) return;
+    it.count--; if (it.count<=0) g.linked=g.linked.filter(x=>x.id!==itemId);
   } else {
-    const arr=g.isDuration?g.linked:g.items; const it=arr.find(x=>x.id===itemId); if (!it) return;
-    it.count--; if (it.count<=0) { g.isDuration ? g.linked=g.linked.filter(x=>x.id!==itemId) : g.items=g.items.filter(x=>x.id!==itemId); }
-    if (!g.isDuration&&g.items.length===0) b.groups=b.groups.filter(x=>x.gid!==gid);
+    const it=g.items.find(x=>x.id===itemId); if (!it) return;
+    it.count--; if (it.count<=0) g.items=g.items.filter(x=>x.id!==itemId);
+    if (g.items.length===0) b.groups=b.groups.filter(x=>x.gid!==gid);
   }
   renderAll();
 }
 
-function decrementTarget(bid) {
-  const b=blocks.find(x=>x.bid===bid); if (!b||!b.targetId) return;
-  b.targetCount=(b.targetCount||1)-1; if (b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;} renderAll();
-}
+function decrementTarget(bid) { const b=blocks.find(x=>x.bid===bid); if(!b||!b.targetId)return; b.targetCount=(b.targetCount||1)-1; if(b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;} renderAll(); }
 function removeRangeFromBlock(bid) { const b=blocks.find(x=>x.bid===bid); if(b){b.rangeId=null;renderAll();} }
 function removeGroup(bid,gid) { const b=blocks.find(x=>x.bid===bid); if(b){b.groups=b.groups.filter(x=>x.gid!==gid);renderAll();} }
 function removeBlock(bid) { blocks=blocks.filter(x=>x.bid!==bid); renderAll(); }
-function addCompoundBlock() { blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]}); if(isMobile()) showToast('Compound block added. Tap it to make it active.'); renderAll(); }
+function addCompoundBlock() { blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]}); if(isMobile())showToast('Compound block added. Tap it to make it active.'); renderAll(); }
 function clearAll() { blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}]; activeBlockId=null; renderAll(); }
 
-// ─── Chip builder ──────────────────────────────────────────────────────────────
-function makeChip(id,count,bid,gid,isLinked,isDurHead,parentLinkedId) {
-  const qdef=Q[id]; if (!qdef) return document.createTextNode('');
+// ─── Chip builder ────────────────────────────────────────────────────────────────
+function makeChip(id, count, bid, gid, mode, extraClass, parentLinkedId) {
+  const qdef=Q[id]; if(!qdef) return document.createTextNode('');
   const chip=document.createElement('div');
-  chip.className=`q-chip ${catClass(qdef.cat)}${isDurHead?' duration-head':''}`;
-  Object.assign(chip.dataset,{bid,gid,id,linked:isLinked?'1':'0'});
-  if (parentLinkedId) chip.dataset.parentLinked=parentLinkedId;
+  chip.className=`q-chip ${catClass(qdef.cat)}${extraClass?' '+extraClass:''}`;
   const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
-  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${stackStr}<span class="chip-remove" title="Remove one" role="button" aria-label="Remove ${qdef.name}">−</span>`;
+  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${stackStr}<span class="chip-remove" role="button" aria-label="Remove ${qdef.name}">−</span>`;
   chip.querySelector('.chip-remove').addEventListener('click', e => {
     e.stopPropagation();
-    decrementInBlock(parseInt(chip.dataset.bid),parseInt(chip.dataset.gid),chip.dataset.id,chip.dataset.linked==='1',chip.dataset.parentLinked||null);
+    decrementInBlock(bid, gid, id, mode, parentLinkedId||null);
   });
   return chip;
 }
 
-// ─── Active block management ────────────────────────────────────────────────────
-function setActiveBlock(bid) {
-  activeBlockId = bid;
-  renderAll();
-}
+// ─── Active block ────────────────────────────────────────────────────────────────
+function setActiveBlock(bid) { activeBlockId=bid; renderAll(); }
 
-// ─── Render ─────────────────────────────────────────────────────────────────────
+// ─── Render ──────────────────────────────────────────────────────────────────────
 function renderAll() {
-  const area = document.getElementById('builder-area');
+  const area=document.getElementById('builder-area');
   area.innerHTML='';
   const summaryParts=[];
 
-  // Ensure activeBlockId is valid
-  if (activeBlockId && !blocks.find(b=>b.bid===activeBlockId)) activeBlockId=null;
-  if (!activeBlockId && blocks.length) activeBlockId=blocks[0].bid;
+  if (activeBlockId&&!blocks.find(b=>b.bid===activeBlockId)) activeBlockId=null;
+  if (!activeBlockId&&blocks.length) activeBlockId=blocks[0].bid;
 
   for (const b of blocks) {
     const phase=blockPhase(b);
     const blockDiv=document.createElement('div');
     blockDiv.className='target-block'+(b.targetId?' has-target':'')+(b.bid===activeBlockId?' active-block':'');
     blockDiv.dataset.bid=b.bid;
-
-    // Tap block header area to activate (mobile UX)
-    blockDiv.addEventListener('click', e => {
+    blockDiv.addEventListener('click', e=>{
       if (e.target.closest('.chip-remove,.group-delete,.block-delete,.link-target,.q-chip,.q-group')) return;
       setActiveBlock(b.bid);
     });
 
-    // Block header
+    // Header
     const hdr=document.createElement('div'); hdr.className='block-header';
-    const lbl=document.createElement('span');
-    lbl.className='block-label'+(b.isCompound?' compound':'');
-    lbl.textContent=b.isCompound?'⊕ Compound Target':'◈ Primary Target';
-    hdr.appendChild(lbl);
-    // Active badge
-    if (b.bid===activeBlockId) {
-      const badge=document.createElement('span'); badge.className='block-active-badge'; badge.textContent='ACTIVE';
-      hdr.appendChild(badge);
-    }
-    if (b.isCompound) {
-      const del=document.createElement('span'); del.className='block-delete'; del.textContent='✕'; del.setAttribute('role','button'); del.setAttribute('aria-label','Remove compound block');
-      del.addEventListener('click', e=>{e.stopPropagation();removeBlock(b.bid);}); hdr.appendChild(del);
-    }
+    const lbl=document.createElement('span'); lbl.className='block-label'+(b.isCompound?' compound':'');
+    lbl.textContent=b.isCompound?'⊕ Compound Target':'◈ Primary Target'; hdr.appendChild(lbl);
+    if (b.bid===activeBlockId) { const badge=document.createElement('span'); badge.className='block-active-badge'; badge.textContent='ACTIVE'; hdr.appendChild(badge); }
+    if (b.isCompound) { const del=document.createElement('span'); del.className='block-delete'; del.textContent='✕'; del.addEventListener('click',e=>{e.stopPropagation();removeBlock(b.bid);}); hdr.appendChild(del); }
     blockDiv.appendChild(hdr);
 
     // Target + Range row
     if (b.targetId) {
       const tRow=document.createElement('div'); tRow.className='q-group';
-      const tq=Q[b.targetId];
-      const tChip=document.createElement('div'); tChip.className=`q-chip ${catClass(tq.cat)}`;
+      const tq=Q[b.targetId]; const tChip=document.createElement('div'); tChip.className=`q-chip ${catClass(tq.cat)}`;
       const ss=(b.targetCount||1)>1?`<span class="chip-stack">${b.targetCount}×${tq.cost}</span>`:'';
       tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}<span class="chip-remove" role="button">−</span>`;
       tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();decrementTarget(b.bid);});
       tRow.appendChild(tChip);
-      if (b.rangeId) {
-        const rq=Q[b.rangeId]; const rChip=document.createElement('div'); rChip.className=`q-chip ${catClass(rq.cat)}`;
-        rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;
-        rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});
-        tRow.appendChild(rChip);
-      }
-      const gd=document.createElement('span'); gd.className='group-delete'; gd.textContent='✕';
-      gd.addEventListener('click',e=>{e.stopPropagation();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();}); tRow.appendChild(gd);
+      if (b.rangeId) { const rq=Q[b.rangeId]; const rChip=document.createElement('div'); rChip.className=`q-chip ${catClass(rq.cat)}`; rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`; rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);}); tRow.appendChild(rChip); }
+      const gd=document.createElement('span'); gd.className='group-delete'; gd.textContent='✕'; gd.addEventListener('click',e=>{e.stopPropagation();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();}); tRow.appendChild(gd);
       blockDiv.appendChild(tRow);
-      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`;
-      if (b.rangeId) bLabel+=` / ${Q[b.rangeId].name}`;
-      summaryParts.push(bLabel);
+      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`; if(b.rangeId) bLabel+=` / ${Q[b.rangeId].name}`; summaryParts.push(bLabel);
     }
 
-    // Phase hint
-    if (phase !== 'effects') {
-      const ph=document.createElement('div'); ph.className='block-phase';
-      ph.textContent=phase==='target'?'← Tap a Target quality first (Single, Multi-Target, or Area)':'← Tap a Range quality next, or skip and add an effect quality';
-      blockDiv.appendChild(ph);
-    }
+    if (phase!=='effects') { const ph=document.createElement('div'); ph.className='block-phase'; ph.textContent=phase==='target'?'← Tap a Target quality first (Single, Multi-Target, or Area)':'← Tap a Range quality next, or skip and add an effect quality'; blockDiv.appendChild(ph); }
 
     // Effect groups
     for (const g of b.groups) {
       const gDiv=document.createElement('div');
-      gDiv.className='q-group'+(g.isDuration?' has-duration':'');
+
       if (g.isDuration) {
-        gDiv.appendChild(makeChip('duration',g.durCount,b.bid,g.gid,false,true,null));
+        gDiv.className='q-group has-duration';
+        gDiv.appendChild(makeChip('duration',g.durCount,b.bid,g.gid,'durHead','duration-head',null));
         for (const lk of g.linked) {
           const dash=document.createElement('span'); dash.className='link-dash'; dash.textContent='—'; gDiv.appendChild(dash);
-          gDiv.appendChild(makeChip(lk.id,lk.count,b.bid,g.gid,true,false,null));
+          gDiv.appendChild(makeChip(lk.id,lk.count,b.bid,g.gid,'linked',null,null));
           for (const sl of (lk.subLinks||[])) {
             const slDash=document.createElement('span'); slDash.className='link-dash'; slDash.textContent='—'; gDiv.appendChild(slDash);
-            gDiv.appendChild(makeChip(sl.id,sl.count,b.bid,g.gid,true,false,lk.id));
+            gDiv.appendChild(makeChip(sl.id,sl.count,b.bid,g.gid,'sublink',null,lk.id));
           }
-          const canSub=Q[lk.id]&&(Q[lk.id].cat==='Condition'||Q[lk.id].cat==='Status');
-          if (canSub) {
-            const slBtn=document.createElement('button');
-            const isSlPending=pendingLinkCtx?.type==='sublink'&&pendingLinkCtx.gid===g.gid&&pendingLinkCtx.linkedId===lk.id;
-            slBtn.className='link-target sub-lt'+(isSlPending?' pending':'');
-            slBtn.textContent=Q[lk.id].cat==='Condition'?'+ Contagious':'+ Accumulation';
-            slBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();slBtn.classList.add('drag-hover');});
-            slBtn.addEventListener('dragleave',()=>slBtn.classList.remove('drag-hover'));
-            slBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();slBtn.classList.remove('drag-hover');if(dragId){subLinkToLinked(g.gid,lk.id,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
-            slBtn.addEventListener('click',e=>{
-              e.stopPropagation();
-              const already=pendingLinkCtx?.type==='sublink'&&pendingLinkCtx.gid===g.gid&&pendingLinkCtx.linkedId===lk.id;
-              pendingLinkCtx=already?null:{type:'sublink',gid:g.gid,linkedId:lk.id,subLinkTarget:Q[lk.id].cat};
-              updatePendingBanner();
-              if (pendingLinkCtx&&isMobile()) openDrawer();
-              renderAll();
-            });
-            gDiv.appendChild(slBtn);
+          // Contagious sub-link button (only on Condition linked qualities)
+          const isSubPending=pendingLinkCtx?.type==='sublink-pending'&&Q[lk.id]?.cat===pendingLinkCtx.subLinkTarget;
+          if (isSubPending) {
+            const existingSub=(lk.subLinks||[]).find(x=>x.id===pendingLinkCtx.qid);
+            const slBtn=document.createElement('button'); slBtn.className='link-target sub-lt'; slBtn.textContent=existingSub?`+1 ${Q[pendingLinkCtx.qid].name}`:`+ ${Q[pendingLinkCtx.qid].name}`;
+            slBtn.addEventListener('click',e=>{e.stopPropagation();subLinkToLinked(g.gid,lk.id,pendingLinkCtx.qid);pendingLinkCtx=null;updatePendingBanner();renderAll();}); gDiv.appendChild(slBtn);
           }
         }
-        const canMore=g.linked.length===0||(isPreceptor&&g.linked.length===1&&Q[g.linked[0].id]?.cat==='Condition');
-        if (canMore) {
+        // Link-quality button for Duration
+        const durLinked=g.linked.length;
+        const durMax = (() => {
+          if (durLinked===0) return true;
+          const firstCat=Q[g.linked[0].id]?.cat;
+          if (firstCat==='Status')    return durLinked < maxStatusLinks();
+          if (firstCat==='Condition') return durLinked < maxConditionLinks();
+          return false;
+        })();
+        if (durMax) {
           const lBtn=document.createElement('button');
           const isLinkPending=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;
-          lBtn.className='link-target'+(isLinkPending?' pending':'');
-          lBtn.textContent='+ Link Quality';
+          lBtn.className='link-target'+(isLinkPending?' pending':''); lBtn.textContent='+ Link quality';
           lBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.add('drag-hover');});
           lBtn.addEventListener('dragleave',()=>lBtn.classList.remove('drag-hover'));
           lBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.remove('drag-hover');if(dragId){linkToGroup(g.gid,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
-          lBtn.addEventListener('click',e=>{
-            e.stopPropagation();
-            const already=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;
-            pendingLinkCtx=already?null:{type:'link',gid:g.gid};
-            updatePendingBanner();
-            if (pendingLinkCtx&&isMobile()) openDrawer();
-            renderAll();
-          });
+          lBtn.addEventListener('click',e=>{e.stopPropagation();const already=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;pendingLinkCtx=already?null:{type:'link',gid:g.gid};updatePendingBanner();if(pendingLinkCtx&&isMobile())openDrawer();renderAll();});
           gDiv.appendChild(lBtn);
         }
         const dLabel=`Duration${g.durCount>1?` ×${g.durCount}`:''}`;
         const lParts=g.linked.map(lk=>{const qd=Q[lk.id];let s=qd?qd.name+(lk.count>1?` ×${lk.count}`:''):'';for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)s+=` — ${sq.name}`;}return s;}).filter(Boolean);
         summaryParts.push(lParts.length?`${dLabel} — ${lParts.join(', ')}`:dLabel);
-      } else {
-        for (const it of g.items) {
-          gDiv.appendChild(makeChip(it.id,it.count,b.bid,g.gid,false,false,null));
-          const qd=Q[it.id]; if(qd) summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:''));
+
+      } else if (g.isAccumulation) {
+        gDiv.className='q-group has-accumulation';
+        gDiv.appendChild(makeChip('accumulation',g.accumCount,b.bid,g.gid,'accumHead','accum-head',null));
+        for (const lk of g.linked) {
+          const dash=document.createElement('span'); dash.className='link-dash'; dash.textContent='—'; gDiv.appendChild(dash);
+          gDiv.appendChild(makeChip(lk.id,lk.count,b.bid,g.gid,'linked',null,null));
         }
+        // Link Status Effect button for Accumulation
+        const accumLinked=g.linked.length;
+        const canLinkMore=accumLinked < maxStatusLinks();
+        if (canLinkMore) {
+          const aBtn=document.createElement('button');
+          const isAccumPending=pendingLinkCtx?.type==='accum-link'&&pendingLinkCtx.gid===g.gid;
+          aBtn.className='link-target accum-lt'+(isAccumPending?' pending':''); aBtn.textContent='+ Link Status Effect';
+          aBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();aBtn.classList.add('drag-hover');});
+          aBtn.addEventListener('dragleave',()=>aBtn.classList.remove('drag-hover'));
+          aBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();aBtn.classList.remove('drag-hover');if(dragId){linkToGroup(g.gid,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
+          aBtn.addEventListener('click',e=>{e.stopPropagation();const already=pendingLinkCtx?.type==='accum-link'&&pendingLinkCtx.gid===g.gid;pendingLinkCtx=already?null:{type:'accum-link',gid:g.gid};updatePendingBanner();if(pendingLinkCtx&&isMobile())openDrawer();renderAll();});
+          gDiv.appendChild(aBtn);
+        }
+        const aLabel=`Accumulation${g.accumCount>1?` ×${g.accumCount}`:''}`;
+        const aParts=g.linked.map(lk=>{const qd=Q[lk.id];return qd?qd.name+(lk.count>1?` ×${lk.count}`:''):'';}).filter(Boolean);
+        summaryParts.push(aParts.length?`${aLabel} — ${aParts.join(', ')}`:aLabel);
+
+      } else {
+        gDiv.className='q-group';
+        for (const it of g.items) { gDiv.appendChild(makeChip(it.id,it.count,b.bid,g.gid,'item',null,null)); const qd=Q[it.id]; if(qd) summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:'')); }
       }
-      const gDel=document.createElement('span'); gDel.className='group-delete'; gDel.textContent='✕';
-      gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);}); gDiv.appendChild(gDel);
+
+      const gDel=document.createElement('span'); gDel.className='group-delete'; gDel.textContent='✕'; gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);}); gDiv.appendChild(gDel);
       blockDiv.appendChild(gDiv);
     }
 
-    // Drag events on block
+    // Block drag/drop
     blockDiv.addEventListener('dragover',e=>{if(!e.target.closest('.link-target')){e.preventDefault();blockDiv.classList.add('drag-over');}});
     blockDiv.addEventListener('dragleave',e=>{if(!blockDiv.contains(e.relatedTarget))blockDiv.classList.remove('drag-over');});
     blockDiv.addEventListener('drop',e=>{
@@ -932,7 +889,8 @@ function renderAll() {
       if (dragId) {
         if (pendingLinkCtx) {
           if (pendingLinkCtx.type==='link') linkToGroup(pendingLinkCtx.gid,dragId);
-          else subLinkToLinked(pendingLinkCtx.gid,pendingLinkCtx.linkedId,dragId);
+          else if (pendingLinkCtx.type==='accum-link') linkToGroup(pendingLinkCtx.gid,dragId);
+          else if (pendingLinkCtx.type==='sublink-pending') { /* handled by button */ }
           pendingLinkCtx=null; updatePendingBanner();
         } else addToBlock(b.bid,dragId);
         dragId=null;
@@ -942,7 +900,7 @@ function renderAll() {
     area.appendChild(blockDiv);
   }
 
-  // Update totals
+  // Totals
   const {baseCost,flawCost,total}=calcCosts();
   document.getElementById('ap-total').textContent=total;
   document.getElementById('ap-total').className='ap-value'+(total<0?' negative':'');
@@ -953,7 +911,7 @@ function renderAll() {
   document.getElementById('breakdown').textContent=summaryParts.join(' · ')||'No qualities added yet.';
 }
 
-// ─── Bank render ───────────────────────────────────────────────────────────────
+// ─── Bank render ─────────────────────────────────────────────────────────────────
 function renderBank() {
   const list=document.getElementById('quality-list');
   const s=searchText.toLowerCase();
@@ -978,10 +936,16 @@ function renderBank() {
     card.addEventListener('click',()=>{
       if (pendingLinkCtx) {
         if (pendingLinkCtx.type==='link') linkToGroup(pendingLinkCtx.gid,card.dataset.id);
-        else subLinkToLinked(pendingLinkCtx.gid,pendingLinkCtx.linkedId,card.dataset.id);
+        else if (pendingLinkCtx.type==='accum-link') linkToGroup(pendingLinkCtx.gid,card.dataset.id);
+        else if (pendingLinkCtx.type==='sublink-pending') {
+          // Let it fall through — only the + button in the drop zone handles the actual sub-link
+          // but show error if not the right type
+          const qdef=Q[card.dataset.id];
+          if (!qdef||qdef.cat!==pendingLinkCtx.subLinkTarget) { showToast(`Please tap a + ${Q[pendingLinkCtx.qid]?.name} button next to the correct quality in your ability.`, true); return; }
+        }
         pendingLinkCtx=null; updatePendingBanner(); if(isMobile())closeDrawer();
       } else {
-        const bid = activeBlockId || (blocks[blocks.length-1]?.bid);
+        const bid=activeBlockId||(blocks[blocks.length-1]?.bid);
         if (bid!=null) addToBlock(bid,card.dataset.id);
         if (isMobile()) closeDrawer();
       }
@@ -989,10 +953,11 @@ function renderBank() {
   });
 }
 
-// ─── Export ─────────────────────────────────────────────────────────────────────
+// ─── Export ──────────────────────────────────────────────────────────────────────
 function exportAbility() {
   const name=document.getElementById('ability-name').value||'Unnamed Ability';
   const cr=getCR(); const {baseCost,flawCost,total}=calcCosts(); const lines=[];
+  const designs=[isPreceptor?'Preceptor':null,isBalancer?'Balancer':null].filter(Boolean);
   for (const b of blocks) {
     if (b.isCompound) lines.push('');
     if (b.targetId) { const tq=Q[b.targetId]; lines.push(`  + ${tq.name} (${tq.cost}×${b.targetCount||1})`); }
@@ -1000,59 +965,62 @@ function exportAbility() {
     for (const g of b.groups) {
       if (g.isDuration) {
         let line=`    + Duration (2×${g.durCount})`;
-        for (const lk of g.linked) {
-          const qd=Q[lk.id]; if (!qd) continue; line+=` - ${qd.name} (${qd.cost}×${lk.count})`;
-          for (const sl of (lk.subLinks||[])) { const sq=Q[sl.id]; if(sq) line+=` - ${sq.name} (${sq.cost}×${sl.count})`; }
-        }
+        for (const lk of g.linked) { const qd=Q[lk.id];if(!qd)continue;line+=` - ${qd.name} (${qd.cost}×${lk.count})`;for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)line+=` - ${sq.name} (${sq.cost}×${sl.count})`;} }
+        lines.push(line);
+      } else if (g.isAccumulation) {
+        let line=`    + Accumulation (3×${g.accumCount})`;
+        for (const lk of g.linked) { const qd=Q[lk.id];if(!qd)continue;line+=` - ${qd.name} (${qd.cost}×${lk.count})`; }
         lines.push(line);
       } else {
-        for (const it of g.items) { const qd=Q[it.id]; if(!qd) continue; lines.push(`    ${qd.flaw?'*':'+'} ${qd.name} (${qd.cost}×${it.count})`); }
+        for (const it of g.items) { const qd=Q[it.id];if(!qd)continue;lines.push(`    ${qd.flaw?'*':'+'} ${qd.name} (${qd.cost}×${it.count})`); }
       }
     }
   }
   const flawMax=Math.round(baseCost*0.333);
-  const blob=new Blob([`Ability: ${name}\nCrown Rank: CR ${cr}${isPreceptor?' [Preceptor Design]':''}\nBase Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n\n`+lines.join('\n')],{type:'text/plain'});
+  const blob=new Blob([
+    `Ability: ${name}\nCrown Rank: CR ${cr}${designs.length?' ['+designs.join(', ')+']':''}\n`
+    +`Base Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n\n`
+    +lines.join('\n')
+  ],{type:'text/plain'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`${name.replace(/\s+/g,'_')}.txt`; a.click();
 }
 
-// ─── Filters ────────────────────────────────────────────────────────────────────
+// ─── Filters ─────────────────────────────────────────────────────────────────────
 const filterRow=document.getElementById('filter-row');
 ['All',...CATEGORIES].forEach(cat=>{
-  const btn=document.createElement('button');
-  btn.className='filter-btn'+(cat==='All'?' active':''); btn.textContent=cat;
+  const btn=document.createElement('button'); btn.className='filter-btn'+(cat==='All'?' active':''); btn.textContent=cat;
   btn.addEventListener('click',()=>{ activeFilter=cat; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderBank(); });
   filterRow.appendChild(btn);
 });
 document.getElementById('search').addEventListener('input',e=>{searchText=e.target.value;renderBank();});
 
-// Cancel pending link on outside click
 document.addEventListener('click',e=>{
-  if (pendingLinkCtx&&!e.target.closest('.panel-left')&&!e.target.closest('.link-target')&&!e.target.closest('#pending-banner')) {
-    pendingLinkCtx=null; updatePendingBanner(); renderAll();
-  }
+  if (pendingLinkCtx&&!e.target.closest('.panel-left')&&!e.target.closest('.link-target')&&!e.target.closest('#pending-banner')) { pendingLinkCtx=null; updatePendingBanner(); renderAll(); }
 });
 
-// CR change
 document.getElementById('cr-select').addEventListener('change',()=>{
   const cr=getCR(); let changed=false;
   for (const b of blocks) {
     for (const g of b.groups) {
       if (g.isDuration) {
         if (g.durCount>cr){g.durCount=cr;changed=true;}
-        for (const lk of g.linked) { const qd=Q[lk.id]; if(qd&&!qd.isStatus&&!qd.flaw&&lk.count>cr){lk.count=cr;changed=true;} }
+        for (const lk of g.linked){const qd=Q[lk.id];if(qd&&!qd.isStatus&&!qd.flaw&&lk.count>cr){lk.count=cr;changed=true;}}
+        g.linked=g.linked.filter(lk=>lk.count>0);
+      } else if (g.isAccumulation) {
+        if (g.accumCount>cr){g.accumCount=cr;changed=true;}
         g.linked=g.linked.filter(lk=>lk.count>0);
       } else {
-        for (const it of g.items) { const qd=Q[it.id]; if(qd&&!qd.isStatus&&!qd.flaw&&it.count>cr){it.count=cr;changed=true;} }
+        for(const it of g.items){const qd=Q[it.id];if(qd&&!qd.isStatus&&!qd.flaw&&it.count>cr){it.count=cr;changed=true;}}
         g.items=g.items.filter(it=>it.count>0);
       }
     }
-    b.groups=b.groups.filter(g=>g.isDuration?g.durCount>0:g.items.length>0);
+    b.groups=b.groups.filter(g=>g.isDuration?g.durCount>0:g.isAccumulation?g.accumCount>0:g.items.length>0);
   }
   if(changed)showToast(`Qualities reduced to match CR ${cr}.`);
   renderAll();
 });
 
-// ─── Init ────────────────────────────────────────────────────────────────────────
+// ─── Init ─────────────────────────────────────────────────────────────────────────
 blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];
 activeBlockId=blocks[0].bid;
 renderBank();
