@@ -6,29 +6,14 @@
 <title>Exemplar Ability Builder</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f5f4f0; color: #1a1a1a;
-  height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-}
+body { font-family: system-ui, -apple-system, sans-serif; background: #f5f4f0; color: #1a1a1a; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; -webkit-tap-highlight-color: transparent; }
 
-/* ── HEADER ── */
-header {
-  background: #1e1b2e; color: #fff;
-  padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap;
-}
+header { background: #1e1b2e; color: #fff; padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
 header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .header-sub { font-size: 12px; color: #a89fc7; flex: 1; display: none; }
 @media (min-width: 700px) { .header-sub { display: block; } }
 
-/* Design toggles */
-.design-toggle {
-  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-  background: rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 12px;
-  cursor: pointer; user-select: none; transition: background 0.15s;
-  border: 1px solid rgba(255,255,255,0.1); touch-action: manipulation;
-}
+.design-toggle { display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 12px; cursor: pointer; user-select: none; transition: background 0.15s; border: 1px solid rgba(255,255,255,0.1); touch-action: manipulation; }
 .design-toggle:hover { background: rgba(255,255,255,0.12); }
 .design-toggle.preceptor.active { background: rgba(127,100,220,0.3); border-color: rgba(160,140,255,0.45); }
 .design-toggle.balancer.active  { background: rgba(30,140,100,0.3);  border-color: rgba(80,200,150,0.45); }
@@ -36,36 +21,16 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .design-toggle.balancer .dt-label { color: #a8d8c0; }
 .design-toggle.preceptor.active .dt-label { color: #ddd8ff; }
 .design-toggle.balancer.active .dt-label  { color: #d8fff0; }
-.toggle-pip {
-  width: 32px; height: 18px; border-radius: 9px; background: #444;
-  position: relative; transition: background 0.2s; flex-shrink: 0;
-}
+.toggle-pip { width: 32px; height: 18px; border-radius: 9px; background: #444; position: relative; transition: background 0.2s; flex-shrink: 0; }
 .design-toggle.preceptor.active .toggle-pip { background: #8f7fdd; }
 .design-toggle.balancer.active  .toggle-pip { background: #2a9e72; }
-.toggle-pip::after {
-  content: ''; position: absolute; top: 3px; left: 3px;
-  width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.2s;
-}
+.toggle-pip::after { content: ''; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
 .design-toggle.active .toggle-pip::after { transform: translateX(14px); }
 
-/* ── APP LAYOUT ── */
 .app { display: flex; flex: 1; overflow: hidden; }
 
-/* ── LEFT PANEL ── */
-.panel-left {
-  width: 300px; flex-shrink: 0; background: #fff;
-  border-right: 1px solid #e2e0da; display: flex; flex-direction: column; overflow: hidden;
-}
-@media (max-width: 699px) {
-  .panel-left {
-    position: fixed; inset: 0 0 0 0; width: 100%; z-index: 200;
-    transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1);
-    border-right: none; border-top: 1px solid #e2e0da;
-    border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
-    top: 20dvh;
-  }
-  .panel-left.open { transform: translateY(0); }
-}
+.panel-left { width: 300px; flex-shrink: 0; background: #fff; border-right: 1px solid #e2e0da; display: flex; flex-direction: column; overflow: hidden; }
+@media (max-width: 699px) { .panel-left { position: fixed; inset: 0 0 0 0; width: 100%; z-index: 200; transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1); border-right: none; border-top: 1px solid #e2e0da; border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.18); top: 20dvh; } .panel-left.open { transform: translateY(0); } }
 .drawer-handle { display: none; width: 40px; height: 5px; border-radius: 3px; background: #ccc; margin: 10px auto 6px; flex-shrink: 0; cursor: pointer; }
 @media (max-width: 699px) { .drawer-handle { display: block; } }
 .search-wrap { padding: 10px 12px; border-bottom: 1px solid #e2e0da; flex-shrink: 0; }
@@ -89,10 +54,8 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .quality-card .q-cat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-right: 8px; }
 .drawer-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199; opacity: 0; transition: opacity 0.25s; }
 .drawer-overlay.visible { opacity: 1; }
-@media (max-width: 699px) { .drawer-overlay { display: block; pointer-events: none; } }
-@media (max-width: 699px) { .drawer-overlay.visible { pointer-events: auto; } }
+@media (max-width: 699px) { .drawer-overlay { display: block; pointer-events: none; } .drawer-overlay.visible { pointer-events: auto; } }
 
-/* ── RIGHT PANEL ── */
 .panel-right { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 12px; gap: 10px; min-width: 0; }
 .ability-meta { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
 .meta-row-1 { display: flex; align-items: center; gap: 10px; }
@@ -113,10 +76,8 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .flaw-budget .fb-nums { font-weight: 700; color: #534ab7; }
 .flaw-budget.over .fb-nums { color: #e24b4a; }
 
-/* ── BUILDER AREA ── */
 .builder-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
 
-/* ── TARGET BLOCK ── */
 .target-block { background: #fff; border-radius: 10px; border: 2px dashed #d0cec8; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.15s, background 0.15s; cursor: pointer; }
 .target-block.drag-over { border-color: #7f77dd; background: #f4f2fd; }
 .target-block.has-target { border-style: solid; border-color: #c5c0e8; cursor: default; }
@@ -129,13 +90,9 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .block-delete:hover { color: #e24b4a; }
 .block-phase { font-size: 11px; color: #bbb; font-style: italic; padding: 2px 0; }
 
-/* Groups */
 .q-group { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; padding: 6px 8px; border-radius: 8px; border: 1px solid #eeece6; background: #fafaf8; }
 .q-group.has-duration { border-color: color-mix(in srgb,#7f77dd 30%,#e2e0da); background: color-mix(in srgb,#7f77dd 4%,#fff); }
-/* Accumulation group — green tint to match Status */
-.q-group.has-accumulation { border-color: color-mix(in srgb,#639922 35%,#e2e0da); background: color-mix(in srgb,#639922 5%,#fff); }
 
-/* Chips */
 .q-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid #e2e0da; background: #f9f8f6; font-size: 13px; font-weight: 500; cursor: default; white-space: nowrap; animation: popIn 0.12s ease; min-height: 32px; }
 @keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
 .q-chip .chip-name { color: #1a1a1a; }
@@ -143,28 +100,23 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .q-chip .chip-remove { cursor: pointer; color: #bbb; font-size: 16px; line-height: 1; transition: color 0.1s; margin-left: 3px; padding: 4px; margin: -4px -4px -4px 0; border-radius: 4px; touch-action: manipulation; display: flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; }
 .q-chip .chip-remove:hover, .q-chip .chip-remove:active { color: #e24b4a; background: rgba(226,75,74,0.08); }
 .q-chip.duration-head { border-color: color-mix(in srgb,#7f77dd 40%,#e2e0da); background: color-mix(in srgb,#7f77dd 10%,#fff); }
-.q-chip.accum-head { border-color: color-mix(in srgb,#639922 45%,#e2e0da); background: color-mix(in srgb,#639922 12%,#fff); }
+.q-chip.accum-tail { border-color: color-mix(in srgb,#639922 45%,#e2e0da); background: color-mix(in srgb,#639922 12%,#fff); }
 .q-chip { border-color: color-mix(in srgb,var(--cat,#e2e0da) 25%,#e2e0da); }
 .q-chip .chip-stack { color: var(--cat,#888); }
 .link-dash { font-size: 16px; font-weight: 700; color: #aaa; padding: 0 2px; }
 
-/* Link-target buttons */
 .link-target { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px; border: 1px dashed #7f77dd; color: #7f77dd; font-size: 12px; cursor: pointer; transition: background 0.12s; background: transparent; white-space: nowrap; min-height: 32px; touch-action: manipulation; }
 .link-target:hover, .link-target:active, .link-target.drag-hover { background: color-mix(in srgb,#7f77dd 12%,#fff); border-style: solid; }
 .link-target.pending { background: color-mix(in srgb,#7f77dd 18%,#fff); border-style: solid; color: #534ab7; }
-/* Accumulation link button — green */
-.link-target.accum-lt { border-color: #639922; color: #3b6d11; }
-.link-target.accum-lt:hover, .link-target.accum-lt:active, .link-target.accum-lt.drag-hover { background: color-mix(in srgb,#639922 10%,#fff); border-style: solid; }
-.link-target.accum-lt.pending { background: color-mix(in srgb,#639922 16%,#fff); border-style: solid; color: #27500a; }
-/* Contagious sub-link button — amber */
 .link-target.sub-lt { border-color: #b5590c; color: #b5590c; }
 .link-target.sub-lt:hover, .link-target.sub-lt:active, .link-target.sub-lt.drag-hover { background: color-mix(in srgb,#b5590c 10%,#fff); border-style: solid; }
 .link-target.sub-lt.pending { background: color-mix(in srgb,#b5590c 16%,#fff); border-style: solid; color: #7a3a08; }
+.link-target.accum-lt { border-color: #3b6d11; color: #3b6d11; }
+.link-target.accum-lt:hover, .link-target.accum-lt:active { background: color-mix(in srgb,#639922 10%,#fff); border-style: solid; }
 
 .q-group .group-delete { margin-left: auto; cursor: pointer; color: #ccc; font-size: 15px; transition: color 0.1s; flex-shrink: 0; padding: 4px 6px; min-width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
 .q-group .group-delete:hover, .q-group .group-delete:active { color: #e24b4a; }
 
-/* Bottom bar / buttons */
 .bottom-bar { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 8px 12px; background: #fff; border-top: 1px solid #e2e0da; }
 @media (min-width: 700px) { .bottom-bar { display: none; } }
 .btn-compound-desktop { font-size: 12px; padding: 8px 16px; border-radius: 8px; border: 1px dashed #534ab7; background: transparent; cursor: pointer; color: #534ab7; transition: all 0.12s; align-self: flex-start; flex-shrink: 0; touch-action: manipulation; display: none; }
@@ -182,28 +134,42 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .bb-btn.primary { background: #534ab7; border-color: #534ab7; color: #fff; }
 .bb-btn.primary:active { background: #3c3489; }
 
-/* FAB */
 .fab { display: none; position: fixed; right: 16px; bottom: 72px; width: 56px; height: 56px; border-radius: 50%; background: #534ab7; color: #fff; font-size: 28px; font-weight: 300; border: none; cursor: pointer; box-shadow: 0 4px 18px rgba(83,74,183,0.45); align-items: center; justify-content: center; z-index: 100; transition: transform 0.15s, box-shadow 0.15s; touch-action: manipulation; }
-.fab:active { transform: scale(0.93); box-shadow: 0 2px 10px rgba(83,74,183,0.35); }
+.fab:active { transform: scale(0.93); }
 @media (max-width: 699px) { .fab { display: flex; } }
 
-/* Pending banner */
-.pending-banner { display: none; background: #534ab7; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 500; text-align: center; flex-shrink: 0; border-radius: 8px; margin: 0; cursor: pointer; touch-action: manipulation; }
+.pending-banner { display: none; background: #534ab7; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 500; text-align: center; flex-shrink: 0; border-radius: 8px; cursor: pointer; touch-action: manipulation; }
 .pending-banner.visible { display: block; }
 
-/* Category colours */
-.cat-target    { --cat: #1d9e75; } .cat-range     { --cat: #378add; }
-.cat-potency   { --cat: #d85a30; } .cat-general   { --cat: #ba7517; }
-.cat-modifier  { --cat: #7f77dd; } .cat-animation { --cat: #d4537e; }
-.cat-status    { --cat: #639922; } .cat-condition { --cat: #b5590c; }
-.cat-design    { --cat: #378add; } .cat-flaw      { --cat: #e24b4a; }
+.cat-target { --cat: #1d9e75; } .cat-range     { --cat: #378add; }
+.cat-potency  { --cat: #d85a30; } .cat-general   { --cat: #ba7517; }
+.cat-modifier { --cat: #7f77dd; } .cat-animation { --cat: #d4537e; }
+.cat-status   { --cat: #639922; } .cat-condition { --cat: #b5590c; }
+.cat-design   { --cat: #378add; } .cat-flaw      { --cat: #e24b4a; }
 .q-cat-dot { background: var(--cat,#ccc); }
 
-/* Toast */
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); color: #fff; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.25); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 300; background: #2c2950; max-width: 90vw; text-align: center; }
 .toast.error { background: #c0392b; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (min-width: 700px) { .toast { bottom: 28px; } }
+
+/* Stack choice dialog */
+.stack-dialog-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:400; align-items:flex-end; justify-content:center; }
+.stack-dialog-overlay.visible { display:flex; }
+@media(min-width:700px){ .stack-dialog-overlay.visible { align-items:center; } }
+.stack-dialog { background:#fff; border-radius:16px 16px 0 0; padding:20px 20px 28px; width:100%; max-width:480px; display:flex; flex-direction:column; gap:10px; box-shadow:0 -4px 32px rgba(0,0,0,0.15); }
+@media(min-width:700px){ .stack-dialog { border-radius:16px; } }
+.stack-dialog-title { font-size:15px; font-weight:600; color:#1a1a1a; margin-bottom:2px; }
+.stack-dialog-sub { font-size:13px; color:#888; margin-bottom:4px; }
+.stack-dialog-opts { display:flex; flex-direction:column; gap:8px; }
+.stack-opt { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; border:1px solid #e2e0da; background:#fafaf8; cursor:pointer; transition:all 0.12s; touch-action:manipulation; text-align:left; }
+.stack-opt:hover, .stack-opt:active { border-color:#7f77dd; background:#f0eefb; }
+.stack-opt-icon { font-size:20px; flex-shrink:0; width:32px; text-align:center; }
+.stack-opt-text { flex:1; }
+.stack-opt-label { font-size:14px; font-weight:600; color:#1a1a1a; }
+.stack-opt-desc  { font-size:12px; color:#888; margin-top:1px; }
+.stack-dialog-cancel { font-size:13px; color:#aaa; text-align:center; cursor:pointer; padding:6px; touch-action:manipulation; }
+.stack-dialog-cancel:hover { color:#e24b4a; }
 
 .no-results { padding: 24px 12px; text-align: center; color: #bbb; font-size: 13px; }
 ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
@@ -218,7 +184,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
     <span class="dt-label">Preceptor Design</span>
     <div class="toggle-pip"></div>
   </div>
-  <div class="design-toggle balancer" id="balancer-toggle" title="Balancers can link two Status Effects to a single Duration or Accumulation quality">
+  <div class="design-toggle balancer" id="balancer-toggle" title="Balancers can link two Status Effects to a single Duration or Accumulation">
     <span class="dt-label">Balancer Design</span>
     <div class="toggle-pip"></div>
   </div>
@@ -235,8 +201,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
   </div>
 
   <div class="panel-right">
-    <div class="pending-banner" id="pending-banner">Tap a quality to link it — or tap here to cancel</div>
-
+    <div class="pending-banner" id="pending-banner">Tap a quality — or tap here to cancel</div>
     <div class="ability-meta">
       <div class="meta-row-1"><input type="text" id="ability-name" placeholder="Name your ability..."></div>
       <div class="meta-row-2">
@@ -251,26 +216,18 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
           </select>
         </div>
         <div class="meta-divider"></div>
-        <div class="ap-display">
-          <span class="ap-label">Ability Points:</span>
-          <span class="ap-value" id="ap-total">0</span>
-        </div>
+        <div class="ap-display"><span class="ap-label">Ability Points:</span><span class="ap-value" id="ap-total">0</span></div>
         <div class="meta-divider"></div>
-        <div class="flaw-budget" id="flaw-budget">
-          Flaws: <span class="fb-nums"><span id="flaw-used">0</span>/<span id="flaw-max">0</span></span>
-        </div>
+        <div class="flaw-budget" id="flaw-budget">Flaws: <span class="fb-nums"><span id="flaw-used">0</span>/<span id="flaw-max">0</span></span></div>
       </div>
     </div>
-
     <div class="builder-area" id="builder-area"></div>
     <button class="btn-compound-desktop" onclick="addCompoundBlock()">＋ Add Compound Target</button>
-
     <div class="summary-bar">
       <div class="breakdown" id="breakdown">No qualities added yet.</div>
       <button class="btn-clear" onclick="clearAll()">Clear</button>
       <button class="btn-export" onclick="exportAbility()">Export</button>
     </div>
-
     <div class="bottom-bar">
       <button class="bb-btn" onclick="clearAll()">Clear</button>
       <button class="bb-btn" onclick="addCompoundBlock()">＋ Compound</button>
@@ -282,14 +239,38 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 <button class="fab" id="fab" aria-label="Add quality">＋</button>
 <div class="toast" id="toast"></div>
 
+<!-- Stack/New choice dialog -->
+<div class="stack-dialog-overlay" id="stack-dialog-overlay">
+  <div class="stack-dialog">
+    <div class="stack-dialog-title" id="stack-dialog-title">Add quality</div>
+    <div class="stack-dialog-sub" id="stack-dialog-sub">This quality already exists in your ability.</div>
+    <div class="stack-dialog-opts" id="stack-dialog-opts"></div>
+    <div class="stack-dialog-cancel" id="stack-dialog-cancel">Cancel</div>
+  </div>
+</div>
+
 <script>
-// ─── Quality data ──────────────────────────────────────────────────────────────
+// ─── Data ──────────────────────────────────────────────────────────────────────
 //
-// isDuration      – creates a Duration group when dragged to zone
-// isAccumulation  – creates an Accumulation group when dragged to zone
-// isSubLink       – Contagious: must be sub-linked to a Condition inside a Duration group
-// durationLinkable – can be linked to a Duration head
-// accumLinkable   – can be linked to an Accumulation head (Status Effects)
+// Group data model:
+//
+//  Standalone group:
+//    { gid, isDuration:false, items:[{id,count}], accum:null|{count} }
+//    accum = Accumulation tail. When present, the group renders as:
+//      Status1 — Status2(Balancer only) — Accumulation
+//
+//  Duration group:
+//    { gid, isDuration:true, durCount, linked:[{id,count,subLinks:[{id,count}]}], accum:null|{count} }
+//    linked = Status Effects or Conditions chained after Duration head
+//    accum = optional Accumulation tail (only when linked are all Status Effects)
+//    Full Balancer example: Duration ×N — StatusA — StatusB — Accumulation ×M
+//
+// Rules:
+//   - Accumulation can only be added when at least one Status Effect exists in the group
+//   - Balancer: up to 2 Status Effects per group (Duration or standalone) before Accumulation
+//   - Normal:   up to 1 Status Effect per group before Accumulation
+//   - Preceptor: up to 2 Conditions per Duration group (no Accumulation with Conditions)
+//   - Accumulation is incompatible with Conditions (only Status Effects)
 
 const QUALITIES = [
   { id:'single',       name:'Single',        cat:'Target',   cost:1,  flaw:false },
@@ -306,14 +287,12 @@ const QUALITIES = [
   { id:'repel',        name:'Repel',         cat:'General',  cost:2,  flaw:false, durationLinkable:true },
   { id:'hidden',       name:'Hidden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true },
   { id:'abjured',      name:'Abjured',       cat:'General',  cost:3,  flaw:false, durationLinkable:true },
-  // Accumulation: creates its own linked group
   { id:'accumulation', name:'Accumulation',  cat:'General',  cost:3,  flaw:false, isAccumulation:true },
   { id:'artifice',     name:'Artifice',      cat:'Modifier', cost:1,  flaw:false },
   { id:'cleave',       name:'Cleave',        cat:'Modifier', cost:1,  flaw:false },
   { id:'cleave-15',    name:'Cleave Range 15',cat:'Modifier',cost:1,  flaw:false },
   { id:'cleave-30',    name:'Cleave Range 30',cat:'Modifier',cost:2,  flaw:false },
   { id:'concentrate',  name:'Concentrate',   cat:'Modifier', cost:1,  flaw:false },
-  // Contagious: sub-link only, must attach to a Condition inside a Duration group
   { id:'contagious',   name:'Contagious',    cat:'Modifier', cost:1,  flaw:false, isSubLink:true, subLinkTarget:'Condition' },
   { id:'defensive',    name:'Defensive',     cat:'Modifier', cost:1,  flaw:false },
   { id:'disperse',     name:'Disperse',      cat:'Modifier', cost:3,  flaw:false },
@@ -332,22 +311,22 @@ const QUALITIES = [
   { id:'animated',     name:'Animated',      cat:'Animation',cost:1,  flaw:false },
   { id:'attach',       name:'Attach',        cat:'Animation',cost:2,  flaw:false },
   { id:'detonate',     name:'Detonate',      cat:'Animation',cost:3,  flaw:false },
-  // Status Effects — Boons (durationLinkable + accumLinkable)
-  { id:'empower',      name:'Empower',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
-  { id:'hearten',      name:'Hearten',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
-  { id:'magnify',      name:'Magnify',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
-  { id:'protection',   name:'Protection',    cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true,accumLinkable:true },
-  { id:'attrition',    name:'Attrition',     cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
-  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
-  { id:'inoculate',    name:'Inoculate',     cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
+  // Status Effects — Boons (durationLinkable = can link to Duration)
+  { id:'empower',      name:'Empower',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'hearten',      name:'Hearten',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'magnify',      name:'Magnify',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'protection',   name:'Protection',    cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
+  { id:'attrition',    name:'Attrition',     cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'inoculate',    name:'Inoculate',     cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   // Status Effects — Banes
-  { id:'weaken',       name:'Weaken',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
-  { id:'wither',       name:'Wither',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
-  { id:'quell',        name:'Quell',         cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true,accumLinkable:true },
-  { id:'amplification',name:'Amplification', cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true,accumLinkable:true },
-  { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
-  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
-  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,accumLinkable:true },
+  { id:'weaken',       name:'Weaken',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'wither',       name:'Wither',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'quell',        name:'Quell',         cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'amplification',name:'Amplification', cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
+  { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   // Conditions — Glories
   { id:'invigorate',   name:'Invigorate',    cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'galvanize',    name:'Galvanize',     cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
@@ -374,14 +353,12 @@ const QUALITIES = [
   { id:'strain',       name:'Strain',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'restrain',     name:'Restrain',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'disparage',    name:'Disparage',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  // Design Actions
   { id:'emp-limited',  name:'Employ Limited Design Action',  cat:'Design',cost:1,flaw:false },
   { id:'emp-charge',   name:'Employ Charge Design Action',   cat:'Design',cost:2,flaw:false },
   { id:'add-employ',   name:'Additional Employ',             cat:'Design',cost:3,flaw:false },
   { id:'gain-limited', name:'Gain Limited Design Action',    cat:'Design',cost:2,flaw:false },
   { id:'gain-charge',  name:'Gain Charge Design Action',     cat:'Design',cost:3,flaw:false },
   { id:'gain-add-use', name:'Design Action Additional Use',  cat:'Design',cost:3,flaw:false },
-  // Flaws
   { id:'flaw-suffer',  name:'Ends on Suffering Action',    cat:'Flaw',cost:-3,flaw:true },
   { id:'flaw-malady',  name:'Ends on Receiving Malady',    cat:'Flaw',cost:-2,flaw:true },
   { id:'flaw-glory',   name:'Ends on Receiving Glory',     cat:'Flaw',cost:-3,flaw:true },
@@ -401,391 +378,360 @@ const QUALITIES = [
   { id:'flaw-unique',  name:'Unique Requirement',          cat:'Flaw',cost:-1,flaw:true },
 ];
 
-const Q = Object.fromEntries(QUALITIES.map(q => [q.id, q]));
-const CAT_CSS = {
-  Target:'cat-target', Range:'cat-range', Potency:'cat-potency', General:'cat-general',
-  Modifier:'cat-modifier', Animation:'cat-animation', Status:'cat-status', Condition:'cat-condition',
-  Design:'cat-design', Flaw:'cat-flaw',
-};
-const CATEGORIES = [...new Set(QUALITIES.map(q => q.cat))];
+const Q = Object.fromEntries(QUALITIES.map(q=>[q.id,q]));
+const CAT_CSS = { Target:'cat-target',Range:'cat-range',Potency:'cat-potency',General:'cat-general',Modifier:'cat-modifier',Animation:'cat-animation',Status:'cat-status',Condition:'cat-condition',Design:'cat-design',Flaw:'cat-flaw' };
+const CATEGORIES = [...new Set(QUALITIES.map(q=>q.cat))];
 
 // ─── State ─────────────────────────────────────────────────────────────────────
-//
-// groups[] can be one of three types:
-//   Standalone:   { gid, isDuration:false, isAccumulation:false, items:[{id,count}] }
-//   Duration:     { gid, isDuration:true,  isAccumulation:false, durCount, linked:[{id,count,subLinks:[]}] }
-//   Accumulation: { gid, isDuration:false, isAccumulation:true,  accumCount, linked:[{id,count}] }
-//
-// Balancer: can link 2 Status Effects to Duration or Accumulation
-// Preceptor: can link 2 Conditions to Duration
+let blocks=[], nextBid=1, nextGid=1;
+let dragId=null, pendingLinkCtx=null, activeBlockId=null;
+let activeFilter='All', searchText='';
+let isPreceptor=false, isBalancer=false, isDrawerOpen=false, toastTimer=null;
 
-let blocks = [];
-let nextBid = 1, nextGid = 1;
-let dragId = null;
-let pendingLinkCtx = null;
-let activeBlockId = null;
-let activeFilter = 'All', searchText = '';
-let isPreceptor = false;
-let isBalancer = false;
-let isDrawerOpen = false;
-let toastTimer = null;
+function getCR() { return parseInt(document.getElementById('cr-select').value,10); }
+function catClass(c) { return CAT_CSS[c]||''; }
+function isMobile() { return window.innerWidth<700; }
 
-function getCR() { return parseInt(document.getElementById('cr-select').value, 10); }
-function catClass(c) { return CAT_CSS[c] || ''; }
-function isMobile() { return window.innerWidth < 700; }
-
-// ─── Toast ──────────────────────────────────────────────────────────────────────
-function showToast(msg, err=false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast'+(err?' error':'')+' show';
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+function showToast(msg,err=false) {
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.className='toast'+(err?' error':'')+' show';
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-// ─── Drawer ─────────────────────────────────────────────────────────────────────
 function openDrawer()  { isDrawerOpen=true;  document.getElementById('panel-left').classList.add('open');    document.getElementById('drawer-overlay').classList.add('visible'); }
 function closeDrawer() { isDrawerOpen=false; document.getElementById('panel-left').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('visible'); }
-document.getElementById('fab').addEventListener('click', () => isDrawerOpen ? closeDrawer() : openDrawer());
-document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
-document.getElementById('drawer-handle').addEventListener('click', closeDrawer);
 
-// ─── Design toggles ─────────────────────────────────────────────────────────────
-document.getElementById('preceptor-toggle').addEventListener('click', () => {
-  isPreceptor = !isPreceptor;
-  document.getElementById('preceptor-toggle').classList.toggle('active', isPreceptor);
-  showToast(isPreceptor ? 'Preceptor Design enabled: Duration can link two Conditions.' : 'Preceptor Design disabled.');
-  renderAll();
-});
-document.getElementById('balancer-toggle').addEventListener('click', () => {
-  isBalancer = !isBalancer;
-  document.getElementById('balancer-toggle').classList.toggle('active', isBalancer);
-  showToast(isBalancer ? 'Balancer Design enabled: Duration and Accumulation can link two Status Effects.' : 'Balancer Design disabled.');
-  renderAll();
-});
-
-// ─── Pending banner ─────────────────────────────────────────────────────────────
-function updatePendingBanner() {
-  const banner = document.getElementById('pending-banner');
-  if (pendingLinkCtx) {
-    let msg;
-    if (pendingLinkCtx.type === 'link') {
-      msg = 'Tap a quality to link it to Duration — or tap here to cancel';
-    } else if (pendingLinkCtx.type === 'accum-link') {
-      msg = 'Tap a Status Effect to link it to Accumulation — or tap here to cancel';
-    } else if (pendingLinkCtx.type === 'sublink-pending') {
-      msg = `Tap + ${Q[pendingLinkCtx.qid]?.name} next to the ${pendingLinkCtx.subLinkTarget} quality to attach it — or tap here to cancel`;
-    } else {
-      msg = 'Tap a quality to link — or tap here to cancel';
-    }
-    banner.textContent = msg;
-    banner.classList.add('visible');
-  } else {
-    banner.classList.remove('visible');
+// ─── Stack/New choice dialog ──────────────────────────────────────────────────
+// options = [{label, desc, icon, action}]
+function showStackDialog(qualityName, options) {
+  const overlay = document.getElementById('stack-dialog-overlay');
+  const title   = document.getElementById('stack-dialog-title');
+  const sub     = document.getElementById('stack-dialog-sub');
+  const opts    = document.getElementById('stack-dialog-opts');
+  title.textContent = qualityName;
+  sub.textContent   = 'This quality already exists. Choose what to do:';
+  opts.innerHTML    = '';
+  for (const o of options) {
+    const btn = document.createElement('button');
+    btn.className = 'stack-opt';
+    btn.innerHTML = `<span class="stack-opt-icon">${o.icon}</span><div class="stack-opt-text"><div class="stack-opt-label">${o.label}</div><div class="stack-opt-desc">${o.desc}</div></div>`;
+    btn.addEventListener('click', () => { hideStackDialog(); o.action(); });
+    opts.appendChild(btn);
   }
+  overlay.classList.add('visible');
 }
-document.getElementById('pending-banner').addEventListener('click', () => { pendingLinkCtx=null; updatePendingBanner(); renderAll(); });
+function hideStackDialog() { document.getElementById('stack-dialog-overlay').classList.remove('visible'); }
+document.getElementById('stack-dialog-cancel').addEventListener('click', hideStackDialog);
+document.getElementById('stack-dialog-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideStackDialog(); });document.getElementById('fab').addEventListener('click',()=>isDrawerOpen?closeDrawer():openDrawer());
+document.getElementById('drawer-overlay').addEventListener('click',closeDrawer);
+document.getElementById('drawer-handle').addEventListener('click',closeDrawer);
 
-// ─── Global counts ──────────────────────────────────────────────────────────────
+document.getElementById('preceptor-toggle').addEventListener('click',()=>{
+  isPreceptor=!isPreceptor;
+  document.getElementById('preceptor-toggle').classList.toggle('active',isPreceptor);
+  showToast(isPreceptor?'Preceptor Design enabled.':'Preceptor Design disabled.');
+  renderAll();
+});
+document.getElementById('balancer-toggle').addEventListener('click',()=>{
+  isBalancer=!isBalancer;
+  document.getElementById('balancer-toggle').classList.toggle('active',isBalancer);
+  showToast(isBalancer?'Balancer Design enabled.':'Balancer Design disabled.');
+  renderAll();
+});
+
+function updatePendingBanner() {
+  const banner=document.getElementById('pending-banner');
+  if (!pendingLinkCtx) { banner.classList.remove('visible'); return; }
+  let msg='Tap a quality — or tap here to cancel';
+  if (pendingLinkCtx.type==='link') msg='Tap a quality to link to Duration — or tap here to cancel';
+  else if (pendingLinkCtx.type==='accum') msg='Click + Accumulation in your ability to place it — or tap here to cancel';
+  else if (pendingLinkCtx.type==='contagious') msg='Tap + Contagious next to a Condition in a Duration row — or tap here to cancel';
+  banner.textContent=msg; banner.classList.add('visible');
+}
+document.getElementById('pending-banner').addEventListener('click',()=>{ pendingLinkCtx=null; updatePendingBanner(); renderAll(); });
+
+// ─── Helpers ───────────────────────────────────────────────────────────────────
+function maxStatusLinks() { return isBalancer?2:1; }
+function maxConditionLinks() { return isPreceptor?2:1; }
+
+// Count how many Status Effects are in a group's linked array (Duration) or items array (standalone)
+function statusCountInGroup(g) {
+  if (g.isDuration) return g.linked.filter(lk=>Q[lk.id]?.cat==='Status').length;
+  return g.items.filter(it=>Q[it.id]?.cat==='Status').length;
+}
+
+// Returns true if this group can accept an Accumulation tail (or stack onto existing)
+function groupCanHaveAccum(g) {
+  const sc = statusCountInGroup(g);
+  if (sc===0) return false; // need at least one Status Effect
+  // If Duration group, linked must all be Status Effects (not Conditions)
+  if (g.isDuration && g.linked.some(lk=>Q[lk.id]?.cat!=='Status')) return false;
+  return true;
+}
+
 function globalCount(id) {
-  let n = 0;
+  let n=0;
   for (const b of blocks) {
-    if (b.targetId === id) n += (b.targetCount||1);
-    if (b.rangeId === id) n++;
+    if (b.targetId===id) n+=(b.targetCount||1);
+    if (b.rangeId===id) n++;
     for (const g of b.groups) {
+      if (id==='accumulation' && g.accum) n+=g.accum.count;
       if (g.isDuration) {
-        if (id === 'duration') n += g.durCount;
-        for (const lk of g.linked) {
-          if (lk.id === id) n += lk.count;
-          for (const sl of (lk.subLinks||[])) if (sl.id === id) n += sl.count;
-        }
-      } else if (g.isAccumulation) {
-        if (id === 'accumulation') n += g.accumCount;
-        for (const lk of g.linked) if (lk.id === id) n += lk.count;
+        if (id==='duration') n+=g.durCount;
+        for (const lk of g.linked) { if(lk.id===id)n+=lk.count; for(const sl of(lk.subLinks||[]))if(sl.id===id)n+=sl.count; }
       } else {
-        for (const it of g.items) if (it.id === id) n += it.count;
+        for (const it of g.items) { if(it.id===id)n+=it.count; }
       }
     }
   }
   return n;
 }
-function totalDurCount() { let n=0; for (const b of blocks) for (const g of b.groups) if (g.isDuration) n+=g.durCount; return n; }
-function totalAccumCount() { let n=0; for (const b of blocks) for (const g of b.groups) if (g.isAccumulation) n+=g.accumCount; return n; }
+function totalDurCount() { let n=0; for(const b of blocks)for(const g of b.groups)if(g.isDuration)n+=g.durCount; return n; }
 
-// ─── Validation ─────────────────────────────────────────────────────────────────
 function flawBudgetOk(qdef) {
-  const {baseCost,flawCost} = calcCosts();
-  const flawMax = Math.round(baseCost * 0.333);
-  if (flawCost + Math.abs(qdef.cost) > flawMax) {
-    showToast(`Flaw budget exceeded. Max reduction: ${flawMax} (33% of ${baseCost}).`, true); return false;
-  }
+  const {baseCost,flawCost}=calcCosts();
+  const max=Math.round(baseCost*0.333);
+  if (flawCost+Math.abs(qdef.cost)>max) { showToast(`Flaw budget exceeded. Max: ${max} (33% of ${baseCost}).`,true); return false; }
   return true;
 }
 
-function canAddToBlock(qdef, bid) {
-  if (qdef.flaw && !flawBudgetOk(qdef)) return false;
-  const cr = getCR(), b = blocks.find(x => x.bid === bid);
-  if (qdef.cat === 'Target') {
-    if (qdef.id === 'single' && b?.targetId === 'single') { showToast('Only one Single target per block.', true); return false; }
-    if (qdef.id === 'area' && b?.targetId === 'area' && (b.targetCount||1) >= 5) { showToast('Area maximum is 5.', true); return false; }
-    if (globalCount(qdef.id) >= cr) { showToast(`CR limit reached for ${qdef.name}.`, true); return false; }
+function canAddToBlock(qdef,bid) {
+  if (qdef.flaw&&!flawBudgetOk(qdef)) return false;
+  const cr=getCR(), b=blocks.find(x=>x.bid===bid);
+  if (qdef.cat==='Target') {
+    if (qdef.id==='single'&&b?.targetId==='single') { showToast('Only one Single target per block.',true); return false; }
+    if (qdef.id==='area'&&b?.targetId==='area'&&(b.targetCount||1)>=5) { showToast('Area maximum is 5.',true); return false; }
+    if (globalCount(qdef.id)>=cr) { showToast(`CR limit reached for ${qdef.name}.`,true); return false; }
     return true;
   }
-  if (qdef.cat === 'Range') { if (b?.rangeId) { showToast('Only one Range per block.', true); return false; } return true; }
-  if (qdef.isDuration)     { if (totalDurCount() >= cr)   { showToast('CR limit reached for Duration.', true); return false; } return true; }
-  if (qdef.isAccumulation) { if (totalAccumCount() >= cr) { showToast('CR limit reached for Accumulation.', true); return false; } return true; }
-  if (qdef.isStatus) {
-    if (qdef.statusMax != null && globalCount(qdef.id) >= qdef.statusMax) { showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`, true); return false; }
-    return true;
-  }
+  if (qdef.cat==='Range') { if(b?.rangeId){showToast('Only one Range per block.',true);return false;} return true; }
+  if (qdef.isDuration) { if(totalDurCount()>=cr){showToast('CR limit reached for Duration.',true);return false;} return true; }
+  if (qdef.isStatus) { if(qdef.statusMax!=null&&globalCount(qdef.id)>=qdef.statusMax){showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`,true);return false;} return true; }
   if (qdef.flaw) return true;
-  if (globalCount(qdef.id) >= cr) { showToast(`CR limit reached for ${qdef.name}.`, true); return false; }
+  if (globalCount(qdef.id)>=cr) { showToast(`CR limit reached for ${qdef.name}.`,true); return false; }
   return true;
 }
 
-// How many Status Effects can be linked to a Duration/Accumulation group?
-function maxStatusLinks() { return isBalancer ? 2 : 1; }
-// How many Conditions can be linked to a Duration group?
-function maxConditionLinks() { return isPreceptor ? 2 : 1; }
-
-function canLinkToDuration(qdef, g) {
-  if (!qdef.durationLinkable) { showToast(`${qdef.name} cannot link directly to Duration.`, true); return false; }
-  if (g.linked.length === 0) return true;
-  // Balancer: up to 2 Status Effects on Duration
-  if (qdef.cat === 'Status') {
-    const statusLinked = g.linked.filter(lk => Q[lk.id]?.cat === 'Status').length;
-    if (statusLinked >= maxStatusLinks()) {
-      showToast(isBalancer ? 'Duration can only link two Status Effects (Balancer rule).' : 'Duration can only link one Status Effect. Enable Balancer Design for two.', true); return false;
-    }
-    // Can't mix Status and non-Status in same group
-    const hasNonStatus = g.linked.some(lk => Q[lk.id]?.cat !== 'Status');
-    if (hasNonStatus) { showToast('Cannot mix Status Effects with other qualities on the same Duration.', true); return false; }
-    if (g.linked.length >= maxStatusLinks()) { showToast('Duration link slots full.', true); return false; }
+function canLinkToDuration(qdef,g) {
+  if (!qdef.durationLinkable) { showToast(`${qdef.name} cannot link to Duration.`,true); return false; }
+  if (g.accum) { showToast('Remove Accumulation from this group before adding more linked qualities.',true); return false; }
+  if (g.linked.length===0) return true;
+  const firstCat=Q[g.linked[0].id]?.cat;
+  if (qdef.cat==='Status') {
+    if (firstCat&&firstCat!=='Status') { showToast('Cannot mix Status Effects and Conditions on the same Duration.',true); return false; }
+    if (g.linked.filter(lk=>Q[lk.id]?.cat==='Status').length>=maxStatusLinks()) { showToast(isBalancer?'Balancer: max two Status Effects per Duration.':'One Status Effect per Duration. Enable Balancer Design for two.',true); return false; }
     return true;
   }
-  // Preceptor: up to 2 Conditions on Duration
-  if (qdef.cat === 'Condition') {
-    const condLinked = g.linked.filter(lk => Q[lk.id]?.cat === 'Condition').length;
-    if (condLinked >= maxConditionLinks()) {
-      showToast(isPreceptor ? 'Duration can only link two Conditions (Preceptor rule).' : 'Duration can only link one Condition. Enable Preceptor Design for two.', true); return false;
-    }
-    const hasNonCond = g.linked.some(lk => Q[lk.id]?.cat !== 'Condition');
-    if (hasNonCond) { showToast('Cannot mix Conditions with other qualities on the same Duration.', true); return false; }
-    if (g.linked.length >= maxConditionLinks()) { showToast('Duration link slots full.', true); return false; }
+  if (qdef.cat==='Condition') {
+    if (firstCat&&firstCat!=='Condition') { showToast('Cannot mix Conditions and Status Effects on the same Duration.',true); return false; }
+    if (g.linked.filter(lk=>Q[lk.id]?.cat==='Condition').length>=maxConditionLinks()) { showToast(isPreceptor?'Preceptor: max two Conditions per Duration.':'One Condition per Duration. Enable Preceptor Design for two.',true); return false; }
     return true;
   }
-  // Any other durationLinkable quality: only 1 allowed, no mixing
-  if (g.linked.length >= 1) {
-    showToast('Duration can only link one quality of this type.', true); return false;
-  }
+  if (g.linked.length>=1) { showToast('Duration can only link one quality of this type.',true); return false; }
   return true;
 }
 
-function canLinkToAccumulation(qdef, g) {
-  if (!qdef.accumLinkable) { showToast(`${qdef.name} cannot be linked to Accumulation.`, true); return false; }
-  if (qdef.cat !== 'Status') { showToast('Accumulation can only link to Status Effects (Boons and Banes).', true); return false; }
-  if (g.linked.length === 0) return true;
-  const statusLinked = g.linked.filter(lk => Q[lk.id]?.cat === 'Status').length;
-  if (statusLinked >= maxStatusLinks()) {
-    showToast(isBalancer ? 'Accumulation can only link two Status Effects (Balancer rule).' : 'Accumulation can only link one Status Effect. Enable Balancer Design for two.', true); return false;
-  }
-  if (g.linked.length >= maxStatusLinks()) { showToast('Accumulation link slots full.', true); return false; }
-  return true;
-}
-
-function canSubLink(qdef, parentId) {
-  const parent = Q[parentId];
-  if (!parent || parent.cat !== qdef.subLinkTarget) {
-    showToast(`${qdef.name} must link to a ${qdef.subLinkTarget} quality.`, true); return false;
-  }
-  return true;
-}
-
-// ─── Block phase ────────────────────────────────────────────────────────────────
-function blockPhase(b) { if (!b.targetId) return 'target'; if (!b.rangeId) return 'range'; return 'effects'; }
-
-// ─── Cost calculation ────────────────────────────────────────────────────────────
+// ─── Cost ──────────────────────────────────────────────────────────────────────
 function calcCosts() {
   let baseCost=0, flawCost=0;
   for (const b of blocks) {
-    if (b.targetId) baseCost += Q[b.targetId].cost*(b.targetCount||1);
-    if (b.rangeId)  baseCost += Q[b.rangeId].cost;
+    if (b.targetId) baseCost+=Q[b.targetId].cost*(b.targetCount||1);
+    if (b.rangeId)  baseCost+=Q[b.rangeId].cost;
     for (const g of b.groups) {
+      if (g.accum) baseCost+=3*g.accum.count;
       if (g.isDuration) {
-        baseCost += 2*g.durCount;
-        for (const lk of g.linked) { const qd=Q[lk.id]; if(qd) baseCost+=qd.cost*lk.count; for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)baseCost+=sq.cost*sl.count;} }
-      } else if (g.isAccumulation) {
-        baseCost += 3*g.accumCount; // Accumulation costs 3
-        for (const lk of g.linked) { const qd=Q[lk.id]; if(qd) baseCost+=qd.cost*lk.count; }
+        baseCost+=2*g.durCount;
+        for (const lk of g.linked) { const qd=Q[lk.id];if(qd)baseCost+=qd.cost*lk.count; for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)baseCost+=sq.cost*sl.count;} }
       } else {
-        for (const it of g.items) { const qd=Q[it.id]; if(!qd) continue; qd.flaw ? flawCost+=Math.abs(qd.cost)*it.count : baseCost+=qd.cost*it.count; }
+        for (const it of g.items) { const qd=Q[it.id];if(!qd)continue; qd.flaw?flawCost+=Math.abs(qd.cost)*it.count:baseCost+=qd.cost*it.count; }
       }
     }
   }
-  return { baseCost, flawCost, total: baseCost-flawCost };
+  return {baseCost,flawCost,total:baseCost-flawCost};
 }
 
-// ─── Mutations ──────────────────────────────────────────────────────────────────
-function addToBlock(bid, qid) {
+// ─── Mutations ─────────────────────────────────────────────────────────────────
+function addToBlock(bid,qid) {
   const b=blocks.find(x=>x.bid===bid), qdef=Q[qid];
   if (!b||!qdef) return;
   const phase=blockPhase(b);
-  if (phase==='target' && qdef.cat!=='Target') { showToast('Choose a Target quality first.', true); return; }
+  if (phase==='target'&&qdef.cat!=='Target') { showToast('Choose a Target quality first.',true); return; }
 
-  // Accumulation: opens a new Accumulation group
   if (qdef.isAccumulation) {
-    if (!canAddToBlock(qdef,bid)) return;
-    b.groups.push({gid:nextGid++,isDuration:false,isAccumulation:true,accumCount:1,linked:[]});
-    renderAll(); return;
+    // Find all groups in this ability that can accept an Accumulation tail
+    const eligible=[];
+    for (const bl of blocks) for (const g of bl.groups) if (groupCanHaveAccum(g)) eligible.push({bid:bl.bid,gid:g.gid});
+    if (eligible.length===0) {
+      showToast('Add a Status Effect first. Accumulation must be paired with at least one Status Effect.',true); return;
+    }
+    if (eligible.length===1) {
+      // Auto-attach (or stack) if only one eligible group
+      addAccumToGroup(eligible[0].gid); return;
+    }
+    // Multiple options — enter pending mode, show + Accumulation buttons on each eligible group
+    pendingLinkCtx={type:'accum'}; updatePendingBanner(); renderAll(); return;
   }
 
-  // Contagious: sub-link to a Condition inside a Duration group
   if (qdef.isSubLink) {
+    // Contagious — needs a Condition inside a Duration group
     const matches=[];
-    for (const bl of blocks) for (const g of bl.groups) { if (!g.isDuration) continue; for (const lk of g.linked) { const lkDef=Q[lk.id]; if (lkDef&&lkDef.cat===qdef.subLinkTarget) matches.push({gid:g.gid,linkedId:lk.id}); } }
-    if (matches.length===0) { showToast(`${qdef.name} must be linked to a ${qdef.subLinkTarget} inside a Duration row. Add a ${qdef.subLinkTarget} to a Duration first.`, true); }
-    else { pendingLinkCtx={type:'sublink-pending',qid:qdef.id,subLinkTarget:qdef.subLinkTarget}; updatePendingBanner(); renderAll(); }
-    return;
+    for (const bl of blocks) for (const g of bl.groups) { if(!g.isDuration)continue; for(const lk of g.linked){const lkDef=Q[lk.id];if(lkDef&&lkDef.cat==='Condition')matches.push({gid:g.gid,linkedId:lk.id});} }
+    if (matches.length===0) { showToast('Add a Condition to a Duration row first, then click Contagious.',true); return; }
+    pendingLinkCtx={type:'contagious',filterCat:'Condition'}; updatePendingBanner(); renderAll(); return;
   }
 
   if (!canAddToBlock(qdef,bid)) return;
+
   if (qdef.cat==='Target') {
-    if (!b.targetId) { b.targetId=qid; b.targetCount=1; }
+    if (!b.targetId){b.targetId=qid;b.targetCount=1;}
     else if (b.targetId===qid&&qid!=='single') b.targetCount++;
-    else { showToast('Only one Target type per block.', true); return; }
+    else { showToast('Only one Target type per block.',true); return; }
     renderAll(); return;
   }
   if (qdef.cat==='Range') { b.rangeId=qid; renderAll(); return; }
-  if (qdef.isDuration) { b.groups.push({gid:nextGid++,isDuration:true,isAccumulation:false,durCount:1,linked:[]}); renderAll(); return; }
-  // Standard quality — stack
-  for (let i=b.groups.length-1;i>=0;i--) { const g=b.groups[i]; if (!g.isDuration&&!g.isAccumulation) { const it=g.items.find(x=>x.id===qid); if(it){it.count++;renderAll();return;} } }
-  const last=[...b.groups].reverse().find(g=>!g.isDuration&&!g.isAccumulation);
+  if (qdef.isDuration) { b.groups.push({gid:nextGid++,isDuration:true,durCount:1,linked:[],accum:null}); renderAll(); return; }
+
+  // Standard quality — check if it already exists anywhere in the ability
+  const existingInStandalone = [];
+  for (const bl of blocks) for (const g of bl.groups) if (!g.isDuration) { const it=g.items.find(x=>x.id===qid); if(it) existingInStandalone.push({g,it,bl}); }
+  const existingInDuration = [];
+  for (const bl of blocks) for (const g of bl.groups) if (g.isDuration) { const lk=g.linked.find(x=>x.id===qid); if(lk) existingInDuration.push({g,lk,bl}); }
+  const hasExisting = existingInStandalone.length > 0 || existingInDuration.length > 0;
+
+  if (hasExisting) {
+    const opts = [];
+    // Stack options — one per existing instance
+    for (const {g,it} of existingInStandalone) {
+      const label = `Stack onto ${qdef.name}${it.count>1?` ×${it.count}`:''}`;
+      const desc  = `Increase to ×${it.count+1} (standalone)`;
+      opts.push({ icon:'＋', label, desc, action:()=>{ if(canAddToBlock(qdef,b.bid)){it.count++;renderAll();} } });
+    }
+    for (const {g,lk} of existingInDuration) {
+      const label = `Stack onto ${qdef.name}${lk.count>1?` ×${lk.count}`:''}`;
+      const desc  = `Increase to ×${lk.count+1} (inside Duration)`;
+      opts.push({ icon:'＋', label, desc, action:()=>{ if(canAddToBlock(qdef,b.bid)){lk.count++;renderAll();} } });
+    }
+    // New option
+    opts.push({ icon:'◈', label:`Add new ${qdef.name}`, desc:'Create a separate new instance', action:()=>{
+      if(!canAddToBlock(qdef,bid))return;
+      const last=[...b.groups].reverse().find(g=>!g.isDuration);
+      if(last){const existing=last.items.find(x=>x.id===qid);if(existing&&existingInStandalone.some(e=>e.g===last)){showToast('Already stacked on this group. Use Stack instead.',true);return;}last.items.push({id:qid,count:1});}
+      else b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1}],accum:null});
+      renderAll();
+    }});
+    if(isMobile())closeDrawer();
+    showStackDialog(qdef.name, opts);
+    return;
+  }
+
+  // No existing instance — add normally
+  const last=[...b.groups].reverse().find(g=>!g.isDuration);
   if (last) last.items.push({id:qid,count:1});
-  else b.groups.push({gid:nextGid++,isDuration:false,isAccumulation:false,items:[{id:qid,count:1}]});
+  else b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1}],accum:null});
   renderAll();
 }
 
-function linkToGroup(gid, qid) {
-  const qdef=Q[qid]; if (!qdef) return;
+function linkToGroup(gid,qid) {
+  const qdef=Q[qid]; if(!qdef)return;
   for (const b of blocks) {
-    const g=b.groups.find(x=>x.gid===gid); if (!g) continue;
-    if (g.isDuration) {
-      if (qdef.isDuration) { if (!canAddToBlock(qdef,b.bid)) return; g.durCount++; renderAll(); return; }
-      if (!canLinkToDuration(qdef,g)) return;
-      if (!canAddToBlock(qdef,b.bid)) return;
-      const ex=g.linked.find(x=>x.id===qid); if(ex) ex.count++; else g.linked.push({id:qid,count:1,subLinks:[]});
-      renderAll(); return;
+    const g=b.groups.find(x=>x.gid===gid); if(!g||!g.isDuration)continue;
+    if (qdef.isDuration){if(!canAddToBlock(qdef,b.bid))return;g.durCount++;renderAll();return;}
+    // Check if already linked in this Duration group
+    const ex=g.linked.find(x=>x.id===qid);
+    if (ex) {
+      // Already linked — offer stack vs new (new = add to standalone)
+      showStackDialog(qdef.name,[
+        { icon:'＋', label:`Stack onto ${qdef.name} ×${ex.count}`, desc:`Increase to ×${ex.count+1} (inside this Duration)`,
+          action:()=>{ if(!canAddToBlock(qdef,b.bid))return; ex.count++; renderAll(); } },
+        { icon:'◈', label:`Add new ${qdef.name}`, desc:'Link as a separate instance on this Duration (if slots available)',
+          action:()=>{
+            if(!canLinkToDuration(qdef,g))return;
+            if(!canAddToBlock(qdef,b.bid))return;
+            g.linked.push({id:qid,count:1,subLinks:[]});
+            renderAll();
+          }
+        }
+      ]);
+      return;
     }
-    if (g.isAccumulation) {
-      if (qdef.isAccumulation) { if (!canAddToBlock(qdef,b.bid)) return; g.accumCount++; renderAll(); return; }
-      if (!canLinkToAccumulation(qdef,g)) return;
-      if (!canAddToBlock(qdef,b.bid)) return;
-      const ex=g.linked.find(x=>x.id===qid); if(ex) ex.count++; else g.linked.push({id:qid,count:1});
-      renderAll(); return;
-    }
-  }
-}
-
-function linkAccumToGroup(gid, qid) {
-  // Called when user taps a Status Effect while pendingLinkCtx.type === 'accum-link'
-  const qdef=Q[qid]; if (!qdef) return;
-  if (qdef.cat!=='Status') { showToast('Accumulation can only link to Status Effects.', true); return; }
-  for (const b of blocks) {
-    const g=b.groups.find(x=>x.gid===gid); if (!g||!g.isAccumulation) continue;
-    if (!canLinkToAccumulation(qdef,g)) return;
-    if (!canAddToBlock(qdef,b.bid)) return;
-    const ex=g.linked.find(x=>x.id===qid); if(ex) ex.count++; else g.linked.push({id:qid,count:1});
+    if (!canLinkToDuration(qdef,g))return;
+    if (!canAddToBlock(qdef,b.bid))return;
+    g.linked.push({id:qid,count:1,subLinks:[]});
     renderAll(); return;
   }
 }
 
-function subLinkToLinked(gid, linkedId, qid) {
-  const qdef=Q[qid]; if (!qdef||!qdef.isSubLink) return;
-  if (!canSubLink(qdef,linkedId)) return;
+function addAccumToGroup(gid) {
   for (const b of blocks) {
-    const g=b.groups.find(x=>x.gid===gid); if (!g||!g.isDuration) continue;
-    const lk=g.linked.find(x=>x.id===linkedId); if (!lk) continue;
-    if (!lk.subLinks) lk.subLinks=[];
-    const ex=lk.subLinks.find(x=>x.id===qid); if(ex) ex.count++; else lk.subLinks.push({id:qid,count:1});
-    renderAll(); return;
+    const g=b.groups.find(x=>x.gid===gid); if(!g)continue;
+    if (g.accum) {
+      // Already has Accumulation — just increment
+      g.accum.count++; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
+    }
+    if (!groupCanHaveAccum(g)){showToast('Cannot add Accumulation to this group.',true);return;}
+    g.accum={count:1}; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
   }
 }
 
-function decrementInBlock(bid,gid,itemId,mode,parentLinkedId) {
-  // mode: 'item' | 'durHead' | 'accumHead' | 'linked' | 'sublink'
-  const b=blocks.find(x=>x.bid===bid); if (!b) return;
-  const g=b.groups.find(x=>x.gid===gid); if (!g) return;
-  if (mode==='durHead') {
-    g.durCount--; if (g.durCount<=0) b.groups=b.groups.filter(x=>x.gid!==gid);
-  } else if (mode==='accumHead') {
-    g.accumCount--; if (g.accumCount<=0) b.groups=b.groups.filter(x=>x.gid!==gid);
-  } else if (mode==='sublink') {
-    const lk=g.linked.find(x=>x.id===parentLinkedId); if (!lk||!lk.subLinks) return;
-    const sl=lk.subLinks.find(x=>x.id===itemId); if (!sl) return;
-    sl.count--; if (sl.count<=0) lk.subLinks=lk.subLinks.filter(x=>x.id!==itemId);
-  } else if (mode==='linked') {
-    const arr=g.linked; const it=arr.find(x=>x.id===itemId); if (!it) return;
-    it.count--; if (it.count<=0) g.linked=g.linked.filter(x=>x.id!==itemId);
-  } else {
-    const it=g.items.find(x=>x.id===itemId); if (!it) return;
-    it.count--; if (it.count<=0) g.items=g.items.filter(x=>x.id!==itemId);
-    if (g.items.length===0) b.groups=b.groups.filter(x=>x.gid!==gid);
+function addContagiousToLinked(gid,linkedId) {
+  for (const b of blocks) {
+    const g=b.groups.find(x=>x.gid===gid); if(!g||!g.isDuration)continue;
+    const lk=g.linked.find(x=>x.id===linkedId); if(!lk)continue;
+    if (!lk.subLinks)lk.subLinks=[];
+    const ex=lk.subLinks.find(x=>x.id==='contagious'); if(ex)ex.count++; else lk.subLinks.push({id:'contagious',count:1});
+    pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
   }
-  renderAll();
 }
 
-function decrementTarget(bid) { const b=blocks.find(x=>x.bid===bid); if(!b||!b.targetId)return; b.targetCount=(b.targetCount||1)-1; if(b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;} renderAll(); }
-function removeRangeFromBlock(bid) { const b=blocks.find(x=>x.bid===bid); if(b){b.rangeId=null;renderAll();} }
-function removeGroup(bid,gid) { const b=blocks.find(x=>x.bid===bid); if(b){b.groups=b.groups.filter(x=>x.gid!==gid);renderAll();} }
-function removeBlock(bid) { blocks=blocks.filter(x=>x.bid!==bid); renderAll(); }
-function addCompoundBlock() { blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]}); if(isMobile())showToast('Compound block added. Tap it to make it active.'); renderAll(); }
-function clearAll() { blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}]; activeBlockId=null; renderAll(); }
+function decrementTarget(bid) { const b=blocks.find(x=>x.bid===bid);if(!b||!b.targetId)return;b.targetCount=(b.targetCount||1)-1;if(b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;}renderAll(); }
+function removeRangeFromBlock(bid) { const b=blocks.find(x=>x.bid===bid);if(b){b.rangeId=null;renderAll();} }
+function removeGroup(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(b){b.groups=b.groups.filter(x=>x.gid!==gid);renderAll();} }
+function removeAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(g)g.accum=null;renderAll(); }
+function decrementAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(!g||!g.accum)return;g.accum.count--;if(g.accum.count<=0)g.accum=null;renderAll(); }
+function removeBlock(bid) { blocks=blocks.filter(x=>x.bid!==bid);renderAll(); }
+function addCompoundBlock() { blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]});if(isMobile())showToast('Compound block added. Tap it to make it active.');renderAll(); }
+function clearAll() { blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];activeBlockId=null;renderAll(); }
+function blockPhase(b) { if(!b.targetId)return'target';if(!b.rangeId)return'range';return'effects'; }
 
-// ─── Chip builder ────────────────────────────────────────────────────────────────
-function makeChip(id, count, bid, gid, mode, extraClass, parentLinkedId) {
-  const qdef=Q[id]; if(!qdef) return document.createTextNode('');
+// ─── Chip ─────────────────────────────────────────────────────────────────────
+function makeChip(id,count,extraClass,onRemove) {
+  const qdef=Q[id]; if(!qdef)return document.createTextNode('');
   const chip=document.createElement('div');
   chip.className=`q-chip ${catClass(qdef.cat)}${extraClass?' '+extraClass:''}`;
   const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
   chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${stackStr}<span class="chip-remove" role="button" aria-label="Remove ${qdef.name}">−</span>`;
-  chip.querySelector('.chip-remove').addEventListener('click', e => {
-    e.stopPropagation();
-    decrementInBlock(bid, gid, id, mode, parentLinkedId||null);
-  });
+  chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();onRemove();});
   return chip;
 }
 
-// ─── Active block ────────────────────────────────────────────────────────────────
+// ─── Active block ─────────────────────────────────────────────────────────────
 function setActiveBlock(bid) { activeBlockId=bid; renderAll(); }
 
-// ─── Render ──────────────────────────────────────────────────────────────────────
+// ─── Render ───────────────────────────────────────────────────────────────────
 function renderAll() {
-  const area=document.getElementById('builder-area');
-  area.innerHTML='';
+  const area=document.getElementById('builder-area'); area.innerHTML='';
   const summaryParts=[];
-
-  if (activeBlockId&&!blocks.find(b=>b.bid===activeBlockId)) activeBlockId=null;
-  if (!activeBlockId&&blocks.length) activeBlockId=blocks[0].bid;
+  if (activeBlockId&&!blocks.find(b=>b.bid===activeBlockId))activeBlockId=null;
+  if (!activeBlockId&&blocks.length)activeBlockId=blocks[0].bid;
 
   for (const b of blocks) {
     const phase=blockPhase(b);
     const blockDiv=document.createElement('div');
     blockDiv.className='target-block'+(b.targetId?' has-target':'')+(b.bid===activeBlockId?' active-block':'');
     blockDiv.dataset.bid=b.bid;
-    blockDiv.addEventListener('click', e=>{
-      if (e.target.closest('.chip-remove,.group-delete,.block-delete,.link-target,.q-chip,.q-group')) return;
+    blockDiv.addEventListener('click',e=>{
+      if(e.target.closest('.chip-remove,.group-delete,.block-delete,.link-target,.q-chip,.q-group'))return;
       setActiveBlock(b.bid);
     });
 
-    // Header
     const hdr=document.createElement('div'); hdr.className='block-header';
     const lbl=document.createElement('span'); lbl.className='block-label'+(b.isCompound?' compound':'');
     lbl.textContent=b.isCompound?'⊕ Compound Target':'◈ Primary Target'; hdr.appendChild(lbl);
-    if (b.bid===activeBlockId) { const badge=document.createElement('span'); badge.className='block-active-badge'; badge.textContent='ACTIVE'; hdr.appendChild(badge); }
-    if (b.isCompound) { const del=document.createElement('span'); del.className='block-delete'; del.textContent='✕'; del.addEventListener('click',e=>{e.stopPropagation();removeBlock(b.bid);}); hdr.appendChild(del); }
+    if (b.bid===activeBlockId){const badge=document.createElement('span');badge.className='block-active-badge';badge.textContent='ACTIVE';hdr.appendChild(badge);}
+    if (b.isCompound){const del=document.createElement('span');del.className='block-delete';del.textContent='✕';del.addEventListener('click',e=>{e.stopPropagation();removeBlock(b.bid);});hdr.appendChild(del);}
     blockDiv.appendChild(hdr);
 
-    // Target + Range row
     if (b.targetId) {
       const tRow=document.createElement('div'); tRow.className='q-group';
       const tq=Q[b.targetId]; const tChip=document.createElement('div'); tChip.className=`q-chip ${catClass(tq.cat)}`;
@@ -793,89 +739,112 @@ function renderAll() {
       tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}<span class="chip-remove" role="button">−</span>`;
       tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();decrementTarget(b.bid);});
       tRow.appendChild(tChip);
-      if (b.rangeId) { const rq=Q[b.rangeId]; const rChip=document.createElement('div'); rChip.className=`q-chip ${catClass(rq.cat)}`; rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`; rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);}); tRow.appendChild(rChip); }
-      const gd=document.createElement('span'); gd.className='group-delete'; gd.textContent='✕'; gd.addEventListener('click',e=>{e.stopPropagation();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();}); tRow.appendChild(gd);
+      if (b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
+      const gd=document.createElement('span');gd.className='group-delete';gd.textContent='✕';gd.addEventListener('click',e=>{e.stopPropagation();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();});tRow.appendChild(gd);
       blockDiv.appendChild(tRow);
-      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`; if(b.rangeId) bLabel+=` / ${Q[b.rangeId].name}`; summaryParts.push(bLabel);
+      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`;if(b.rangeId)bLabel+=` / ${Q[b.rangeId].name}`;summaryParts.push(bLabel);
     }
 
-    if (phase!=='effects') { const ph=document.createElement('div'); ph.className='block-phase'; ph.textContent=phase==='target'?'← Tap a Target quality first (Single, Multi-Target, or Area)':'← Tap a Range quality next, or skip and add an effect quality'; blockDiv.appendChild(ph); }
+    if (phase!=='effects'){const ph=document.createElement('div');ph.className='block-phase';ph.textContent=phase==='target'?'← Tap a Target quality first (Single, Multi-Target, or Area)':'← Tap a Range quality next, or skip and add an effect quality';blockDiv.appendChild(ph);}
 
-    // Effect groups
     for (const g of b.groups) {
       const gDiv=document.createElement('div');
+      gDiv.className='q-group'+(g.isDuration?' has-duration':'');
 
       if (g.isDuration) {
-        gDiv.className='q-group has-duration';
-        gDiv.appendChild(makeChip('duration',g.durCount,b.bid,g.gid,'durHead','duration-head',null));
+        // Duration head
+        gDiv.appendChild(makeChip('duration',g.durCount,'duration-head',()=>{
+          g.durCount--; if(g.durCount<=0)b.groups=b.groups.filter(x=>x.gid!==g.gid); renderAll();
+        }));
+
+        // Linked qualities (Status Effects or Conditions)
         for (const lk of g.linked) {
-          const dash=document.createElement('span'); dash.className='link-dash'; dash.textContent='—'; gDiv.appendChild(dash);
-          gDiv.appendChild(makeChip(lk.id,lk.count,b.bid,g.gid,'linked',null,null));
+          const dash=document.createElement('span');dash.className='link-dash';dash.textContent='—';gDiv.appendChild(dash);
+          gDiv.appendChild(makeChip(lk.id,lk.count,null,()=>{
+            lk.count--;
+            if(lk.count<=0){g.linked=g.linked.filter(x=>x.id!==lk.id);if(g.linked.length===0)g.accum=null;}
+            renderAll();
+          }));
+          // Contagious sub-links
           for (const sl of (lk.subLinks||[])) {
-            const slDash=document.createElement('span'); slDash.className='link-dash'; slDash.textContent='—'; gDiv.appendChild(slDash);
-            gDiv.appendChild(makeChip(sl.id,sl.count,b.bid,g.gid,'sublink',null,lk.id));
+            const slDash=document.createElement('span');slDash.className='link-dash';slDash.textContent='—';gDiv.appendChild(slDash);
+            gDiv.appendChild(makeChip(sl.id,sl.count,null,()=>{
+              sl.count--;if(sl.count<=0)lk.subLinks=lk.subLinks.filter(x=>x.id!==sl.id);renderAll();
+            }));
           }
-          // Contagious sub-link button (only on Condition linked qualities)
-          const isSubPending=pendingLinkCtx?.type==='sublink-pending'&&Q[lk.id]?.cat===pendingLinkCtx.subLinkTarget;
-          if (isSubPending) {
-            const existingSub=(lk.subLinks||[]).find(x=>x.id===pendingLinkCtx.qid);
-            const slBtn=document.createElement('button'); slBtn.className='link-target sub-lt'; slBtn.textContent=existingSub?`+1 ${Q[pendingLinkCtx.qid].name}`:`+ ${Q[pendingLinkCtx.qid].name}`;
-            slBtn.addEventListener('click',e=>{e.stopPropagation();subLinkToLinked(g.gid,lk.id,pendingLinkCtx.qid);pendingLinkCtx=null;updatePendingBanner();renderAll();}); gDiv.appendChild(slBtn);
+          // + Contagious button when pending
+          if (pendingLinkCtx?.type==='contagious'&&Q[lk.id]?.cat==='Condition') {
+            const existingSub=(lk.subLinks||[]).find(x=>x.id==='contagious');
+            const cBtn=document.createElement('button');cBtn.className='link-target sub-lt';cBtn.textContent=existingSub?'+1 Contagious':'+ Contagious';
+            cBtn.addEventListener('click',e=>{e.stopPropagation();addContagiousToLinked(g.gid,lk.id);});gDiv.appendChild(cBtn);
           }
         }
-        // Link-quality button for Duration
+
+        // Accumulation tail
+        if (g.accum) {
+          const aDash=document.createElement('span');aDash.className='link-dash';aDash.textContent='—';gDiv.appendChild(aDash);
+          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid)));
+        }
+
+        // + Accumulation button (when pending and this group is eligible)
+        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)) {
+          const aBtn=document.createElement('button');aBtn.className='link-target accum-lt';aBtn.textContent='+ Accumulation';
+          aBtn.addEventListener('click',e=>{e.stopPropagation();addAccumToGroup(g.gid);});gDiv.appendChild(aBtn);
+        }
+
+        // + Link Quality button
         const durLinked=g.linked.length;
-        const durMax = (() => {
-          if (durLinked===0) return true;
-          const firstCat=Q[g.linked[0].id]?.cat;
-          if (firstCat==='Status')    return durLinked < maxStatusLinks();
-          if (firstCat==='Condition') return durLinked < maxConditionLinks();
+        const canLinkMore=(()=>{
+          if(g.accum)return false;
+          if(durLinked===0)return true;
+          const fc=Q[g.linked[0].id]?.cat;
+          if(fc==='Status')return durLinked<maxStatusLinks();
+          if(fc==='Condition')return durLinked<maxConditionLinks();
           return false;
         })();
-        if (durMax) {
+        if (canLinkMore) {
           const lBtn=document.createElement('button');
           const isLinkPending=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;
-          lBtn.className='link-target'+(isLinkPending?' pending':''); lBtn.textContent='+ Link quality';
+          lBtn.className='link-target'+(isLinkPending?' pending':'');lBtn.textContent='+ Link Quality';
           lBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.add('drag-hover');});
           lBtn.addEventListener('dragleave',()=>lBtn.classList.remove('drag-hover'));
           lBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.remove('drag-hover');if(dragId){linkToGroup(g.gid,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
           lBtn.addEventListener('click',e=>{e.stopPropagation();const already=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;pendingLinkCtx=already?null:{type:'link',gid:g.gid};updatePendingBanner();if(pendingLinkCtx&&isMobile())openDrawer();renderAll();});
           gDiv.appendChild(lBtn);
         }
+
         const dLabel=`Duration${g.durCount>1?` ×${g.durCount}`:''}`;
         const lParts=g.linked.map(lk=>{const qd=Q[lk.id];let s=qd?qd.name+(lk.count>1?` ×${lk.count}`:''):'';for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)s+=` — ${sq.name}`;}return s;}).filter(Boolean);
-        summaryParts.push(lParts.length?`${dLabel} — ${lParts.join(', ')}`:dLabel);
-
-      } else if (g.isAccumulation) {
-        gDiv.className='q-group has-accumulation';
-        gDiv.appendChild(makeChip('accumulation',g.accumCount,b.bid,g.gid,'accumHead','accum-head',null));
-        for (const lk of g.linked) {
-          const dash=document.createElement('span'); dash.className='link-dash'; dash.textContent='—'; gDiv.appendChild(dash);
-          gDiv.appendChild(makeChip(lk.id,lk.count,b.bid,g.gid,'linked',null,null));
-        }
-        // Link Status Effect button for Accumulation
-        const accumLinked=g.linked.length;
-        const canLinkMore=accumLinked < maxStatusLinks();
-        if (canLinkMore) {
-          const aBtn=document.createElement('button');
-          const isAccumPending=pendingLinkCtx?.type==='accum-link'&&pendingLinkCtx.gid===g.gid;
-          aBtn.className='link-target accum-lt'+(isAccumPending?' pending':''); aBtn.textContent='+ Link Status Effect';
-          aBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();aBtn.classList.add('drag-hover');});
-          aBtn.addEventListener('dragleave',()=>aBtn.classList.remove('drag-hover'));
-          aBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();aBtn.classList.remove('drag-hover');if(dragId){linkToGroup(g.gid,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
-          aBtn.addEventListener('click',e=>{e.stopPropagation();const already=pendingLinkCtx?.type==='accum-link'&&pendingLinkCtx.gid===g.gid;pendingLinkCtx=already?null:{type:'accum-link',gid:g.gid};updatePendingBanner();if(pendingLinkCtx&&isMobile())openDrawer();renderAll();});
-          gDiv.appendChild(aBtn);
-        }
-        const aLabel=`Accumulation${g.accumCount>1?` ×${g.accumCount}`:''}`;
-        const aParts=g.linked.map(lk=>{const qd=Q[lk.id];return qd?qd.name+(lk.count>1?` ×${lk.count}`:''):'';}).filter(Boolean);
-        summaryParts.push(aParts.length?`${aLabel} — ${aParts.join(', ')}`:aLabel);
+        let dSummary=lParts.length?`${dLabel} — ${lParts.join(', ')}`:dLabel;
+        if(g.accum)dSummary+=` — Accumulation${g.accum.count>1?` ×${g.accum.count}`:''}`;
+        summaryParts.push(dSummary);
 
       } else {
-        gDiv.className='q-group';
-        for (const it of g.items) { gDiv.appendChild(makeChip(it.id,it.count,b.bid,g.gid,'item',null,null)); const qd=Q[it.id]; if(qd) summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:'')); }
+        // Standalone group
+        for (const it of g.items) {
+          gDiv.appendChild(makeChip(it.id,it.count,null,()=>{
+            it.count--;
+            if(it.count<=0){g.items=g.items.filter(x=>x.id!==it.id);if(g.items.filter(x=>Q[x.id]?.cat==='Status').length===0)g.accum=null;}
+            if(g.items.length===0)b.groups=b.groups.filter(x=>x.gid!==g.gid);
+            renderAll();
+          }));
+          const qd=Q[it.id];if(qd)summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:''));
+        }
+
+        // Accumulation tail
+        if (g.accum) {
+          const aDash=document.createElement('span');aDash.className='link-dash';aDash.textContent='—';gDiv.appendChild(aDash);
+          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid)));
+        }
+
+        // + Accumulation button (when pending and this group is eligible)
+        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)) {
+          const aBtn=document.createElement('button');aBtn.className='link-target accum-lt';aBtn.textContent='+ Accumulation';
+          aBtn.addEventListener('click',e=>{e.stopPropagation();addAccumToGroup(g.gid);});gDiv.appendChild(aBtn);
+        }
       }
 
-      const gDel=document.createElement('span'); gDel.className='group-delete'; gDel.textContent='✕'; gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);}); gDiv.appendChild(gDel);
+      const gDel=document.createElement('span');gDel.className='group-delete';gDel.textContent='✕';gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);});gDiv.appendChild(gDel);
       blockDiv.appendChild(gDiv);
     }
 
@@ -883,24 +852,17 @@ function renderAll() {
     blockDiv.addEventListener('dragover',e=>{if(!e.target.closest('.link-target')){e.preventDefault();blockDiv.classList.add('drag-over');}});
     blockDiv.addEventListener('dragleave',e=>{if(!blockDiv.contains(e.relatedTarget))blockDiv.classList.remove('drag-over');});
     blockDiv.addEventListener('drop',e=>{
-      blockDiv.classList.remove('drag-over');
-      if (e.target.closest('.link-target')) return;
-      e.preventDefault();
-      if (dragId) {
-        if (pendingLinkCtx) {
-          if (pendingLinkCtx.type==='link') linkToGroup(pendingLinkCtx.gid,dragId);
-          else if (pendingLinkCtx.type==='accum-link') linkToGroup(pendingLinkCtx.gid,dragId);
-          else if (pendingLinkCtx.type==='sublink-pending') { /* handled by button */ }
-          pendingLinkCtx=null; updatePendingBanner();
-        } else addToBlock(b.bid,dragId);
+      blockDiv.classList.remove('drag-over'); if(e.target.closest('.link-target'))return; e.preventDefault();
+      if(dragId){
+        if(pendingLinkCtx?.type==='link')linkToGroup(pendingLinkCtx.gid,dragId);
+        else addToBlock(b.bid,dragId);
+        if(pendingLinkCtx&&pendingLinkCtx.type==='link'){pendingLinkCtx=null;updatePendingBanner();}
         dragId=null;
       }
     });
-
     area.appendChild(blockDiv);
   }
 
-  // Totals
   const {baseCost,flawCost,total}=calcCosts();
   document.getElementById('ap-total').textContent=total;
   document.getElementById('ap-total').className='ap-value'+(total<0?' negative':'');
@@ -911,12 +873,16 @@ function renderAll() {
   document.getElementById('breakdown').textContent=summaryParts.join(' · ')||'No qualities added yet.';
 }
 
-// ─── Bank render ─────────────────────────────────────────────────────────────────
+// ─── Bank render ──────────────────────────────────────────────────────────────
 function renderBank() {
   const list=document.getElementById('quality-list');
   const s=searchText.toLowerCase();
-  const filtered=QUALITIES.filter(q=>(!s||q.name.toLowerCase().includes(s)||q.cat.toLowerCase().includes(s))&&(activeFilter==='All'||q.cat===activeFilter));
-  if (!filtered.length) { list.innerHTML='<div class="no-results">No qualities match.</div>'; return; }
+  const forceCat=pendingLinkCtx?.filterCat||null;
+  const filtered=QUALITIES.filter(q=>{
+    if(forceCat&&q.cat!==forceCat)return false;
+    return (!s||q.name.toLowerCase().includes(s)||q.cat.toLowerCase().includes(s))&&(activeFilter==='All'||q.cat===activeFilter||forceCat);
+  });
+  if(!filtered.length){list.innerHTML='<div class="no-results">No qualities match.</div>';return;}
   const byCat={};
   filtered.forEach(q=>{(byCat[q.cat]=byCat[q.cat]||[]).push(q);});
   list.innerHTML=Object.entries(byCat).map(([cat,items])=>`
@@ -934,45 +900,43 @@ function renderBank() {
     card.addEventListener('dragstart',e=>{dragId=card.dataset.id;card.classList.add('dragging');e.dataTransfer.effectAllowed='copy';});
     card.addEventListener('dragend',()=>card.classList.remove('dragging'));
     card.addEventListener('click',()=>{
-      if (pendingLinkCtx) {
-        if (pendingLinkCtx.type==='link') linkToGroup(pendingLinkCtx.gid,card.dataset.id);
-        else if (pendingLinkCtx.type==='accum-link') linkToGroup(pendingLinkCtx.gid,card.dataset.id);
-        else if (pendingLinkCtx.type==='sublink-pending') {
-          // Let it fall through — only the + button in the drop zone handles the actual sub-link
-          // but show error if not the right type
-          const qdef=Q[card.dataset.id];
-          if (!qdef||qdef.cat!==pendingLinkCtx.subLinkTarget) { showToast(`Please tap a + ${Q[pendingLinkCtx.qid]?.name} button next to the correct quality in your ability.`, true); return; }
-        }
-        pendingLinkCtx=null; updatePendingBanner(); if(isMobile())closeDrawer();
+      if(pendingLinkCtx?.type==='link'){
+        linkToGroup(pendingLinkCtx.gid,card.dataset.id);
+        pendingLinkCtx=null;updatePendingBanner();if(isMobile())closeDrawer();
+      } else if(pendingLinkCtx?.type==='contagious') {
+        showToast('Tap the + Contagious button next to a Condition in a Duration row.',false);
+      } else if(pendingLinkCtx?.type==='accum') {
+        showToast('Tap the + Accumulation button next to a group in your ability.',false);
       } else {
         const bid=activeBlockId||(blocks[blocks.length-1]?.bid);
-        if (bid!=null) addToBlock(bid,card.dataset.id);
-        if (isMobile()) closeDrawer();
+        if(bid!=null)addToBlock(bid,card.dataset.id);
+        if(isMobile())closeDrawer();
       }
     });
   });
 }
 
-// ─── Export ──────────────────────────────────────────────────────────────────────
+// ─── Export ───────────────────────────────────────────────────────────────────
 function exportAbility() {
   const name=document.getElementById('ability-name').value||'Unnamed Ability';
-  const cr=getCR(); const {baseCost,flawCost,total}=calcCosts(); const lines=[];
+  const cr=getCR();const{baseCost,flawCost,total}=calcCosts();const lines=[];
   const designs=[isPreceptor?'Preceptor':null,isBalancer?'Balancer':null].filter(Boolean);
-  for (const b of blocks) {
-    if (b.isCompound) lines.push('');
-    if (b.targetId) { const tq=Q[b.targetId]; lines.push(`  + ${tq.name} (${tq.cost}×${b.targetCount||1})`); }
-    if (b.rangeId) { const rq=Q[b.rangeId]; lines.push(`    + ${rq.name} (${rq.cost}×1)`); }
-    for (const g of b.groups) {
-      if (g.isDuration) {
+  for(const b of blocks){
+    if(b.isCompound)lines.push('');
+    if(b.targetId){const tq=Q[b.targetId];lines.push(`  + ${tq.name} (${tq.cost}×${b.targetCount||1})`);}
+    if(b.rangeId){const rq=Q[b.rangeId];lines.push(`    + ${rq.name} (${rq.cost}×1)`);}
+    for(const g of b.groups){
+      if(g.isDuration){
         let line=`    + Duration (2×${g.durCount})`;
-        for (const lk of g.linked) { const qd=Q[lk.id];if(!qd)continue;line+=` - ${qd.name} (${qd.cost}×${lk.count})`;for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)line+=` - ${sq.name} (${sq.cost}×${sl.count})`;} }
-        lines.push(line);
-      } else if (g.isAccumulation) {
-        let line=`    + Accumulation (3×${g.accumCount})`;
-        for (const lk of g.linked) { const qd=Q[lk.id];if(!qd)continue;line+=` - ${qd.name} (${qd.cost}×${lk.count})`; }
+        for(const lk of g.linked){const qd=Q[lk.id];if(!qd)continue;line+=` - ${qd.name} (${qd.cost}×${lk.count})`;for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)line+=` - ${sq.name} (${sq.cost}×${sl.count})`;}}
+        if(g.accum)line+=` - Accumulation (3×${g.accum.count})`;
         lines.push(line);
       } else {
-        for (const it of g.items) { const qd=Q[it.id];if(!qd)continue;lines.push(`    ${qd.flaw?'*':'+'} ${qd.name} (${qd.cost}×${it.count})`); }
+        let line='   ';
+        const itemStrs=g.items.map(it=>{const qd=Q[it.id];return qd?` + ${qd.name} (${qd.cost}×${it.count})`:''}).join('');
+        line+=itemStrs;
+        if(g.accum)line+=` - Accumulation (3×${g.accum.count})`;
+        if(line.trim())lines.push(line);
       }
     }
   }
@@ -982,45 +946,44 @@ function exportAbility() {
     +`Base Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n\n`
     +lines.join('\n')
   ],{type:'text/plain'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`${name.replace(/\s+/g,'_')}.txt`; a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${name.replace(/\s+/g,'_')}.txt`;a.click();
 }
 
-// ─── Filters ─────────────────────────────────────────────────────────────────────
+// ─── Filters ──────────────────────────────────────────────────────────────────
 const filterRow=document.getElementById('filter-row');
 ['All',...CATEGORIES].forEach(cat=>{
-  const btn=document.createElement('button'); btn.className='filter-btn'+(cat==='All'?' active':''); btn.textContent=cat;
-  btn.addEventListener('click',()=>{ activeFilter=cat; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderBank(); });
+  const btn=document.createElement('button');btn.className='filter-btn'+(cat==='All'?' active':'');btn.textContent=cat;
+  btn.addEventListener('click',()=>{activeFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderBank();});
   filterRow.appendChild(btn);
 });
 document.getElementById('search').addEventListener('input',e=>{searchText=e.target.value;renderBank();});
 
 document.addEventListener('click',e=>{
-  if (pendingLinkCtx&&!e.target.closest('.panel-left')&&!e.target.closest('.link-target')&&!e.target.closest('#pending-banner')) { pendingLinkCtx=null; updatePendingBanner(); renderAll(); }
+  if(pendingLinkCtx&&!e.target.closest('.panel-left')&&!e.target.closest('.link-target')&&!e.target.closest('#pending-banner')){pendingLinkCtx=null;updatePendingBanner();renderAll();}
 });
 
 document.getElementById('cr-select').addEventListener('change',()=>{
-  const cr=getCR(); let changed=false;
-  for (const b of blocks) {
-    for (const g of b.groups) {
-      if (g.isDuration) {
-        if (g.durCount>cr){g.durCount=cr;changed=true;}
-        for (const lk of g.linked){const qd=Q[lk.id];if(qd&&!qd.isStatus&&!qd.flaw&&lk.count>cr){lk.count=cr;changed=true;}}
+  const cr=getCR();let changed=false;
+  for(const b of blocks){
+    for(const g of b.groups){
+      if(g.isDuration){
+        if(g.durCount>cr){g.durCount=cr;changed=true;}
+        for(const lk of g.linked){const qd=Q[lk.id];if(qd&&!qd.isStatus&&!qd.flaw&&lk.count>cr){lk.count=cr;changed=true;}}
         g.linked=g.linked.filter(lk=>lk.count>0);
-      } else if (g.isAccumulation) {
-        if (g.accumCount>cr){g.accumCount=cr;changed=true;}
-        g.linked=g.linked.filter(lk=>lk.count>0);
+        if(g.linked.filter(lk=>Q[lk.id]?.cat==='Status').length===0)g.accum=null;
       } else {
         for(const it of g.items){const qd=Q[it.id];if(qd&&!qd.isStatus&&!qd.flaw&&it.count>cr){it.count=cr;changed=true;}}
         g.items=g.items.filter(it=>it.count>0);
+        if(g.items.filter(it=>Q[it.id]?.cat==='Status').length===0)g.accum=null;
       }
     }
-    b.groups=b.groups.filter(g=>g.isDuration?g.durCount>0:g.isAccumulation?g.accumCount>0:g.items.length>0);
+    b.groups=b.groups.filter(g=>g.isDuration?g.durCount>0:g.items.length>0);
   }
   if(changed)showToast(`Qualities reduced to match CR ${cr}.`);
   renderAll();
 });
 
-// ─── Init ─────────────────────────────────────────────────────────────────────────
+// ─── Init ─────────────────────────────────────────────────────────────────────
 blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];
 activeBlockId=blocks[0].bid;
 renderBank();
