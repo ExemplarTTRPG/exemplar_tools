@@ -97,6 +97,8 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 @keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
 .q-chip .chip-name { color: #1a1a1a; }
 .q-chip .chip-stack { font-size: 11px; font-weight: 700; }
+.q-chip .chip-add { cursor: pointer; color: #7f77dd; font-size: 16px; line-height: 1; transition: color 0.1s; margin-left: 1px; padding: 4px; margin: -4px 0 -4px 0; border-radius: 4px; touch-action: manipulation; display: flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; }
+.q-chip .chip-add:hover, .q-chip .chip-add:active { color: #534ab7; background: rgba(83,74,183,0.1); }
 .q-chip .chip-remove { cursor: pointer; color: #bbb; font-size: 16px; line-height: 1; transition: color 0.1s; margin-left: 3px; padding: 4px; margin: -4px -4px -4px 0; border-radius: 4px; touch-action: manipulation; display: flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; }
 .q-chip .chip-remove:hover, .q-chip .chip-remove:active { color: #e24b4a; background: rgba(226,75,74,0.08); }
 .q-chip.duration-head { border-color: color-mix(in srgb,#7f77dd 40%,#e2e0da); background: color-mix(in srgb,#7f77dd 10%,#fff); }
@@ -283,10 +285,10 @@ const QUALITIES = [
   { id:'healing',      name:'Healing',       cat:'Potency',  cost:1,  flaw:false, durationLinkable:true },
   { id:'burden',       name:'Burden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true },
   { id:'boost',        name:'Boost',         cat:'General',  cost:3,  flaw:false, durationLinkable:true },
-  { id:'tether',       name:'Tether',        cat:'General',  cost:2,  flaw:false, durationLinkable:true },
-  { id:'repel',        name:'Repel',         cat:'General',  cost:2,  flaw:false, durationLinkable:true },
-  { id:'hidden',       name:'Hidden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true },
-  { id:'abjured',      name:'Abjured',       cat:'General',  cost:3,  flaw:false, durationLinkable:true },
+  { id:'tether',       name:'Tether',        cat:'General',  cost:2,  flaw:false, durationLinkable:true, noStack:true },
+  { id:'repel',        name:'Repel',         cat:'General',  cost:2,  flaw:false, durationLinkable:true, noStack:true },
+  { id:'hidden',       name:'Hidden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
+  { id:'abjured',      name:'Abjured',       cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
   { id:'accumulation', name:'Accumulation',  cat:'General',  cost:3,  flaw:false, isAccumulation:true },
   { id:'artifice',     name:'Artifice',      cat:'Modifier', cost:1,  flaw:false },
   { id:'cleave',       name:'Cleave',        cat:'Modifier', cost:1,  flaw:false },
@@ -294,17 +296,17 @@ const QUALITIES = [
   { id:'cleave-30',    name:'Cleave Range 30',cat:'Modifier',cost:2,  flaw:false },
   { id:'concentrate',  name:'Concentrate',   cat:'Modifier', cost:1,  flaw:false },
   { id:'contagious',   name:'Contagious',    cat:'Modifier', cost:1,  flaw:false, isSubLink:true, subLinkTarget:'Condition' },
-  { id:'defensive',    name:'Defensive',     cat:'Modifier', cost:1,  flaw:false },
+  { id:'defensive',    name:'Defensive',     cat:'Modifier', cost:1,  flaw:false, noStack:true },
   { id:'disperse',     name:'Disperse',      cat:'Modifier', cost:3,  flaw:false },
   { id:'duration',     name:'Duration',      cat:'Modifier', cost:2,  flaw:false, isDuration:true },
-  { id:'dynamic',      name:'Dynamic',       cat:'Modifier', cost:1,  flaw:false },
+  { id:'dynamic',      name:'Dynamic',       cat:'Modifier', cost:1,  flaw:false, noStack:true },
   { id:'efficiency',   name:'Efficiency',    cat:'Modifier', cost:3,  flaw:false },
-  { id:'enjoin',       name:'Enjoin',        cat:'Modifier', cost:1,  flaw:false },
+  { id:'enjoin',       name:'Enjoin',        cat:'Modifier', cost:1,  flaw:false, noStack:true },
   { id:'enjoin-trig',  name:'Enjoin Trigger Charge', cat:'Modifier', cost:2, flaw:false },
-  { id:'escalating',   name:'Escalating',    cat:'Modifier', cost:3,  flaw:false },
-  { id:'gambit',       name:'Gambit',        cat:'Modifier', cost:1,  flaw:false },
-  { id:'on-next',      name:'On Next',       cat:'Modifier', cost:1,  flaw:false },
-  { id:'reactive',     name:'Reactive',      cat:'Modifier', cost:1,  flaw:false },
+  { id:'escalating',   name:'Escalating',    cat:'Modifier', cost:3,  flaw:false, noStack:true },
+  { id:'gambit',       name:'Gambit',        cat:'Modifier', cost:1,  flaw:false, noStack:true },
+  { id:'on-next',      name:'On Next',       cat:'Modifier', cost:1,  flaw:false, noStack:true },
+  { id:'reactive',     name:'Reactive',      cat:'Modifier', cost:1,  flaw:false, noStack:true },
   { id:'repeating',    name:'Repeating',     cat:'Modifier', cost:1,  flaw:false },
   { id:'reposition',   name:'Reposition',    cat:'Modifier', cost:1,  flaw:false },
   { id:'suspend',      name:'Suspend',       cat:'Modifier', cost:1,  flaw:false },
@@ -327,32 +329,32 @@ const QUALITIES = [
   { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  // Conditions — Glories
-  { id:'invigorate',   name:'Invigorate',    cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'galvanize',    name:'Galvanize',     cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'determined',   name:'Determined',    cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'courage',      name:'Courage',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'prepare',      name:'Prepare',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'temper',       name:'Temper',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'hasten',       name:'Hasten',        cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'quicken',      name:'Quicken',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'elude',        name:'Elude',         cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'stimulate',    name:'Stimulate',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'freedom',      name:'Freedom',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'enkindle',     name:'Enkindle',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  // Conditions — Maladies
-  { id:'fatigue',      name:'Fatigue',       cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'torpor',       name:'Torpor',        cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'blind',        name:'Blind',         cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'fear',         name:'Fear',          cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'unbalance',    name:'Unbalance',     cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'sunder',       name:'Sunder',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'root',         name:'Root',          cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'exhaust',      name:'Exhaust',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'ambush',       name:'Ambush',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'strain',       name:'Strain',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'restrain',     name:'Restrain',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'disparage',    name:'Disparage',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  // Conditions — Glories (do not stack)
+  { id:'invigorate',   name:'Invigorate',    cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'galvanize',    name:'Galvanize',     cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'determined',   name:'Determined',    cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'courage',      name:'Courage',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'prepare',      name:'Prepare',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'temper',       name:'Temper',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'hasten',       name:'Hasten',        cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'quicken',      name:'Quicken',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'elude',        name:'Elude',         cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'stimulate',    name:'Stimulate',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'freedom',      name:'Freedom',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'enkindle',     name:'Enkindle',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  // Conditions — Maladies (do not stack; Ambush also cannot have Duration increased)
+  { id:'fatigue',      name:'Fatigue',       cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'torpor',       name:'Torpor',        cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'blind',        name:'Blind',         cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'fear',         name:'Fear',          cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'unbalance',    name:'Unbalance',     cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'sunder',       name:'Sunder',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'root',         name:'Root',          cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'exhaust',      name:'Exhaust',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'ambush',       name:'Ambush',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:false,noStack:true },
+  { id:'strain',       name:'Strain',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'restrain',     name:'Restrain',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
+  { id:'disparage',    name:'Disparage',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
   { id:'emp-limited',  name:'Employ Limited Design Action',  cat:'Design',cost:1,flaw:false },
   { id:'emp-charge',   name:'Employ Charge Design Action',   cat:'Design',cost:2,flaw:false },
   { id:'add-employ',   name:'Additional Employ',             cat:'Design',cost:3,flaw:false },
@@ -599,6 +601,10 @@ function addToBlock(bid,qid) {
   for (const bl of blocks) for (const g of bl.groups) if (g.isDuration) { const lk=g.linked.find(x=>x.id===qid); if(lk) existingInDuration.push({g,lk,bl}); }
   const hasExisting = existingInStandalone.length > 0 || existingInDuration.length > 0;
 
+  if (hasExisting && qdef.noStack) {
+    showToast(`${qdef.name} does not stack. Use the − button to remove the existing one first.`, true); return;
+  }
+
   if (hasExisting) {
     const opts = [];
     // Stack options — one per existing instance
@@ -695,13 +701,17 @@ function clearAll() { blocks=[{bid:nextBid++,isCompound:false,targetId:null,targ
 function blockPhase(b) { if(!b.targetId)return'target';if(!b.rangeId)return'range';return'effects'; }
 
 // ─── Chip ─────────────────────────────────────────────────────────────────────
-function makeChip(id,count,extraClass,onRemove) {
+// onAdd: if provided AND quality is stackable, shows a + button
+function makeChip(id, count, extraClass, onRemove, onAdd) {
   const qdef=Q[id]; if(!qdef)return document.createTextNode('');
   const chip=document.createElement('div');
   chip.className=`q-chip ${catClass(qdef.cat)}${extraClass?' '+extraClass:''}`;
   const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
-  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${stackStr}<span class="chip-remove" role="button" aria-label="Remove ${qdef.name}">−</span>`;
-  chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();onRemove();});
+  // Show + only if onAdd is provided and quality is stackable
+  const showAdd = onAdd && !qdef.noStack;
+  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${stackStr}${showAdd?`<span class="chip-add" role="button" aria-label="Add one more ${qdef.name}">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button" aria-label="Remove ${qdef.name}">−</span>`:''}`;
+  if (showAdd) chip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();onAdd();});
+  if (onRemove) chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();onRemove();});
   return chip;
 }
 
@@ -736,7 +746,9 @@ function renderAll() {
       const tRow=document.createElement('div'); tRow.className='q-group';
       const tq=Q[b.targetId]; const tChip=document.createElement('div'); tChip.className=`q-chip ${catClass(tq.cat)}`;
       const ss=(b.targetCount||1)>1?`<span class="chip-stack">${b.targetCount}×${tq.cost}</span>`:'';
-      tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}<span class="chip-remove" role="button">−</span>`;
+      const tCanAdd = tq.id!=='single';
+      tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}${tCanAdd?`<span class="chip-add" role="button">＋</span>`:''}${`<span class="chip-remove" role="button">−</span>`}`;
+      if(tCanAdd) tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();if(canAddToBlock(tq,b.bid))b.targetCount++;renderAll();});
       tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();decrementTarget(b.bid);});
       tRow.appendChild(tChip);
       if (b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
@@ -755,6 +767,8 @@ function renderAll() {
         // Duration head
         gDiv.appendChild(makeChip('duration',g.durCount,'duration-head',()=>{
           g.durCount--; if(g.durCount<=0)b.groups=b.groups.filter(x=>x.gid!==g.gid); renderAll();
+        },()=>{
+          if(!canAddToBlock(Q['duration'],b.bid))return; g.durCount++; renderAll();
         }));
 
         // Linked qualities (Status Effects or Conditions)
@@ -764,13 +778,15 @@ function renderAll() {
             lk.count--;
             if(lk.count<=0){g.linked=g.linked.filter(x=>x.id!==lk.id);if(g.linked.length===0)g.accum=null;}
             renderAll();
+          },()=>{
+            if(!canAddToBlock(Q[lk.id],b.bid))return; lk.count++; renderAll();
           }));
           // Contagious sub-links
           for (const sl of (lk.subLinks||[])) {
             const slDash=document.createElement('span');slDash.className='link-dash';slDash.textContent='—';gDiv.appendChild(slDash);
             gDiv.appendChild(makeChip(sl.id,sl.count,null,()=>{
               sl.count--;if(sl.count<=0)lk.subLinks=lk.subLinks.filter(x=>x.id!==sl.id);renderAll();
-            }));
+            },()=>{ sl.count++; renderAll(); }));
           }
           // + Contagious button when pending
           if (pendingLinkCtx?.type==='contagious'&&Q[lk.id]?.cat==='Condition') {
@@ -783,16 +799,14 @@ function renderAll() {
         // Accumulation tail
         if (g.accum) {
           const aDash=document.createElement('span');aDash.className='link-dash';aDash.textContent='—';gDiv.appendChild(aDash);
-          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid)));
+          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid),()=>{g.accum.count++;renderAll();}));
         }
-
         // + Accumulation button (when pending and this group is eligible)
-        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)) {
+        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)&&!g.accum) {
           const aBtn=document.createElement('button');aBtn.className='link-target accum-lt';aBtn.textContent='+ Accumulation';
           aBtn.addEventListener('click',e=>{e.stopPropagation();addAccumToGroup(g.gid);});gDiv.appendChild(aBtn);
         }
 
-        // + Link Quality button
         const durLinked=g.linked.length;
         const canLinkMore=(()=>{
           if(g.accum)return false;
@@ -827,6 +841,8 @@ function renderAll() {
             if(it.count<=0){g.items=g.items.filter(x=>x.id!==it.id);if(g.items.filter(x=>Q[x.id]?.cat==='Status').length===0)g.accum=null;}
             if(g.items.length===0)b.groups=b.groups.filter(x=>x.gid!==g.gid);
             renderAll();
+          },()=>{
+            if(!canAddToBlock(Q[it.id],b.bid))return; it.count++; renderAll();
           }));
           const qd=Q[it.id];if(qd)summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:''));
         }
@@ -834,11 +850,11 @@ function renderAll() {
         // Accumulation tail
         if (g.accum) {
           const aDash=document.createElement('span');aDash.className='link-dash';aDash.textContent='—';gDiv.appendChild(aDash);
-          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid)));
+          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid),()=>{g.accum.count++;renderAll();}));
         }
 
         // + Accumulation button (when pending and this group is eligible)
-        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)) {
+        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)&&!g.accum) {
           const aBtn=document.createElement('button');aBtn.className='link-target accum-lt';aBtn.textContent='+ Accumulation';
           aBtn.addEventListener('click',e=>{e.stopPropagation();addAccumToGroup(g.gid);});gDiv.appendChild(aBtn);
         }
