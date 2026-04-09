@@ -617,6 +617,7 @@ function canAddToBlock(qdef, bid) {
   if (qdef.cat === 'Target') {
     if (qdef.id === 'single' && b?.targetId === 'single') { showToast('Only one Single target per block.', true); return false; }
     if (qdef.id === 'area' && (b?.targetId === 'area') && (b.targetCount||1) >= 5) { showToast('Area maximum is 5.', true); return false; }
+    if (globalCount(qdef.id) >= cr) { showToast(Crown Rank limit reached for ${qdef.name}., true); return false; }
     return true;
   }
   if (qdef.cat === 'Range') { if (b?.rangeId) { showToast('Only one Range per block.', true); return false; } return true; }
