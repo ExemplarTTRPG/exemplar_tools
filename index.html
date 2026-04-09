@@ -894,7 +894,7 @@ function renderAll() {
           const lBtn=document.createElement('button');
           const isLinkPending=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;
           lBtn.className='link-target'+(isLinkPending?' pending':'');
-          lBtn.textContent='+ Link quality';
+          lBtn.textContent='+ Link Quality';
           lBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.add('drag-hover');});
           lBtn.addEventListener('dragleave',()=>lBtn.classList.remove('drag-hover'));
           lBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.remove('drag-hover');if(dragId){linkToGroup(g.gid,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
