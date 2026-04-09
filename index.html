@@ -611,13 +611,19 @@ function flawBudgetOk(qdef) {
   return true;
 }
 
-function canAddToBlock(qdef, bid) {
+function canAddToBlock(qdef, bid) 
+{
   if (qdef.flaw && !flawBudgetOk(qdef)) return false;
-  const cr = getCR(), b = blocks.find(x => x.bid === bid);
+  const cr = getCR();
+  const b = blocks.find(x => x.bid === bid);
+
   if (qdef.cat === 'Target') {
-    if (qdef.id === 'single' && b?.targetId === 'single') { showToast('Only one Single target per block.', true); return false; }
-    if (qdef.id === 'area' && (b?.targetId === 'area') && (b.targetCount||1) >= 5) { showToast('Area maximum is 5.', true); return false; }
-    if (globalCount(qdef.id) >= cr) { showToast(Crown Rank limit reached for ${qdef.name}., true); return false; }
+    if (qdef.id === 'single' && b && b.targetId === 'single') { showToast('Only one Single target quality per block.', true); return false; }
+    if (qdef.id === 'area') {
+      const n = (b && b.targetId === 'area') ? (b.targetCount||1) : 0;
+      if (n >= 5) { showToast('Area maximum is 5 per ability.', true); return false; }
+    }
+    if (globalCount(qdef.id) >= cr) { showToast(`Crown Rank limit reached for ${qdef.name}.`, true); return false; }
     return true;
   }
   if (qdef.cat === 'Range') { if (b?.rangeId) { showToast('Only one Range per block.', true); return false; } return true; }
