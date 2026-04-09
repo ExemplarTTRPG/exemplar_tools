@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Exemplar Ability Builder</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f5f4f0; color: #1a1a1a;
+  height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── HEADER ── */
+header {
+  background: #1e1b2e; color: #fff;
+  padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap;
+}
+header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
+.header-sub { font-size: 12px; color: #a89fc7; flex: 1; display: none; }
+@media (min-width: 700px) { .header-sub { display: block; } }
+
+/* Preceptor toggle */
+.preceptor-toggle {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 12px;
+  cursor: pointer; user-select: none; transition: background 0.15s;
+  border: 1px solid rgba(255,255,255,0.1); touch-action: manipulation;
+}
+.preceptor-toggle:hover { background: rgba(255,255,255,0.12); }
+.preceptor-toggle.active { background: rgba(127,100,220,0.3); border-color: rgba(160,140,255,0.45); }
+.pt-label { font-size: 12px; font-weight: 600; color: #b0a8d8; white-space: nowrap; }
+.preceptor-toggle.active .pt-label { color: #ddd8ff; }
+.toggle-pip {
+  width: 32px; height: 18px; border-radius: 9px; background: #444;
+  position: relative; transition: background 0.2s; flex-shrink: 0;
+}
+.preceptor-toggle.active .toggle-pip { background: #8f7fdd; }
+.toggle-pip::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.2s;
+}
+.preceptor-toggle.active .toggle-pip::after { transform: translateX(14px); }
+
+/* ── APP LAYOUT ── */
+.app { display: flex; flex: 1; overflow: hidden; }
+
+/* ── LEFT PANEL — desktop sidebar / mobile drawer ── */
+.panel-left {
+  width: 300px; flex-shrink: 0; background: #fff;
+  border-right: 1px solid #e2e0da; display: flex; flex-direction: column; overflow: hidden;
+}
+/* Mobile: hide sidebar, shown as drawer */
+@media (max-width: 699px) {
+  .panel-left {
+    position: fixed; inset: 0 0 0 0; width: 100%; z-index: 200;
+    transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1);
+    border-right: none; border-top: 1px solid #e2e0da;
+    border-radius: 20px 20px 0 0; box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+    /* Show only bottom 80% */
+    top: 20dvh;
+  }
+  .panel-left.open { transform: translateY(0); }
+}
+
+/* Drawer handle (mobile only) */
+.drawer-handle {
+  display: none;
+  width: 40px; height: 5px; border-radius: 3px; background: #ccc;
+  margin: 10px auto 6px; flex-shrink: 0; cursor: pointer;
+}
+@media (max-width: 699px) { .drawer-handle { display: block; } }
+
+.search-wrap { padding: 10px 12px; border-bottom: 1px solid #e2e0da; flex-shrink: 0; }
+.search-wrap input {
+  width: 100%; padding: 9px 12px; border: 1px solid #d0cec8;
+  border-radius: 8px; font-size: 14px; background: #f9f8f6; outline: none;
+}
+.search-wrap input:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.15); }
+
+.filter-row { padding: 8px 12px; display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid #e2e0da; flex-shrink: 0; overflow-x: auto; flex-wrap: nowrap; }
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-btn {
+  font-size: 12px; padding: 5px 11px; border-radius: 14px; white-space: nowrap;
+  border: 1px solid #d0cec8; background: #f5f4f0; cursor: pointer; color: #555; transition: all 0.15s;
+  flex-shrink: 0; touch-action: manipulation; min-height: 32px;
+}
+.filter-btn:hover { border-color: #7f77dd; color: #534ab7; }
+.filter-btn.active { background: #534ab7; border-color: #534ab7; color: #fff; }
+
+.quality-list { overflow-y: auto; flex: 1; padding: 8px; -webkit-overflow-scrolling: touch; }
+.category-group { margin-bottom: 10px; }
+.category-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #999; padding: 4px 6px 2px; }
+.quality-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border-radius: 8px; border: 1px solid #e8e6e0;
+  background: #faf9f7; margin-bottom: 5px; cursor: pointer;
+  transition: all 0.12s; user-select: none; touch-action: manipulation;
+  min-height: 44px;
+}
+.quality-card:hover, .quality-card:active { border-color: #b0a9e8; background: #f0eefb; }
+.quality-card.dragging { opacity: 0.4; }
+.quality-card .q-name { font-size: 13px; font-weight: 500; color: #1a1a1a; flex: 1; }
+.quality-card .q-cost { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 10px; flex-shrink: 0; }
+.q-cost.positive { background: #eeedfe; color: #534ab7; }
+.q-cost.negative { background: #fceaea; color: #a32d2d; }
+.quality-card .q-cat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; margin-right: 8px; }
+
+/* Drawer overlay */
+.drawer-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  z-index: 199; opacity: 0; transition: opacity 0.25s;
+}
+.drawer-overlay.visible { opacity: 1; }
+@media (max-width: 699px) { .drawer-overlay { display: block; pointer-events: none; } }
+@media (max-width: 699px) { .drawer-overlay.visible { pointer-events: auto; } }
+
+/* ── RIGHT PANEL ── */
+.panel-right { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 12px; gap: 10px; min-width: 0; }
+
+/* ── ABILITY META ── */
+.ability-meta {
+  background: #fff; border-radius: 10px; border: 1px solid #e2e0da;
+  padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
+}
+.meta-row-1 { display: flex; align-items: center; gap: 10px; }
+.meta-row-2 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ability-meta input { flex: 1; font-size: 17px; font-weight: 600; border: none; outline: none; color: #1a1a1a; background: transparent; min-width: 0; }
+.ability-meta input::placeholder { color: #bbb; }
+
+@media (min-width: 700px) {
+  .ability-meta { flex-direction: row; align-items: center; gap: 14px; padding: 12px 16px; }
+  .meta-row-1 { flex: 1; gap: 14px; }
+  .meta-row-2 { gap: 14px; }
+}
+
+.cr-display { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.cr-label { font-size: 12px; color: #888; white-space: nowrap; }
+.cr-select {
+  font-size: 14px; font-weight: 700; color: #1a1a1a;
+  background: #f5f4f0; border: 1px solid #d0cec8; border-radius: 6px;
+  padding: 4px 8px; outline: none; cursor: pointer; min-height: 36px;
+}
+.ap-display { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.ap-label { font-size: 12px; color: #888; white-space: nowrap; }
+.ap-value { font-size: 20px; font-weight: 700; color: #534ab7; min-width: 28px; text-align: right; }
+.ap-value.negative { color: #e24b4a; }
+.meta-divider { width: 1px; height: 24px; background: #e2e0da; flex-shrink: 0; }
+@media (max-width: 699px) { .meta-divider { display: none; } }
+
+/* Flaw budget */
+.flaw-budget { font-size: 12px; color: #888; white-space: nowrap; flex-shrink: 0; }
+.flaw-budget .fb-nums { font-weight: 700; color: #534ab7; }
+.flaw-budget.over .fb-nums { color: #e24b4a; }
+
+/* ── BUILDER AREA ── */
+.builder-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+
+/* ── TARGET BLOCK ── */
+.target-block {
+  background: #fff; border-radius: 10px; border: 2px dashed #d0cec8;
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
+  transition: border-color 0.15s, background 0.15s; cursor: pointer;
+}
+.target-block.drag-over { border-color: #7f77dd; background: #f4f2fd; }
+.target-block.has-target { border-style: solid; border-color: #c5c0e8; cursor: default; }
+.target-block.active-block { border-color: #534ab7 !important; border-style: solid !important; box-shadow: 0 0 0 3px rgba(83,74,183,0.12); }
+.block-header { display: flex; align-items: center; gap: 8px; }
+.block-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #999; }
+.block-label.compound { color: #7f77dd; }
+.block-active-badge {
+  font-size: 10px; font-weight: 700; color: #534ab7; background: #eeedfe;
+  border-radius: 8px; padding: 1px 7px; letter-spacing: 0.04em;
+}
+.block-delete { margin-left: auto; cursor: pointer; color: #ccc; font-size: 16px; transition: color 0.1s; padding: 4px 6px; min-width: 32px; min-height: 32px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
+.block-delete:hover { color: #e24b4a; }
+.block-phase { font-size: 11px; color: #bbb; font-style: italic; padding: 2px 0; }
+
+/* Groups */
+.q-group {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px;
+  padding: 6px 8px; border-radius: 8px; border: 1px solid #eeece6; background: #fafaf8;
+}
+.q-group.has-duration { border-color: color-mix(in srgb,#7f77dd 30%,#e2e0da); background: color-mix(in srgb,#7f77dd 4%,#fff); }
+.q-group.sub-link { margin-left: 20px; border-color: color-mix(in srgb,#b5590c 25%,#e2e0da); background: color-mix(in srgb,#b5590c 4%,#fff); }
+
+/* Chips */
+.q-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 7px; border: 1px solid #e2e0da;
+  background: #f9f8f6; font-size: 13px; font-weight: 500;
+  cursor: default; white-space: nowrap; animation: popIn 0.12s ease;
+  min-height: 32px;
+}
+@keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
+.q-chip .chip-name { color: #1a1a1a; }
+.q-chip .chip-stack { font-size: 11px; font-weight: 700; }
+.q-chip .chip-remove {
+  cursor: pointer; color: #bbb; font-size: 16px; line-height: 1; transition: color 0.1s; margin-left: 3px;
+  /* Larger tap target */
+  padding: 4px; margin: -4px -4px -4px 0; border-radius: 4px; touch-action: manipulation;
+  display: flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px;
+}
+.q-chip .chip-remove:hover, .q-chip .chip-remove:active { color: #e24b4a; background: rgba(226,75,74,0.08); }
+.q-chip.duration-head { border-color: color-mix(in srgb,#7f77dd 40%,#e2e0da); background: color-mix(in srgb,#7f77dd 10%,#fff); }
+.q-chip { border-color: color-mix(in srgb,var(--cat,#e2e0da) 25%,#e2e0da); }
+.q-chip .chip-stack { color: var(--cat,#888); }
+
+.link-dash { font-size: 16px; font-weight: 700; color: #aaa; padding: 0 2px; }
+
+/* Link-target buttons */
+.link-target {
+  display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px;
+  border: 1px dashed #7f77dd; color: #7f77dd; font-size: 12px;
+  cursor: pointer; transition: background 0.12s; background: transparent; white-space: nowrap;
+  min-height: 32px; touch-action: manipulation;
+}
+.link-target:hover, .link-target:active, .link-target.drag-hover { background: color-mix(in srgb,#7f77dd 12%,#fff); border-style: solid; }
+.link-target.pending { background: color-mix(in srgb,#7f77dd 18%,#fff); border-style: solid; color: #534ab7; }
+.link-target.sub-lt { border-color: #b5590c; color: #b5590c; }
+.link-target.sub-lt:hover, .link-target.sub-lt:active, .link-target.sub-lt.drag-hover { background: color-mix(in srgb,#b5590c 10%,#fff); border-style: solid; }
+.link-target.sub-lt.pending { background: color-mix(in srgb,#b5590c 16%,#fff); border-style: solid; color: #7a3a08; }
+
+.q-group .group-delete {
+  margin-left: auto; cursor: pointer; color: #ccc; font-size: 15px; transition: color 0.1s;
+  flex-shrink: 0; padding: 4px 6px; min-width: 30px; min-height: 30px;
+  display: flex; align-items: center; justify-content: center; touch-action: manipulation;
+}
+.q-group .group-delete:hover, .q-group .group-delete:active { color: #e24b4a; }
+
+/* ── BOTTOM BAR (mobile) ── */
+.bottom-bar {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 8px 12px;
+  background: #fff; border-top: 1px solid #e2e0da;
+}
+/* On desktop the compound button and summary bar are inline */
+@media (min-width: 700px) { .bottom-bar { display: none; } }
+
+/* Compound button — desktop */
+.btn-compound-desktop {
+  font-size: 12px; padding: 8px 16px; border-radius: 8px; border: 1px dashed #534ab7;
+  background: transparent; cursor: pointer; color: #534ab7; transition: all 0.12s;
+  align-self: flex-start; flex-shrink: 0; touch-action: manipulation; display: none;
+}
+@media (min-width: 700px) { .btn-compound-desktop { display: block; } }
+.btn-compound-desktop:hover { background: color-mix(in srgb,#534ab7 8%,#fff); border-style: solid; }
+
+/* Summary bar */
+.summary-bar {
+  background: #fff; border-radius: 10px; border: 1px solid #e2e0da;
+  padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+@media (max-width: 699px) { .summary-bar { display: none; } }
+.summary-bar .breakdown { flex: 1; font-size: 12px; color: #777; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.btn-clear { font-size: 12px; padding: 6px 12px; border-radius: 6px; border: 1px solid #d0cec8; background: transparent; cursor: pointer; color: #555; transition: all 0.1s; min-height: 36px; touch-action: manipulation; }
+.btn-clear:hover, .btn-clear:active { border-color: #e24b4a; color: #e24b4a; }
+.btn-export { font-size: 12px; padding: 6px 14px; border-radius: 6px; border: 1px solid #534ab7; background: #534ab7; cursor: pointer; color: #fff; transition: background 0.1s; min-height: 36px; touch-action: manipulation; }
+.btn-export:hover, .btn-export:active { background: #3c3489; }
+
+/* Mobile bottom bar buttons */
+.bb-btn {
+  flex: 1; font-size: 13px; font-weight: 600; padding: 10px 8px; border-radius: 9px;
+  border: 1px solid #d0cec8; background: #f5f4f0; cursor: pointer; color: #444;
+  transition: all 0.12s; touch-action: manipulation; text-align: center;
+  min-height: 44px;
+}
+.bb-btn:active { background: #e8e6f0; }
+.bb-btn.primary { background: #534ab7; border-color: #534ab7; color: #fff; }
+.bb-btn.primary:active { background: #3c3489; }
+.bb-btn.danger { color: #e24b4a; border-color: #e2d0cf; }
+.bb-btn.danger:active { background: #fceaea; }
+
+/* FAB — "Add Quality" floating action button on mobile */
+.fab {
+  display: none; position: fixed; right: 16px; bottom: 72px;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #534ab7; color: #fff; font-size: 28px; font-weight: 300;
+  border: none; cursor: pointer; box-shadow: 0 4px 18px rgba(83,74,183,0.45);
+  align-items: center; justify-content: center; z-index: 100;
+  transition: transform 0.15s, box-shadow 0.15s; touch-action: manipulation;
+}
+.fab:active { transform: scale(0.93); box-shadow: 0 2px 10px rgba(83,74,183,0.35); }
+@media (max-width: 699px) { .fab { display: flex; } }
+
+/* Pending-link banner */
+.pending-banner {
+  display: none; background: #534ab7; color: #fff;
+  padding: 8px 14px; font-size: 13px; font-weight: 500; text-align: center;
+  flex-shrink: 0; border-radius: 8px; margin: 0; cursor: pointer; touch-action: manipulation;
+}
+.pending-banner.visible { display: block; }
+
+/* Category colours */
+.cat-target    { --cat: #1d9e75; } .cat-range     { --cat: #378add; }
+.cat-potency   { --cat: #d85a30; } .cat-general   { --cat: #ba7517; }
+.cat-modifier  { --cat: #7f77dd; } .cat-animation { --cat: #d4537e; }
+.cat-status    { --cat: #639922; } .cat-condition { --cat: #b5590c; }
+.cat-design    { --cat: #378add; } .cat-flaw      { --cat: #e24b4a; }
+.q-cat-dot { background: var(--cat,#ccc); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+  color: #fff; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25); opacity: 0; transition: opacity .2s, transform .2s;
+  pointer-events: none; z-index: 300; background: #2c2950; max-width: 90vw; text-align: center;
+}
+.toast.error { background: #c0392b; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (min-width: 700px) { .toast { bottom: 28px; } }
+
+.no-results { padding: 24px 12px; text-align: center; color: #bbb; font-size: 13px; }
+::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Exemplar Ability Builder</h1>
+  <span class="header-sub">Drag or tap qualities to build your ability</span>
+  <div class="preceptor-toggle" id="preceptor-toggle" title="Preceptors may link two Conditions to a single Duration quality">
+    <span class="pt-label">Preceptor Design</span>
+    <div class="toggle-pip"></div>
+  </div>
+</header>
+
+<!-- Drawer overlay (mobile) -->
+<div class="drawer-overlay" id="drawer-overlay"></div>
+
+<div class="app">
+  <!-- LEFT PANEL / DRAWER -->
+  <div class="panel-left" id="panel-left">
+    <div class="drawer-handle" id="drawer-handle"></div>
+    <div class="search-wrap"><input type="text" id="search" placeholder="Search qualities..." autocomplete="off" autocorrect="off"></div>
+    <div class="filter-row" id="filter-row"></div>
+    <div class="quality-list" id="quality-list"></div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-right">
+    <!-- Pending link banner -->
+    <div class="pending-banner" id="pending-banner">
+      Tap a quality to link it — or tap here to cancel
+    </div>
+
+    <div class="ability-meta">
+      <div class="meta-row-1">
+        <input type="text" id="ability-name" placeholder="Name your ability...">
+      </div>
+      <div class="meta-row-2">
+        <div class="cr-display">
+          <span class="cr-label">Crown Rank:</span>
+          <select class="cr-select" id="cr-select">
+            <option value="1">CR 1</option><option value="2">CR 2</option>
+            <option value="3">CR 3</option><option value="4" selected>CR 4</option>
+            <option value="5">CR 5</option><option value="6">CR 6</option>
+            <option value="7">CR 7</option><option value="8">CR 8</option>
+            <option value="9">CR 9</option><option value="10">CR 10</option>
+          </select>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="ap-display">
+          <span class="ap-label">Ability Points:</span>
+          <span class="ap-value" id="ap-total">0</span>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="flaw-budget" id="flaw-budget">
+          Flaws: <span class="fb-nums"><span id="flaw-used">0</span>/<span id="flaw-max">0</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="builder-area" id="builder-area"></div>
+    <button class="btn-compound-desktop" onclick="addCompoundBlock()">＋ Add Compound Target</button>
+
+    <div class="summary-bar">
+      <div class="breakdown" id="breakdown">No qualities added yet.</div>
+      <button class="btn-clear" onclick="clearAll()">Clear</button>
+      <button class="btn-export" onclick="exportAbility()">Export</button>
+    </div>
+
+    <!-- Mobile bottom bar -->
+    <div class="bottom-bar">
+      <button class="bb-btn" onclick="clearAll()">Clear</button>
+      <button class="bb-btn" onclick="addCompoundBlock()">＋ Compound</button>
+      <button class="bb-btn primary" onclick="exportAbility()">Export</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB: open quality drawer on mobile -->
+<button class="fab" id="fab" aria-label="Add quality">＋</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── Data ─────────────────────────────────────────────────────────────────────
+const QUALITIES = [
+  { id:'single',       name:'Single',        cat:'Target',   cost:1,  flaw:false },
+  { id:'multi-target', name:'Multi-Target',  cat:'Target',   cost:3,  flaw:false },
+  { id:'area',         name:'Area',          cat:'Target',   cost:3,  flaw:false, statusMax:5 },
+  { id:'melee',        name:'Melee',         cat:'Range',    cost:1,  flaw:false },
+  { id:'ranged',       name:'Ranged',        cat:'Range',    cost:2,  flaw:false },
+  { id:'long-ranged',  name:'Long Ranged',   cat:'Range',    cost:3,  flaw:false },
+  { id:'damage',       name:'Damage',        cat:'Potency',  cost:1,  flaw:false, durationLinkable:true },
+  { id:'healing',      name:'Healing',       cat:'Potency',  cost:1,  flaw:false, durationLinkable:true },
+  { id:'burden',       name:'Burden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true },
+  { id:'boost',        name:'Boost',         cat:'General',  cost:3,  flaw:false, durationLinkable:true },
+  { id:'tether',       name:'Tether',        cat:'General',  cost:2,  flaw:false, durationLinkable:true },
+  { id:'repel',        name:'Repel',         cat:'General',  cost:2,  flaw:false, durationLinkable:true },
+  { id:'hidden',       name:'Hidden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true },
+  { id:'abjured',      name:'Abjured',       cat:'General',  cost:3,  flaw:false, durationLinkable:true },
+  { id:'accumulation', name:'Accumulation',  cat:'General',  cost:3,  flaw:false, isSubLink:true, subLinkTarget:'Status' },
+  { id:'artifice',     name:'Artifice',      cat:'Modifier', cost:1,  flaw:false },
+  { id:'cleave',       name:'Cleave',        cat:'Modifier', cost:1,  flaw:false },
+  { id:'cleave-15',    name:'Cleave Range 15',cat:'Modifier',cost:1,  flaw:false },
+  { id:'cleave-30',    name:'Cleave Range 30',cat:'Modifier',cost:2,  flaw:false },
+  { id:'concentrate',  name:'Concentrate',   cat:'Modifier', cost:1,  flaw:false },
+  { id:'contagious',   name:'Contagious',    cat:'Modifier', cost:1,  flaw:false, isSubLink:true, subLinkTarget:'Condition' },
+  { id:'defensive',    name:'Defensive',     cat:'Modifier', cost:1,  flaw:false },
+  { id:'disperse',     name:'Disperse',      cat:'Modifier', cost:3,  flaw:false },
+  { id:'duration',     name:'Duration',      cat:'Modifier', cost:2,  flaw:false, isDuration:true },
+  { id:'dynamic',      name:'Dynamic',       cat:'Modifier', cost:1,  flaw:false },
+  { id:'efficiency',   name:'Efficiency',    cat:'Modifier', cost:3,  flaw:false },
+  { id:'enjoin',       name:'Enjoin',        cat:'Modifier', cost:1,  flaw:false },
+  { id:'enjoin-trig',  name:'Enjoin Trigger Charge', cat:'Modifier', cost:2, flaw:false },
+  { id:'escalating',   name:'Escalating',    cat:'Modifier', cost:3,  flaw:false },
+  { id:'gambit',       name:'Gambit',        cat:'Modifier', cost:1,  flaw:false },
+  { id:'on-next',      name:'On Next',       cat:'Modifier', cost:1,  flaw:false },
+  { id:'reactive',     name:'Reactive',      cat:'Modifier', cost:1,  flaw:false },
+  { id:'repeating',    name:'Repeating',     cat:'Modifier', cost:1,  flaw:false },
+  { id:'reposition',   name:'Reposition',    cat:'Modifier', cost:1,  flaw:false },
+  { id:'suspend',      name:'Suspend',       cat:'Modifier', cost:1,  flaw:false },
+  { id:'animated',     name:'Animated',      cat:'Animation',cost:1,  flaw:false },
+  { id:'attach',       name:'Attach',        cat:'Animation',cost:2,  flaw:false },
+  { id:'detonate',     name:'Detonate',      cat:'Animation',cost:3,  flaw:false },
+  // Status — Boons
+  { id:'empower',      name:'Empower',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'hearten',      name:'Hearten',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'magnify',      name:'Magnify',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'protection',   name:'Protection',    cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
+  { id:'attrition',    name:'Attrition',     cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'inoculate',    name:'Inoculate',     cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  // Status — Banes
+  { id:'weaken',       name:'Weaken',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'wither',       name:'Wither',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'quell',        name:'Quell',         cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
+  { id:'amplification',name:'Amplification', cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
+  { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  // Conditions — Glories
+  { id:'invigorate',   name:'Invigorate',    cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'galvanize',    name:'Galvanize',     cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'determined',   name:'Determined',    cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'courage',      name:'Courage',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'prepare',      name:'Prepare',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'temper',       name:'Temper',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'hasten',       name:'Hasten',        cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'quicken',      name:'Quicken',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'elude',        name:'Elude',         cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'stimulate',    name:'Stimulate',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'freedom',      name:'Freedom',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'enkindle',     name:'Enkindle',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  // Conditions — Maladies
+  { id:'fatigue',      name:'Fatigue',       cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'torpor',       name:'Torpor',        cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'blind',        name:'Blind',         cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'fear',         name:'Fear',          cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'unbalance',    name:'Unbalance',     cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'sunder',       name:'Sunder',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'root',         name:'Root',          cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'exhaust',      name:'Exhaust',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'ambush',       name:'Ambush',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'strain',       name:'Strain',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'restrain',     name:'Restrain',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'disparage',    name:'Disparage',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'emp-limited',  name:'Employ Limited Design Action',  cat:'Design',cost:1,flaw:false },
+  { id:'emp-charge',   name:'Employ Charge Design Action',   cat:'Design',cost:2,flaw:false },
+  { id:'add-employ',   name:'Additional Employ',             cat:'Design',cost:3,flaw:false },
+  { id:'gain-limited', name:'Gain Limited Design Action',    cat:'Design',cost:2,flaw:false },
+  { id:'gain-charge',  name:'Gain Charge Design Action',     cat:'Design',cost:3,flaw:false },
+  { id:'gain-add-use', name:'Design Action Additional Use',  cat:'Design',cost:3,flaw:false },
+  { id:'flaw-suffer',  name:'Ends on Suffering Action',    cat:'Flaw',cost:-3,flaw:true },
+  { id:'flaw-malady',  name:'Ends on Receiving Malady',    cat:'Flaw',cost:-2,flaw:true },
+  { id:'flaw-glory',   name:'Ends on Receiving Glory',     cat:'Flaw',cost:-3,flaw:true },
+  { id:'flaw-cd',      name:'Enforced Cooldown',           cat:'Flaw',cost:-1,flaw:true },
+  { id:'flaw-harrow',  name:'Harrowing',                   cat:'Flaw',cost:-2,flaw:true },
+  { id:'flaw-remorse', name:'Remorseful',                  cat:'Flaw',cost:-3,flaw:true },
+  { id:'flaw-capric',  name:'Capricious',                  cat:'Flaw',cost:-2,flaw:true },
+  { id:'flaw-taxing',  name:'Taxing',                      cat:'Flaw',cost:-2,flaw:true },
+  { id:'flaw-demand',  name:'Demanding',                   cat:'Flaw',cost:-2,flaw:true },
+  { id:'flaw-seq',     name:'Sequenced',                   cat:'Flaw',cost:-1,flaw:true },
+  { id:'flaw-restr',   name:'Restricted Uses',             cat:'Flaw',cost:-3,flaw:true },
+  { id:'flaw-bself',   name:'Burden Self',                 cat:'Flaw',cost:-3,flaw:true },
+  { id:'flaw-mself',   name:'Malady to Self',              cat:'Flaw',cost:-1,flaw:true },
+  { id:'flaw-mdur',    name:'Malady to Self Duration',     cat:'Flaw',cost:-3,flaw:true },
+  { id:'flaw-minr',    name:'Minimum Range',               cat:'Flaw',cost:-1,flaw:true },
+  { id:'flaw-limr',    name:'Limited Range',               cat:'Flaw',cost:-1,flaw:true },
+  { id:'flaw-unique',  name:'Unique Requirement',          cat:'Flaw',cost:-1,flaw:true },
+];
+
+const Q = Object.fromEntries(QUALITIES.map(q => [q.id, q]));
+const CAT_CSS = {
+  Target:'cat-target', Range:'cat-range', Potency:'cat-potency', General:'cat-general',
+  Modifier:'cat-modifier', Animation:'cat-animation', Status:'cat-status', Condition:'cat-condition',
+  Design:'cat-design', Flaw:'cat-flaw',
+};
+const CATEGORIES = [...new Set(QUALITIES.map(q => q.cat))];
+
+// ─── State ─────────────────────────────────────────────────────────────────────
+let blocks = [];
+let nextBid = 1, nextGid = 1;
+let dragId = null;
+let pendingLinkCtx = null;  // { type:'link'|'sublink', gid, [linkedId] }
+let activeBlockId = null;   // which block taps go to on mobile
+let activeFilter = 'All', searchText = '';
+let isPreceptor = false;
+let isDrawerOpen = false;
+let toastTimer = null;
+
+function getCR() { return parseInt(document.getElementById('cr-select').value, 10); }
+function catClass(c) { return CAT_CSS[c] || ''; }
+function isMobile() { return window.innerWidth < 700; }
+
+// ─── Toast ──────────────────────────────────────────────────────────────────────
+function showToast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast'+(err?' error':'')+' show';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ─── Drawer ─────────────────────────────────────────────────────────────────────
+function openDrawer() {
+  isDrawerOpen = true;
+  document.getElementById('panel-left').classList.add('open');
+  const ov = document.getElementById('drawer-overlay');
+  ov.classList.add('visible');
+}
+function closeDrawer() {
+  isDrawerOpen = false;
+  document.getElementById('panel-left').classList.remove('open');
+  const ov = document.getElementById('drawer-overlay');
+  ov.classList.remove('visible');
+}
+document.getElementById('fab').addEventListener('click', () => {
+  isDrawerOpen ? closeDrawer() : openDrawer();
+});
+document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
+document.getElementById('drawer-handle').addEventListener('click', closeDrawer);
+
+// ─── Preceptor toggle ──────────────────────────────────────────────────────────
+document.getElementById('preceptor-toggle').addEventListener('click', () => {
+  isPreceptor = !isPreceptor;
+  document.getElementById('preceptor-toggle').classList.toggle('active', isPreceptor);
+  showToast(isPreceptor ? 'Preceptor Design enabled.' : 'Preceptor Design disabled.');
+  renderAll();
+});
+
+// ─── Pending banner ────────────────────────────────────────────────────────────
+function updatePendingBanner() {
+  const banner = document.getElementById('pending-banner');
+  if (pendingLinkCtx) {
+    const msg = pendingLinkCtx.type === 'link'
+      ? 'Tap a quality to link it to Duration — or tap here to cancel'
+      : `Tap ${pendingLinkCtx.subLinkTarget==='Condition'?'Contagious':'Accumulation'} to sub-link — or tap here to cancel`;
+    banner.textContent = msg;
+    banner.classList.add('visible');
+  } else {
+    banner.classList.remove('visible');
+  }
+}
+document.getElementById('pending-banner').addEventListener('click', () => {
+  pendingLinkCtx = null; updatePendingBanner(); renderAll();
+});
+
+// ─── Global counts ─────────────────────────────────────────────────────────────
+function globalCount(id) {
+  let n = 0;
+  for (const b of blocks) {
+    if (b.targetId === id) n += (b.targetCount||1);
+    if (b.rangeId === id) n++;
+    for (const g of b.groups) {
+      if (g.isDuration) {
+        if (id === 'duration') n += g.durCount;
+        for (const lk of g.linked) {
+          if (lk.id === id) n += lk.count;
+          for (const sl of (lk.subLinks||[])) if (sl.id === id) n += sl.count;
+        }
+      } else { for (const it of g.items) if (it.id === id) n += it.count; }
+    }
+  }
+  return n;
+}
+function totalDurCount() {
+  let n=0; for (const b of blocks) for (const g of b.groups) if (g.isDuration) n+=g.durCount; return n;
+}
+
+// ─── Validation ────────────────────────────────────────────────────────────────
+function flawBudgetOk(qdef) {
+  const {baseCost,flawCost} = calcCosts();
+  const flawMax = Math.round(baseCost * 0.333);
+  if (flawCost + Math.abs(qdef.cost) > flawMax) {
+    showToast(`Flaw budget exceeded. Max reduction: ${flawMax} (33% of ${baseCost}).`, true); return false;
+  }
+  return true;
+}
+
+function canAddToBlock(qdef, bid) {
+  if (qdef.flaw && !flawBudgetOk(qdef)) return false;
+  const cr = getCR(), b = blocks.find(x => x.bid === bid);
+  if (qdef.cat === 'Target') {
+    if (qdef.id === 'single' && b?.targetId === 'single') { showToast('Only one Single target per block.', true); return false; }
+    if (qdef.id === 'area' && (b?.targetId === 'area') && (b.targetCount||1) >= 5) { showToast('Area maximum is 5.', true); return false; }
+    return true;
+  }
+  if (qdef.cat === 'Range') { if (b?.rangeId) { showToast('Only one Range per block.', true); return false; } return true; }
+  if (qdef.isDuration) { if (totalDurCount() >= cr) { showToast('CR limit reached for Duration.', true); return false; } return true; }
+  if (qdef.isStatus) {
+    if (qdef.statusMax != null && globalCount(qdef.id) >= qdef.statusMax) {
+      showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`, true); return false;
+    }
+    return true;
+  }
+  if (qdef.flaw) return true;
+  if (globalCount(qdef.id) >= cr) { showToast(`CR limit reached for ${qdef.name}.`, true); return false; }
+  return true;
+}
+
+function canLinkToDuration(qdef, g) {
+  if (!qdef.durationLinkable) { showToast(`${qdef.name} cannot link directly to Duration.`, true); return false; }
+  if (g.linked.length === 0) return true;
+  if (isPreceptor) {
+    if (g.linked.length >= 2) { showToast('Duration can only link two qualities (Preceptor rule).', true); return false; }
+    if (qdef.cat !== 'Condition') { showToast('Preceptors can only double-link Conditions.', true); return false; }
+    if (Q[g.linked[0].id]?.cat !== 'Condition') { showToast('First linked quality must also be a Condition.', true); return false; }
+    return true;
+  }
+  showToast('Duration can only link one quality. Enable Preceptor Design for two Conditions.', true); return false;
+}
+
+function canSubLink(qdef, parentId) {
+  const parent = Q[parentId];
+  if (!parent || parent.cat !== qdef.subLinkTarget) {
+    showToast(`${qdef.name} must link to a ${qdef.subLinkTarget} quality.`, true); return false;
+  }
+  return true;
+}
+
+// ─── Block phase ───────────────────────────────────────────────────────────────
+function blockPhase(b) {
+  if (!b.targetId) return 'target';
+  if (!b.rangeId) return 'range';
+  return 'effects';
+}
+
+// ─── Cost calculation ──────────────────────────────────────────────────────────
+function calcCosts() {
+  let baseCost=0, flawCost=0;
+  for (const b of blocks) {
+    if (b.targetId) baseCost += Q[b.targetId].cost*(b.targetCount||1);
+    if (b.rangeId)  baseCost += Q[b.rangeId].cost;
+    for (const g of b.groups) {
+      if (g.isDuration) {
+        baseCost += 2*g.durCount;
+        for (const lk of g.linked) {
+          const qd=Q[lk.id]; if (qd) baseCost += qd.cost*lk.count;
+          for (const sl of (lk.subLinks||[])) { const sq=Q[sl.id]; if (sq) baseCost += sq.cost*sl.count; }
+        }
+      } else {
+        for (const it of g.items) { const qd=Q[it.id]; if (!qd) continue; qd.flaw ? flawCost+=Math.abs(qd.cost)*it.count : baseCost+=qd.cost*it.count; }
+      }
+    }
+  }
+  return { baseCost, flawCost, total: baseCost - flawCost };
+}
+
+// ─── Mutations ─────────────────────────────────────────────────────────────────
+function addToBlock(bid, qid) {
+  const b = blocks.find(x => x.bid === bid), qdef = Q[qid];
+  if (!b || !qdef) return;
+  const phase = blockPhase(b);
+  if (phase === 'target' && qdef.cat !== 'Target') { showToast('Choose a Target quality first.', true); return; }
+  if (qdef.isSubLink) { showToast(`${qdef.name} must sub-link to a ${qdef.subLinkTarget} quality inside a Duration row.`, true); return; }
+  if (!canAddToBlock(qdef, bid)) return;
+  if (qdef.cat === 'Target') {
+    if (!b.targetId) { b.targetId=qid; b.targetCount=1; }
+    else if (b.targetId===qid && qid!=='single') b.targetCount++;
+    else { showToast('Only one Target type per block.', true); return; }
+    renderAll(); return;
+  }
+  if (qdef.cat === 'Range') { b.rangeId=qid; renderAll(); return; }
+  if (qdef.isDuration) { b.groups.push({gid:nextGid++,isDuration:true,durCount:1,linked:[]}); renderAll(); return; }
+  for (let i=b.groups.length-1;i>=0;i--) {
+    const g=b.groups[i];
+    if (!g.isDuration) { const it=g.items.find(x=>x.id===qid); if (it) { it.count++; renderAll(); return; } }
+  }
+  const last=[...b.groups].reverse().find(g=>!g.isDuration);
+  if (last) last.items.push({id:qid,count:1});
+  else b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1}]});
+  renderAll();
+}
+
+function linkToGroup(gid, qid) {
+  const qdef=Q[qid]; if (!qdef) return;
+  for (const b of blocks) {
+    const g=b.groups.find(x=>x.gid===gid); if (!g||!g.isDuration) continue;
+    if (qdef.isDuration) { if (!canAddToBlock(qdef,b.bid)) return; g.durCount++; renderAll(); return; }
+    if (!canLinkToDuration(qdef,g)) return;
+    if (!canAddToBlock(qdef,b.bid)) return;
+    const ex=g.linked.find(x=>x.id===qid);
+    if (ex) ex.count++; else g.linked.push({id:qid,count:1,subLinks:[]});
+    renderAll(); return;
+  }
+}
+
+function subLinkToLinked(gid, linkedId, qid) {
+  const qdef=Q[qid]; if (!qdef||!qdef.isSubLink) return;
+  if (!canSubLink(qdef,linkedId)) return;
+  for (const b of blocks) {
+    const g=b.groups.find(x=>x.gid===gid); if (!g||!g.isDuration) continue;
+    const lk=g.linked.find(x=>x.id===linkedId); if (!lk) continue;
+    if (!lk.subLinks) lk.subLinks=[];
+    const ex=lk.subLinks.find(x=>x.id===qid); if (ex) ex.count++; else lk.subLinks.push({id:qid,count:1});
+    renderAll(); return;
+  }
+}
+
+function decrementInBlock(bid,gid,itemId,isLinked,parentLinkedId) {
+  const b=blocks.find(x=>x.bid===bid); if (!b) return;
+  const g=b.groups.find(x=>x.gid===gid); if (!g) return;
+  if (parentLinkedId) {
+    const lk=g.linked.find(x=>x.id===parentLinkedId); if (!lk||!lk.subLinks) return;
+    const sl=lk.subLinks.find(x=>x.id===itemId); if (!sl) return;
+    sl.count--; if (sl.count<=0) lk.subLinks=lk.subLinks.filter(x=>x.id!==itemId);
+  } else if (g.isDuration&&!isLinked) {
+    g.durCount--; if (g.durCount<=0) b.groups=b.groups.filter(x=>x.gid!==gid);
+  } else {
+    const arr=g.isDuration?g.linked:g.items; const it=arr.find(x=>x.id===itemId); if (!it) return;
+    it.count--; if (it.count<=0) { g.isDuration ? g.linked=g.linked.filter(x=>x.id!==itemId) : g.items=g.items.filter(x=>x.id!==itemId); }
+    if (!g.isDuration&&g.items.length===0) b.groups=b.groups.filter(x=>x.gid!==gid);
+  }
+  renderAll();
+}
+
+function decrementTarget(bid) {
+  const b=blocks.find(x=>x.bid===bid); if (!b||!b.targetId) return;
+  b.targetCount=(b.targetCount||1)-1; if (b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;} renderAll();
+}
+function removeRangeFromBlock(bid) { const b=blocks.find(x=>x.bid===bid); if(b){b.rangeId=null;renderAll();} }
+function removeGroup(bid,gid) { const b=blocks.find(x=>x.bid===bid); if(b){b.groups=b.groups.filter(x=>x.gid!==gid);renderAll();} }
+function removeBlock(bid) { blocks=blocks.filter(x=>x.bid!==bid); renderAll(); }
+function addCompoundBlock() { blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]}); if(isMobile()) showToast('Compound block added. Tap it to make it active.'); renderAll(); }
+function clearAll() { blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}]; activeBlockId=null; renderAll(); }
+
+// ─── Chip builder ──────────────────────────────────────────────────────────────
+function makeChip(id,count,bid,gid,isLinked,isDurHead,parentLinkedId) {
+  const qdef=Q[id]; if (!qdef) return document.createTextNode('');
+  const chip=document.createElement('div');
+  chip.className=`q-chip ${catClass(qdef.cat)}${isDurHead?' duration-head':''}`;
+  Object.assign(chip.dataset,{bid,gid,id,linked:isLinked?'1':'0'});
+  if (parentLinkedId) chip.dataset.parentLinked=parentLinkedId;
+  const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
+  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${stackStr}<span class="chip-remove" title="Remove one" role="button" aria-label="Remove ${qdef.name}">−</span>`;
+  chip.querySelector('.chip-remove').addEventListener('click', e => {
+    e.stopPropagation();
+    decrementInBlock(parseInt(chip.dataset.bid),parseInt(chip.dataset.gid),chip.dataset.id,chip.dataset.linked==='1',chip.dataset.parentLinked||null);
+  });
+  return chip;
+}
+
+// ─── Active block management ────────────────────────────────────────────────────
+function setActiveBlock(bid) {
+  activeBlockId = bid;
+  renderAll();
+}
+
+// ─── Render ─────────────────────────────────────────────────────────────────────
+function renderAll() {
+  const area = document.getElementById('builder-area');
+  area.innerHTML='';
+  const summaryParts=[];
+
+  // Ensure activeBlockId is valid
+  if (activeBlockId && !blocks.find(b=>b.bid===activeBlockId)) activeBlockId=null;
+  if (!activeBlockId && blocks.length) activeBlockId=blocks[0].bid;
+
+  for (const b of blocks) {
+    const phase=blockPhase(b);
+    const blockDiv=document.createElement('div');
+    blockDiv.className='target-block'+(b.targetId?' has-target':'')+(b.bid===activeBlockId?' active-block':'');
+    blockDiv.dataset.bid=b.bid;
+
+    // Tap block header area to activate (mobile UX)
+    blockDiv.addEventListener('click', e => {
+      if (e.target.closest('.chip-remove,.group-delete,.block-delete,.link-target,.q-chip,.q-group')) return;
+      setActiveBlock(b.bid);
+    });
+
+    // Block header
+    const hdr=document.createElement('div'); hdr.className='block-header';
+    const lbl=document.createElement('span');
+    lbl.className='block-label'+(b.isCompound?' compound':'');
+    lbl.textContent=b.isCompound?'⊕ Compound Target':'◈ Primary Target';
+    hdr.appendChild(lbl);
+    // Active badge
+    if (b.bid===activeBlockId) {
+      const badge=document.createElement('span'); badge.className='block-active-badge'; badge.textContent='ACTIVE';
+      hdr.appendChild(badge);
+    }
+    if (b.isCompound) {
+      const del=document.createElement('span'); del.className='block-delete'; del.textContent='✕'; del.setAttribute('role','button'); del.setAttribute('aria-label','Remove compound block');
+      del.addEventListener('click', e=>{e.stopPropagation();removeBlock(b.bid);}); hdr.appendChild(del);
+    }
+    blockDiv.appendChild(hdr);
+
+    // Target + Range row
+    if (b.targetId) {
+      const tRow=document.createElement('div'); tRow.className='q-group';
+      const tq=Q[b.targetId];
+      const tChip=document.createElement('div'); tChip.className=`q-chip ${catClass(tq.cat)}`;
+      const ss=(b.targetCount||1)>1?`<span class="chip-stack">${b.targetCount}×${tq.cost}</span>`:'';
+      tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}<span class="chip-remove" role="button">−</span>`;
+      tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();decrementTarget(b.bid);});
+      tRow.appendChild(tChip);
+      if (b.rangeId) {
+        const rq=Q[b.rangeId]; const rChip=document.createElement('div'); rChip.className=`q-chip ${catClass(rq.cat)}`;
+        rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;
+        rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});
+        tRow.appendChild(rChip);
+      }
+      const gd=document.createElement('span'); gd.className='group-delete'; gd.textContent='✕';
+      gd.addEventListener('click',e=>{e.stopPropagation();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();}); tRow.appendChild(gd);
+      blockDiv.appendChild(tRow);
+      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`;
+      if (b.rangeId) bLabel+=` / ${Q[b.rangeId].name}`;
+      summaryParts.push(bLabel);
+    }
+
+    // Phase hint
+    if (phase !== 'effects') {
+      const ph=document.createElement('div'); ph.className='block-phase';
+      ph.textContent=phase==='target'?'← Tap a Target quality first (Single, Multi-Target, or Area)':'← Tap a Range quality next, or skip and add an effect quality';
+      blockDiv.appendChild(ph);
+    }
+
+    // Effect groups
+    for (const g of b.groups) {
+      const gDiv=document.createElement('div');
+      gDiv.className='q-group'+(g.isDuration?' has-duration':'');
+      if (g.isDuration) {
+        gDiv.appendChild(makeChip('duration',g.durCount,b.bid,g.gid,false,true,null));
+        for (const lk of g.linked) {
+          const dash=document.createElement('span'); dash.className='link-dash'; dash.textContent='—'; gDiv.appendChild(dash);
+          gDiv.appendChild(makeChip(lk.id,lk.count,b.bid,g.gid,true,false,null));
+          for (const sl of (lk.subLinks||[])) {
+            const slDash=document.createElement('span'); slDash.className='link-dash'; slDash.textContent='—'; gDiv.appendChild(slDash);
+            gDiv.appendChild(makeChip(sl.id,sl.count,b.bid,g.gid,true,false,lk.id));
+          }
+          const canSub=Q[lk.id]&&(Q[lk.id].cat==='Condition'||Q[lk.id].cat==='Status');
+          if (canSub) {
+            const slBtn=document.createElement('button');
+            const isSlPending=pendingLinkCtx?.type==='sublink'&&pendingLinkCtx.gid===g.gid&&pendingLinkCtx.linkedId===lk.id;
+            slBtn.className='link-target sub-lt'+(isSlPending?' pending':'');
+            slBtn.textContent=Q[lk.id].cat==='Condition'?'+ Contagious':'+ Accumulation';
+            slBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();slBtn.classList.add('drag-hover');});
+            slBtn.addEventListener('dragleave',()=>slBtn.classList.remove('drag-hover'));
+            slBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();slBtn.classList.remove('drag-hover');if(dragId){subLinkToLinked(g.gid,lk.id,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
+            slBtn.addEventListener('click',e=>{
+              e.stopPropagation();
+              const already=pendingLinkCtx?.type==='sublink'&&pendingLinkCtx.gid===g.gid&&pendingLinkCtx.linkedId===lk.id;
+              pendingLinkCtx=already?null:{type:'sublink',gid:g.gid,linkedId:lk.id,subLinkTarget:Q[lk.id].cat};
+              updatePendingBanner();
+              if (pendingLinkCtx&&isMobile()) openDrawer();
+              renderAll();
+            });
+            gDiv.appendChild(slBtn);
+          }
+        }
+        const canMore=g.linked.length===0||(isPreceptor&&g.linked.length===1&&Q[g.linked[0].id]?.cat==='Condition');
+        if (canMore) {
+          const lBtn=document.createElement('button');
+          const isLinkPending=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;
+          lBtn.className='link-target'+(isLinkPending?' pending':'');
+          lBtn.textContent='+ Link quality';
+          lBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.add('drag-hover');});
+          lBtn.addEventListener('dragleave',()=>lBtn.classList.remove('drag-hover'));
+          lBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.remove('drag-hover');if(dragId){linkToGroup(g.gid,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
+          lBtn.addEventListener('click',e=>{
+            e.stopPropagation();
+            const already=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;
+            pendingLinkCtx=already?null:{type:'link',gid:g.gid};
+            updatePendingBanner();
+            if (pendingLinkCtx&&isMobile()) openDrawer();
+            renderAll();
+          });
+          gDiv.appendChild(lBtn);
+        }
+        const dLabel=`Duration${g.durCount>1?` ×${g.durCount}`:''}`;
+        const lParts=g.linked.map(lk=>{const qd=Q[lk.id];let s=qd?qd.name+(lk.count>1?` ×${lk.count}`:''):'';for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)s+=` — ${sq.name}`;}return s;}).filter(Boolean);
+        summaryParts.push(lParts.length?`${dLabel} — ${lParts.join(', ')}`:dLabel);
+      } else {
+        for (const it of g.items) {
+          gDiv.appendChild(makeChip(it.id,it.count,b.bid,g.gid,false,false,null));
+          const qd=Q[it.id]; if(qd) summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:''));
+        }
+      }
+      const gDel=document.createElement('span'); gDel.className='group-delete'; gDel.textContent='✕';
+      gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);}); gDiv.appendChild(gDel);
+      blockDiv.appendChild(gDiv);
+    }
+
+    // Drag events on block
+    blockDiv.addEventListener('dragover',e=>{if(!e.target.closest('.link-target')){e.preventDefault();blockDiv.classList.add('drag-over');}});
+    blockDiv.addEventListener('dragleave',e=>{if(!blockDiv.contains(e.relatedTarget))blockDiv.classList.remove('drag-over');});
+    blockDiv.addEventListener('drop',e=>{
+      blockDiv.classList.remove('drag-over');
+      if (e.target.closest('.link-target')) return;
+      e.preventDefault();
+      if (dragId) {
+        if (pendingLinkCtx) {
+          if (pendingLinkCtx.type==='link') linkToGroup(pendingLinkCtx.gid,dragId);
+          else subLinkToLinked(pendingLinkCtx.gid,pendingLinkCtx.linkedId,dragId);
+          pendingLinkCtx=null; updatePendingBanner();
+        } else addToBlock(b.bid,dragId);
+        dragId=null;
+      }
+    });
+
+    area.appendChild(blockDiv);
+  }
+
+  // Update totals
+  const {baseCost,flawCost,total}=calcCosts();
+  document.getElementById('ap-total').textContent=total;
+  document.getElementById('ap-total').className='ap-value'+(total<0?' negative':'');
+  const flawMax=Math.round(baseCost*0.333);
+  document.getElementById('flaw-used').textContent=flawCost;
+  document.getElementById('flaw-max').textContent=flawMax;
+  document.getElementById('flaw-budget').className='flaw-budget'+(flawCost>flawMax?' over':'');
+  document.getElementById('breakdown').textContent=summaryParts.join(' · ')||'No qualities added yet.';
+}
+
+// ─── Bank render ───────────────────────────────────────────────────────────────
+function renderBank() {
+  const list=document.getElementById('quality-list');
+  const s=searchText.toLowerCase();
+  const filtered=QUALITIES.filter(q=>(!s||q.name.toLowerCase().includes(s)||q.cat.toLowerCase().includes(s))&&(activeFilter==='All'||q.cat===activeFilter));
+  if (!filtered.length) { list.innerHTML='<div class="no-results">No qualities match.</div>'; return; }
+  const byCat={};
+  filtered.forEach(q=>{(byCat[q.cat]=byCat[q.cat]||[]).push(q);});
+  list.innerHTML=Object.entries(byCat).map(([cat,items])=>`
+    <div class="category-group">
+      <div class="category-label">${cat}</div>
+      ${items.map(q=>`
+        <div class="quality-card ${catClass(q.cat)}" draggable="true" data-id="${q.id}" role="button" aria-label="Add ${q.name}">
+          <div class="q-cat-dot" style="background:var(--cat)"></div>
+          <span class="q-name">${q.name}</span>
+          <span class="q-cost ${q.cost<0?'negative':'positive'}">${q.cost>0?'+':''}${q.cost} pts</span>
+        </div>`).join('')}
+    </div>`).join('');
+
+  list.querySelectorAll('.quality-card').forEach(card=>{
+    card.addEventListener('dragstart',e=>{dragId=card.dataset.id;card.classList.add('dragging');e.dataTransfer.effectAllowed='copy';});
+    card.addEventListener('dragend',()=>card.classList.remove('dragging'));
+    card.addEventListener('click',()=>{
+      if (pendingLinkCtx) {
+        if (pendingLinkCtx.type==='link') linkToGroup(pendingLinkCtx.gid,card.dataset.id);
+        else subLinkToLinked(pendingLinkCtx.gid,pendingLinkCtx.linkedId,card.dataset.id);
+        pendingLinkCtx=null; updatePendingBanner(); if(isMobile())closeDrawer();
+      } else {
+        const bid = activeBlockId || (blocks[blocks.length-1]?.bid);
+        if (bid!=null) addToBlock(bid,card.dataset.id);
+        if (isMobile()) closeDrawer();
+      }
+    });
+  });
+}
+
+// ─── Export ─────────────────────────────────────────────────────────────────────
+function exportAbility() {
+  const name=document.getElementById('ability-name').value||'Unnamed Ability';
+  const cr=getCR(); const {baseCost,flawCost,total}=calcCosts(); const lines=[];
+  for (const b of blocks) {
+    if (b.isCompound) lines.push('');
+    if (b.targetId) { const tq=Q[b.targetId]; lines.push(`  + ${tq.name} (${tq.cost}×${b.targetCount||1})`); }
+    if (b.rangeId) { const rq=Q[b.rangeId]; lines.push(`    + ${rq.name} (${rq.cost}×1)`); }
+    for (const g of b.groups) {
+      if (g.isDuration) {
+        let line=`    + Duration (2×${g.durCount})`;
+        for (const lk of g.linked) {
+          const qd=Q[lk.id]; if (!qd) continue; line+=` - ${qd.name} (${qd.cost}×${lk.count})`;
+          for (const sl of (lk.subLinks||[])) { const sq=Q[sl.id]; if(sq) line+=` - ${sq.name} (${sq.cost}×${sl.count})`; }
+        }
+        lines.push(line);
+      } else {
+        for (const it of g.items) { const qd=Q[it.id]; if(!qd) continue; lines.push(`    ${qd.flaw?'*':'+'} ${qd.name} (${qd.cost}×${it.count})`); }
+      }
+    }
+  }
+  const flawMax=Math.round(baseCost*0.333);
+  const blob=new Blob([`Ability: ${name}\nCrown Rank: CR ${cr}${isPreceptor?' [Preceptor Design]':''}\nBase Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n\n`+lines.join('\n')],{type:'text/plain'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`${name.replace(/\s+/g,'_')}.txt`; a.click();
+}
+
+// ─── Filters ────────────────────────────────────────────────────────────────────
+const filterRow=document.getElementById('filter-row');
+['All',...CATEGORIES].forEach(cat=>{
+  const btn=document.createElement('button');
+  btn.className='filter-btn'+(cat==='All'?' active':''); btn.textContent=cat;
+  btn.addEventListener('click',()=>{ activeFilter=cat; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); renderBank(); });
+  filterRow.appendChild(btn);
+});
+document.getElementById('search').addEventListener('input',e=>{searchText=e.target.value;renderBank();});
+
+// Cancel pending link on outside click
+document.addEventListener('click',e=>{
+  if (pendingLinkCtx&&!e.target.closest('.panel-left')&&!e.target.closest('.link-target')&&!e.target.closest('#pending-banner')) {
+    pendingLinkCtx=null; updatePendingBanner(); renderAll();
+  }
+});
+
+// CR change
+document.getElementById('cr-select').addEventListener('change',()=>{
+  const cr=getCR(); let changed=false;
+  for (const b of blocks) {
+    for (const g of b.groups) {
+      if (g.isDuration) {
+        if (g.durCount>cr){g.durCount=cr;changed=true;}
+        for (const lk of g.linked) { const qd=Q[lk.id]; if(qd&&!qd.isStatus&&!qd.flaw&&lk.count>cr){lk.count=cr;changed=true;} }
+        g.linked=g.linked.filter(lk=>lk.count>0);
+      } else {
+        for (const it of g.items) { const qd=Q[it.id]; if(qd&&!qd.isStatus&&!qd.flaw&&it.count>cr){it.count=cr;changed=true;} }
+        g.items=g.items.filter(it=>it.count>0);
+      }
+    }
+    b.groups=b.groups.filter(g=>g.isDuration?g.durCount>0:g.items.length>0);
+  }
+  if(changed)showToast(`Qualities reduced to match CR ${cr}.`);
+  renderAll();
+});
+
+// ─── Init ────────────────────────────────────────────────────────────────────────
+blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];
+activeBlockId=blocks[0].bid;
+renderBank();
+renderAll();
+</script>
+</body>
+</html>
