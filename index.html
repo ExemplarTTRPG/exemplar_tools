@@ -77,6 +77,17 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .flaw-budget .fb-nums { font-weight: 700; color: #534ab7; }
 .flaw-budget.over .fb-nums { color: #e24b4a; }
 
+.totals-row { display: none; align-items: center; gap: 14px; flex-wrap: wrap; background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 14px; flex-shrink: 0; }
+.totals-row.visible { display: flex; }
+@media (min-width: 700px) { .totals-row { padding: 10px 16px; } }
+.total-item { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.total-label { font-size: 13px; color: #888; white-space: nowrap; }
+.total-value { font-size: 18px; font-weight: 700; color: #1a1a1a; min-width: 24px; }
+.total-value.dmg  { color: #c0392b; }
+.total-value.heal { color: #27ae60; }
+.total-value.res  { color: #8e44ad; }
+.grade-select { font-size: 13px; font-weight: 600; color: #1a1a1a; background: #f5f4f0; border: 1px solid #d0cec8; border-radius: 6px; padding: 4px 8px; outline: none; cursor: pointer; min-height: 32px; }
+
 .builder-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
 
 .target-block { background: #fff; border-radius: 10px; border: 2px dashed #d0cec8; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; transition: border-color 0.15s, background 0.15s; cursor: pointer; }
@@ -258,6 +269,35 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
         <div class="ap-display"><span class="ap-label">Ability Points:</span><span class="ap-value" id="ap-total">0</span></div>
         <div class="meta-divider"></div>
         <div class="flaw-budget" id="flaw-budget">Flaws: <span class="fb-nums"><span id="flaw-used">0</span>/<span id="flaw-max">0</span></span></div>
+      </div>
+    </div>
+    <!-- Totals row — shown only when ability has Damage, Healing, or Maladies -->
+    <div class="totals-row" id="totals-row">
+      <div class="total-item" id="total-dmg-wrap">
+        <span class="total-label">Damage Attribute:</span>
+        <select class="grade-select" id="dmg-grade-select">
+          <option value="2" selected>F (2)</option>
+          <option value="3">D (3)</option>
+          <option value="4">C (4)</option>
+          <option value="5">B (5)</option>
+          <option value="6">A (6)</option>
+          <option value="7">E (7)</option>
+          <option value="8">S (8)</option>
+          <option value="10">M (10)</option>
+          <option value="12">M+ (12)</option>
+        </select>
+        <span class="total-label">Damage:</span>
+        <span class="total-value dmg" id="total-dmg">—</span>
+      </div>
+      <div class="meta-divider" id="total-divider-1"></div>
+      <div class="total-item" id="total-heal-wrap">
+        <span class="total-label">Healing:</span>
+        <span class="total-value heal" id="total-heal">—</span>
+      </div>
+      <div class="meta-divider" id="total-divider-2"></div>
+      <div class="total-item" id="total-res-wrap">
+        <span class="total-label">Resilience Damage:</span>
+        <span class="total-value res" id="total-res">—</span>
       </div>
     </div>
     <div class="builder-area" id="builder-area"></div>
@@ -448,6 +488,68 @@ const Q = Object.fromEntries(QUALITIES.map(q=>[q.id,q]));
 const CAT_CSS = { Target:'cat-target',Range:'cat-range',Potency:'cat-potency',General:'cat-general',Modifier:'cat-modifier',Animation:'cat-animation',Status:'cat-status',Condition:'cat-condition',Design:'cat-design',Flaw:'cat-flaw' };
 const CATEGORIES = [...new Set(QUALITIES.map(q=>q.cat))];
 const ATTRIBUTES = ['Power','Finesse','Resolve','Intensity','Awareness'];
+
+// Malady → Resilience damage (from wiki Conditions table)
+const RESILIENCE_DMG = {
+  fear:1, unbalance:1, exhaust:1,
+  blind:3, sunder:3, root:3, restrain:3, disparage:3,
+  torpor:5, fatigue:5, ambush:5, strain:5,
+};
+
+function calcTotals() {
+  let dmgCount=0, healCount=0, resTotal=0;
+  for (const b of blocks) {
+    for (const g of b.groups) {
+      if (g.isDuration) {
+        for (const lk of g.linked) {
+          if (lk.id==='damage')  dmgCount  += lk.count;
+          if (lk.id==='healing') healCount += lk.count;
+          if (RESILIENCE_DMG[lk.id]) resTotal += RESILIENCE_DMG[lk.id] * lk.count;
+        }
+      } else {
+        for (const it of g.items) {
+          if (it.id==='damage')  dmgCount  += it.count;
+          if (it.id==='healing') healCount += it.count;
+          if (RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id] * it.count;
+        }
+      }
+    }
+  }
+  return { dmgCount, healCount, resTotal };
+}
+
+function updateTotals() {
+  const { dmgCount, healCount, resTotal } = calcTotals();
+  const hasDmg  = dmgCount  > 0;
+  const hasHeal = healCount > 0;
+  const hasRes  = resTotal  > 0;
+  const visible = hasDmg || hasHeal || hasRes;
+
+  document.getElementById('totals-row').classList.toggle('visible', visible);
+
+  const dmgWrap  = document.getElementById('total-dmg-wrap');
+  const healWrap = document.getElementById('total-heal-wrap');
+  const resWrap  = document.getElementById('total-res-wrap');
+  const div1     = document.getElementById('total-divider-1');
+  const div2     = document.getElementById('total-divider-2');
+
+  dmgWrap.style.display  = hasDmg  ? 'flex' : 'none';
+  healWrap.style.display = hasHeal ? 'flex' : 'none';
+  resWrap.style.display  = hasRes  ? 'flex' : 'none';
+  div1.style.display = (hasDmg  && (hasHeal || hasRes)) ? '' : 'none';
+  div2.style.display = (hasHeal && hasRes)               ? '' : 'none';
+
+  if (hasDmg) {
+    const gradeVal = parseInt(document.getElementById('dmg-grade-select').value, 10);
+    document.getElementById('total-dmg').textContent = dmgCount * gradeVal;
+  }
+  if (hasHeal) {
+    document.getElementById('total-heal').textContent = healCount * getCR();
+  }
+  if (hasRes) {
+    document.getElementById('total-res').textContent = resTotal;
+  }
+}
 
 // ─── State ─────────────────────────────────────────────────────────────────────
 let blocks=[], nextBid=1, nextGid=1;
@@ -1118,6 +1220,7 @@ function renderAll() {
   document.getElementById('flaw-max').textContent=flawMax;
   document.getElementById('flaw-budget').className='flaw-budget'+(flawCost>flawMax?' over':'');
   document.getElementById('breakdown').textContent=summaryParts.join(' · ')||'No qualities added yet.';
+  updateTotals();
 }
 
 // ─── Bank render ──────────────────────────────────────────────────────────────
@@ -1188,10 +1291,17 @@ function exportAbility() {
     }
   }
   const flawMax=Math.round(baseCost*0.333);
+  const {dmgCount,healCount,resTotal} = calcTotals();
+  const dmgGrade = parseInt(document.getElementById('dmg-grade-select').value, 10);
+  const totalLines=[];
+  if (dmgCount>0)  totalLines.push(`Damage: ${dmgCount * dmgGrade} (${dmgCount} × grade ${dmgGrade})`);
+  if (healCount>0) totalLines.push(`Healing: ${healCount * cr} (${healCount} × CR ${cr})`);
+  if (resTotal>0)  totalLines.push(`Resilience Damage: ${resTotal}`);
   const blob=new Blob([
     `Ability: ${name}\nCrown Rank: CR ${cr}${designs.length?' ['+designs.join(', ')+']':''}\n`
-    +`Base Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n\n`
-    +lines.join('\n')
+    +`Base Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n`
+    +(totalLines.length?totalLines.join('  ·  ')+'\n':'')
+    +'\n'+lines.join('\n')
   ],{type:'text/plain'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${name.replace(/\s+/g,'_')}.txt`;a.click();
 }
@@ -1206,10 +1316,14 @@ function getSaved() {
 function saveAbility() {
   const name = document.getElementById('ability-name').value.trim() || 'Unnamed Ability';
   const {total} = calcCosts();
+  const {dmgCount,healCount,resTotal} = calcTotals();
+  const cr = getCR();
+  const dmgGrade = parseInt(document.getElementById('dmg-grade-select').value, 10);
+  const dmgTotal  = dmgCount  > 0 ? dmgCount * dmgGrade : null;
+  const healTotal = healCount > 0 ? healCount * cr       : null;
   const saved = getSaved();
-  // Overwrite if same name exists
   const idx = saved.findIndex(s=>s.name===name);
-  const entry = { name, total, blocks: JSON.parse(JSON.stringify(blocks)), nextBid, nextGid, cr: getCR(), isPreceptor, isBalancer, ts: Date.now() };
+  const entry = { name, total, dmgTotal, healTotal, resTotal: resTotal||null, dmgGrade, blocks: JSON.parse(JSON.stringify(blocks)), nextBid, nextGid, cr, isPreceptor, isBalancer, ts: Date.now() };
   if (idx>=0) saved[idx]=entry; else saved.unshift(entry);
   localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
   showToast(`Saved "${name}".`);
@@ -1223,6 +1337,7 @@ function loadAbility(entry) {
   nextGid = entry.nextGid;
   document.getElementById('ability-name').value = entry.name;
   document.getElementById('cr-select').value = String(entry.cr||1);
+  if (entry.dmgGrade) document.getElementById('dmg-grade-select').value = String(entry.dmgGrade);
   isPreceptor = !!entry.isPreceptor;
   isBalancer  = !!entry.isBalancer;
   document.getElementById('preceptor-toggle').classList.toggle('active', isPreceptor);
@@ -1247,7 +1362,11 @@ function renderSavedList() {
     const row=document.createElement('div'); row.className='saved-item';
     const nm=document.createElement('span'); nm.className='saved-item-name'; nm.textContent=entry.name;
     nm.addEventListener('click',()=>loadAbility(entry));
-    const pts=document.createElement('span'); pts.className='saved-item-pts'; pts.textContent=`${entry.total} pts`;
+    const statParts=[`${entry.total} pts`];
+    if (entry.dmgTotal  != null) statParts.push(`${entry.dmgTotal} dmg`);
+    if (entry.healTotal != null) statParts.push(`${entry.healTotal} heal`);
+    if (entry.resTotal  != null) statParts.push(`${entry.resTotal} res`);
+    const pts=document.createElement('span'); pts.className='saved-item-pts'; pts.textContent=statParts.join(' · ');
     const del=document.createElement('span'); del.className='saved-item-del'; del.textContent='✕';
     del.addEventListener('click',e=>{e.stopPropagation();deleteSaved(entry.name);});
     row.appendChild(nm); row.appendChild(pts); row.appendChild(del);
@@ -1292,6 +1411,8 @@ document.getElementById('cr-select').addEventListener('change',()=>{
   if(changed)showToast(`Qualities reduced to match CR ${cr}.`);
   renderAll();
 });
+
+document.getElementById('dmg-grade-select').addEventListener('change', updateTotals);
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];
