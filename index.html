@@ -495,8 +495,7 @@ document.getElementById('stack-dialog-cancel').addEventListener('click', hideSta
 document.getElementById('stack-dialog-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideStackDialog(); });
 
 // ─── Attribute picker dialog ──────────────────────────────────────────────────
-// Shows attribute choices for Burden/Boost, filtering out already-used attrs
-function showAttrDialog(qid, bid, usedAttrs) {
+function showAttrDialog(qid, bid, usedAttrs, onPick) {
   const qdef = Q[qid];
   const overlay = document.getElementById('attr-dialog-overlay');
   document.getElementById('attr-dialog-title').textContent = `Choose Attribute — ${qdef.name}`;
@@ -512,6 +511,8 @@ function showAttrDialog(qid, bid, usedAttrs) {
     btn.innerHTML = `<span class="stack-opt-icon">◈</span><div class="stack-opt-text"><div class="stack-opt-label">${attr}</div></div>`;
     btn.addEventListener('click', () => {
       hideAttrDialog();
+      if (onPick) { onPick(attr); return; }
+      // Default: add as standalone row
       snapshot();
       const b = blocks.find(x => x.bid === bid);
       if (b) { b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1,attr}],accum:null}); }
@@ -803,6 +804,17 @@ function linkToGroup(gid,qid) {
     if (qdef.isDuration){if(!canAddToBlock(qdef,b.bid))return;snapshot();g.durCount++;renderAll();return;}
     const ex=g.linked.find(x=>x.id===qid);
     if (ex) {
+      // requiresAttr qualities never stack — each needs a different attr
+      if (qdef.requiresAttr) {
+        const usedAttrs=g.linked.filter(lk=>lk.id===qid).map(lk=>lk.attr).filter(Boolean);
+        if (usedAttrs.length>=ATTRIBUTES.length){showToast(`All attributes already used for ${qdef.name}.`,true);return;}
+        if(!canLinkToDuration(qdef,g))return;
+        if(!canAddToBlock(qdef,b.bid))return;
+        showAttrDialog(qid, b.bid, usedAttrs, (attr)=>{
+          snapshot(); g.linked.push({id:qid,count:1,subLinks:[],attr}); renderAll();
+        });
+        return;
+      }
       showStackDialog(qdef.name,[
         { icon:'＋', label:`Stack onto ${qdef.name} ×${ex.count}`, desc:`Increase to ×${ex.count+1} (inside this Duration)`,
           action:()=>{ if(!canAddToBlock(qdef,b.bid))return; snapshot(); ex.count++; renderAll(); } },
@@ -819,6 +831,14 @@ function linkToGroup(gid,qid) {
     }
     if (!canLinkToDuration(qdef,g))return;
     if (!canAddToBlock(qdef,b.bid))return;
+    // requiresAttr: show attr picker before linking
+    if (qdef.requiresAttr) {
+      const usedAttrs=g.linked.filter(lk=>lk.id===qid).map(lk=>lk.attr).filter(Boolean);
+      showAttrDialog(qid, b.bid, usedAttrs, (attr)=>{
+        snapshot(); g.linked.push({id:qid,count:1,subLinks:[],attr}); renderAll();
+      });
+      return;
+    }
     snapshot(); g.linked.push({id:qid,count:1,subLinks:[]});
     renderAll(); return;
   }
@@ -941,7 +961,7 @@ function renderAll() {
             renderAll();
           },()=>{
             if(!canAddToBlock(Q[lk.id],b.bid))return; lk.count++; renderAll();
-          }));
+          },lk.attr||null));
           // Contagious sub-links
           for (const sl of (lk.subLinks||[])) {
             const slDash=document.createElement('span');slDash.className='link-dash';slDash.textContent='—';gDiv.appendChild(slDash);
