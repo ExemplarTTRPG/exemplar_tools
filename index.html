@@ -106,6 +106,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .q-chip.accum-tail { border-color: color-mix(in srgb,#639922 45%,#e2e0da); background: color-mix(in srgb,#639922 12%,#fff); }
 .q-chip { border-color: color-mix(in srgb,var(--cat,#e2e0da) 25%,#e2e0da); }
 .q-chip .chip-stack { color: var(--cat,#888); }
+.q-chip .chip-attr { font-size: 10px; font-weight: 700; background: color-mix(in srgb,var(--cat,#ba7517) 15%,#fff); color: color-mix(in srgb,var(--cat,#ba7517) 70%,#333); border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
 .link-dash { font-size: 16px; font-weight: 700; color: #aaa; padding: 0 2px; }
 
 .link-target { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px; border: 1px dashed #7f77dd; color: #7f77dd; font-size: 12px; cursor: pointer; transition: background 0.12s; background: transparent; white-space: nowrap; min-height: 32px; touch-action: manipulation; }
@@ -174,6 +175,41 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .stack-dialog-cancel { font-size:13px; color:#aaa; text-align:center; cursor:pointer; padding:6px; touch-action:manipulation; }
 .stack-dialog-cancel:hover { color:#e24b4a; }
 
+/* Undo button */
+.btn-undo { font-size: 12px; padding: 6px 12px; border-radius: 6px; border: 1px solid #d0cec8; background: transparent; cursor: pointer; color: #555; transition: all 0.1s; min-height: 36px; touch-action: manipulation; }
+.btn-undo:hover, .btn-undo:active { border-color: #534ab7; color: #534ab7; }
+.btn-undo:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+
+/* Drag reorder handle */
+.group-drag-handle { cursor: grab; color: #ccc; font-size: 14px; padding: 4px 2px; display: flex; align-items: center; touch-action: none; flex-shrink: 0; }
+.group-drag-handle:active { cursor: grabbing; color: #999; }
+.q-group.dragging-group { opacity: 0.4; }
+.q-group.drop-above { border-top: 2px solid #7f77dd; }
+.q-group.drop-below { border-bottom: 2px solid #7f77dd; }
+
+/* Saved abilities panel */
+.saved-panel { background:#fff; border-radius:10px; border:1px solid #e2e0da; padding:10px 14px; flex-shrink:0; display:flex; flex-direction:column; gap:8px; max-height:180px; }
+.saved-panel-header { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.saved-panel-title { font-size:12px; font-weight:700; color:#888; text-transform:uppercase; letter-spacing:0.06em; }
+.btn-save-ability { font-size:12px; padding:5px 12px; border-radius:6px; border:1px solid #534ab7; background:#534ab7; color:#fff; cursor:pointer; touch-action:manipulation; white-space:nowrap; }
+.btn-save-ability:hover { background:#3c3489; }
+.saved-list { display:flex; flex-direction:column; gap:4px; overflow-y:auto; }
+.saved-item { display:flex; align-items:center; gap:6px; padding:6px 8px; border-radius:7px; border:1px solid #e2e0da; background:#fafaf8; min-height:36px; }
+.saved-item-name { flex:1; font-size:13px; font-weight:500; color:#1a1a1a; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+.saved-item-name:hover { color:#534ab7; }
+.saved-item-pts { font-size:11px; color:#888; flex-shrink:0; }
+.saved-item-del { cursor:pointer; color:#ccc; font-size:15px; padding:2px 4px; border-radius:4px; touch-action:manipulation; flex-shrink:0; }
+.saved-item-del:hover { color:#e24b4a; }
+.saved-empty { font-size:12px; color:#bbb; text-align:center; padding:8px 0; }
+
+/* Quick-stack preference */
+.pref-row { display:flex; align-items:center; gap:8px; padding:2px 0; }
+.pref-label { font-size:12px; color:#888; flex:1; }
+.pref-toggle { width:28px; height:16px; border-radius:8px; background:#ccc; position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; }
+.pref-toggle.on { background:#534ab7; }
+.pref-toggle::after { content:''; position:absolute; top:2px; left:2px; width:12px; height:12px; border-radius:50%; background:#fff; transition:transform 0.2s; }
+.pref-toggle.on::after { transform:translateX(12px); }
+
 .no-results { padding: 24px 12px; text-align: center; color: #bbb; font-size: 13px; }
 ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
 </style>
@@ -226,14 +262,32 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
     </div>
     <div class="builder-area" id="builder-area"></div>
     <button class="btn-compound-desktop" onclick="addCompoundBlock()">＋ Add Compound Target</button>
+
+    <!-- Saved abilities -->
+    <div class="saved-panel" id="saved-panel">
+      <div class="saved-panel-header">
+        <span class="saved-panel-title">Saved Abilities</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="pref-row">
+            <span class="pref-label">Quick stack</span>
+            <div class="pref-toggle" id="quick-stack-toggle" title="Skip dialog and always stack when re-adding a quality from the bank"></div>
+          </div>
+          <button class="btn-save-ability" onclick="saveAbility()">Save current</button>
+        </div>
+      </div>
+      <div class="saved-list" id="saved-list"></div>
+    </div>
+
     <div class="summary-bar">
       <div class="breakdown" id="breakdown">No qualities added yet.</div>
+      <button class="btn-undo" id="btn-undo" onclick="undo()" disabled title="Undo (Ctrl+Z)">↩ Undo</button>
       <button class="btn-clear" onclick="clearAll()">Clear</button>
       <button class="btn-export" onclick="exportAbility()">Export</button>
     </div>
     <div class="bottom-bar">
+      <button class="bb-btn" onclick="undo()" id="btn-undo-mobile">↩</button>
       <button class="bb-btn" onclick="clearAll()">Clear</button>
-      <button class="bb-btn" onclick="addCompoundBlock()">＋ Compound</button>
+      <button class="bb-btn" onclick="addCompoundBlock()">＋ Cmpd</button>
       <button class="bb-btn primary" onclick="exportAbility()">Export</button>
     </div>
   </div>
@@ -252,8 +306,17 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
   </div>
 </div>
 
+<!-- Attribute picker dialog -->
+<div class="stack-dialog-overlay" id="attr-dialog-overlay">
+  <div class="stack-dialog">
+    <div class="stack-dialog-title" id="attr-dialog-title">Choose an Attribute</div>
+    <div class="stack-dialog-sub" id="attr-dialog-sub">Each instance must target a different attribute.</div>
+    <div class="stack-dialog-opts" id="attr-dialog-opts"></div>
+    <div class="stack-dialog-cancel" id="attr-dialog-cancel">Cancel</div>
+  </div>
+</div>
+
 <script>
-// ─── Data ──────────────────────────────────────────────────────────────────────
 //
 // Group data model:
 //
@@ -284,10 +347,10 @@ const QUALITIES = [
   { id:'long-ranged',  name:'Long Ranged',   cat:'Range',    cost:3,  flaw:false },
   { id:'damage',       name:'Damage',        cat:'Potency',  cost:1,  flaw:false, durationLinkable:true },
   { id:'healing',      name:'Healing',       cat:'Potency',  cost:1,  flaw:false, durationLinkable:true },
-  { id:'burden',       name:'Burden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true },
-  { id:'boost',        name:'Boost',         cat:'General',  cost:3,  flaw:false, durationLinkable:true },
-  { id:'tether',       name:'Tether',        cat:'General',  cost:2,  flaw:false, durationLinkable:true, noStack:true },
-  { id:'repel',        name:'Repel',         cat:'General',  cost:2,  flaw:false, durationLinkable:true, noStack:true },
+  { id:'burden',       name:'Burden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true, requiresAttr:true },
+  { id:'boost',        name:'Boost',         cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true, requiresAttr:true },
+  { id:'tether',       name:'Tether',        cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
+  { id:'repel',        name:'Repel',         cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
   { id:'hidden',       name:'Hidden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
   { id:'abjured',      name:'Abjured',       cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
   { id:'accumulation', name:'Accumulation',  cat:'General',  cost:3,  flaw:false, isAccumulation:true },
@@ -320,7 +383,7 @@ const QUALITIES = [
   { id:'magnify',      name:'Magnify',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
   { id:'protection',   name:'Protection',    cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
   { id:'attrition',    name:'Attrition',     cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noAccum:true },
   { id:'inoculate',    name:'Inoculate',     cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
   // Status Effects — Banes
   { id:'weaken',       name:'Weaken',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
@@ -328,8 +391,8 @@ const QUALITIES = [
   { id:'quell',        name:'Quell',         cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
   { id:'amplification',name:'Amplification', cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
   { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
+  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noAccum:true },
+  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:false,noAccum:true },
   // Conditions — Glories (do not stack)
   { id:'invigorate',   name:'Invigorate',    cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
   { id:'galvanize',    name:'Galvanize',     cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
@@ -384,12 +447,15 @@ const QUALITIES = [
 const Q = Object.fromEntries(QUALITIES.map(q=>[q.id,q]));
 const CAT_CSS = { Target:'cat-target',Range:'cat-range',Potency:'cat-potency',General:'cat-general',Modifier:'cat-modifier',Animation:'cat-animation',Status:'cat-status',Condition:'cat-condition',Design:'cat-design',Flaw:'cat-flaw' };
 const CATEGORIES = [...new Set(QUALITIES.map(q=>q.cat))];
+const ATTRIBUTES = ['Power','Finesse','Resolve','Intensity','Awareness'];
 
 // ─── State ─────────────────────────────────────────────────────────────────────
 let blocks=[], nextBid=1, nextGid=1;
 let dragId=null, pendingLinkCtx=null, activeBlockId=null;
 let activeFilter='All', searchText='';
 let isPreceptor=false, isBalancer=false, isDrawerOpen=false, toastTimer=null;
+let undoStack=[];           // array of JSON snapshots
+let quickStack=false;       // skip dialog, always stack onto first existing instance
 
 function getCR() { return parseInt(document.getElementById('cr-select').value,10); }
 function catClass(c) { return CAT_CSS[c]||''; }
@@ -426,9 +492,69 @@ function showStackDialog(qualityName, options) {
 }
 function hideStackDialog() { document.getElementById('stack-dialog-overlay').classList.remove('visible'); }
 document.getElementById('stack-dialog-cancel').addEventListener('click', hideStackDialog);
-document.getElementById('stack-dialog-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideStackDialog(); });document.getElementById('fab').addEventListener('click',()=>isDrawerOpen?closeDrawer():openDrawer());
+document.getElementById('stack-dialog-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideStackDialog(); });
+
+// ─── Attribute picker dialog ──────────────────────────────────────────────────
+// Shows attribute choices for Burden/Boost, filtering out already-used attrs
+function showAttrDialog(qid, bid, usedAttrs) {
+  const qdef = Q[qid];
+  const overlay = document.getElementById('attr-dialog-overlay');
+  document.getElementById('attr-dialog-title').textContent = `Choose Attribute — ${qdef.name}`;
+  document.getElementById('attr-dialog-sub').textContent =
+    usedAttrs.length ? `Already used: ${usedAttrs.join(', ')}. Pick a different attribute.`
+                     : 'Choose one attribute. Each instance must target a different one.';
+  const opts = document.getElementById('attr-dialog-opts');
+  opts.innerHTML = '';
+  const available = ATTRIBUTES.filter(a => !usedAttrs.includes(a));
+  for (const attr of available) {
+    const btn = document.createElement('button');
+    btn.className = 'stack-opt';
+    btn.innerHTML = `<span class="stack-opt-icon">◈</span><div class="stack-opt-text"><div class="stack-opt-label">${attr}</div></div>`;
+    btn.addEventListener('click', () => {
+      hideAttrDialog();
+      snapshot();
+      const b = blocks.find(x => x.bid === bid);
+      if (b) { b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1,attr}],accum:null}); }
+      renderAll();
+    });
+    opts.appendChild(btn);
+  }
+  overlay.classList.add('visible');
+}
+function hideAttrDialog() { document.getElementById('attr-dialog-overlay').classList.remove('visible'); }
+document.getElementById('attr-dialog-cancel').addEventListener('click', hideAttrDialog);
+document.getElementById('attr-dialog-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideAttrDialog(); });
+
+document.getElementById('fab').addEventListener('click',()=>isDrawerOpen?closeDrawer():openDrawer());
 document.getElementById('drawer-overlay').addEventListener('click',closeDrawer);
 document.getElementById('drawer-handle').addEventListener('click',closeDrawer);
+
+// ─── Undo ─────────────────────────────────────────────────────────────────────
+function snapshot() {
+  undoStack.push(JSON.stringify({blocks,nextBid,nextGid,activeBlockId}));
+  if (undoStack.length>50) undoStack.shift();
+  const btn=document.getElementById('btn-undo');
+  const btnM=document.getElementById('btn-undo-mobile');
+  if(btn)btn.disabled=false;
+  if(btnM)btnM.disabled=false;
+}
+function undo() {
+  if (!undoStack.length) return;
+  const state=JSON.parse(undoStack.pop());
+  ({blocks,nextBid,nextGid,activeBlockId}=state);
+  const btn=document.getElementById('btn-undo');
+  const btnM=document.getElementById('btn-undo-mobile');
+  if(btn)btn.disabled=undoStack.length===0;
+  if(btnM)btnM.disabled=undoStack.length===0;
+  renderAll();
+}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}});
+
+// ─── Quick-stack toggle ────────────────────────────────────────────────────────
+document.getElementById('quick-stack-toggle').addEventListener('click',()=>{
+  quickStack=!quickStack;
+  document.getElementById('quick-stack-toggle').classList.toggle('on',quickStack);
+});
 
 document.getElementById('preceptor-toggle').addEventListener('click',()=>{
   isPreceptor=!isPreceptor;
@@ -467,9 +593,13 @@ function statusCountInGroup(g) {
 // Returns true if this group can accept an Accumulation tail (or stack onto existing)
 function groupCanHaveAccum(g) {
   const sc = statusCountInGroup(g);
-  if (sc===0) return false; // need at least one Status Effect
-  // If Duration group, linked must all be Status Effects (not Conditions)
-  if (g.isDuration && g.linked.some(lk=>Q[lk.id]?.cat!=='Status')) return false;
+  if (sc===0) return false;
+  if (g.isDuration) {
+    if (g.linked.some(lk=>Q[lk.id]?.cat!=='Status')) return false;
+    if (g.linked.some(lk=>Q[lk.id]?.noAccum)) return false;
+  } else {
+    if (g.items.some(it=>Q[it.id]?.noAccum)) return false;
+  }
   return true;
 }
 
@@ -510,7 +640,13 @@ function canAddToBlock(qdef,bid) {
   }
   if (qdef.cat==='Range') { if(b?.rangeId){showToast('Only one Range per block.',true);return false;} return true; }
   if (qdef.isDuration) { if(totalDurCount()>=cr){showToast('CR limit reached for Duration.',true);return false;} return true; }
-  if (qdef.isStatus) { if(qdef.statusMax!=null&&globalCount(qdef.id)>=qdef.statusMax){showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`,true);return false;} return true; }
+  if (qdef.isStatus) {
+    if (qdef.statusMax!=null) {
+      if (globalCount(qdef.id)>=qdef.statusMax) { showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`,true); return false; }
+      return true; // has own cap, ignores CR
+    }
+    // No specific max — falls through to CR check below
+  }
   if (qdef.flaw) return true;
   if (globalCount(qdef.id)>=cr) { showToast(`CR limit reached for ${qdef.name}.`,true); return false; }
   return true;
@@ -569,7 +705,7 @@ function addToBlock(bid,qid) {
       showToast('Add a Status Effect first. Accumulation must be paired with at least one Status Effect.',true); return;
     }
     if (eligible.length===1) {
-      // Auto-attach (or stack) if only one eligible group
+      snapshot();
       addAccumToGroup(eligible[0].gid); return;
     }
     // Multiple options — enter pending mode, show + Accumulation buttons on each eligible group
@@ -586,6 +722,7 @@ function addToBlock(bid,qid) {
 
   if (!canAddToBlock(qdef,bid)) return;
 
+  snapshot();
   if (qdef.cat==='Target') {
     if (!b.targetId){b.targetId=qid;b.targetCount=1;}
     else if (b.targetId===qid&&qid!=='single') b.targetCount++;
@@ -603,10 +740,34 @@ function addToBlock(bid,qid) {
   const hasExisting = existingInStandalone.length > 0 || existingInDuration.length > 0;
 
   if (hasExisting && qdef.noStack) {
+    // Special case: requiresAttr qualities (Burden/Boost) can have multiple instances
+    // as long as each has a different attribute — show attr picker
+    if (qdef.requiresAttr) {
+      const usedAttrs = existingInStandalone.map(e=>e.it.attr).filter(Boolean);
+      if (usedAttrs.length >= ATTRIBUTES.length) {
+        showToast(`All attributes already used for ${qdef.name}.`, true); return;
+      }
+      if(isMobile())closeDrawer();
+      showAttrDialog(qid, bid, usedAttrs);
+      return;
+    }
     showToast(`${qdef.name} does not stack. Use the − button to remove the existing one first.`, true); return;
   }
 
+  // requiresAttr with no existing instance — still need to pick attribute
+  if (qdef.requiresAttr) {
+    if(isMobile())closeDrawer();
+    showAttrDialog(qid, bid, []);
+    return;
+  }
+
   if (hasExisting) {
+    // Quick-stack: bypass dialog, stack onto first existing instance
+    if (quickStack) {
+      const first = existingInStandalone[0] || existingInDuration[0];
+      const target = existingInStandalone.length ? first.it : first.lk;
+      target.count++; renderAll(); return;
+    }
     const opts = [];
     // Stack options — one per existing instance
     for (const {g,it} of existingInStandalone) {
@@ -639,19 +800,17 @@ function linkToGroup(gid,qid) {
   const qdef=Q[qid]; if(!qdef)return;
   for (const b of blocks) {
     const g=b.groups.find(x=>x.gid===gid); if(!g||!g.isDuration)continue;
-    if (qdef.isDuration){if(!canAddToBlock(qdef,b.bid))return;g.durCount++;renderAll();return;}
-    // Check if already linked in this Duration group
+    if (qdef.isDuration){if(!canAddToBlock(qdef,b.bid))return;snapshot();g.durCount++;renderAll();return;}
     const ex=g.linked.find(x=>x.id===qid);
     if (ex) {
-      // Already linked — offer stack vs new (new = add to standalone)
       showStackDialog(qdef.name,[
         { icon:'＋', label:`Stack onto ${qdef.name} ×${ex.count}`, desc:`Increase to ×${ex.count+1} (inside this Duration)`,
-          action:()=>{ if(!canAddToBlock(qdef,b.bid))return; ex.count++; renderAll(); } },
+          action:()=>{ if(!canAddToBlock(qdef,b.bid))return; snapshot(); ex.count++; renderAll(); } },
         { icon:'◈', label:`Add new ${qdef.name}`, desc:'Link as a separate instance on this Duration (if slots available)',
           action:()=>{
             if(!canLinkToDuration(qdef,g))return;
             if(!canAddToBlock(qdef,b.bid))return;
-            g.linked.push({id:qid,count:1,subLinks:[]});
+            snapshot(); g.linked.push({id:qid,count:1,subLinks:[]});
             renderAll();
           }
         }
@@ -660,7 +819,7 @@ function linkToGroup(gid,qid) {
     }
     if (!canLinkToDuration(qdef,g))return;
     if (!canAddToBlock(qdef,b.bid))return;
-    g.linked.push({id:qid,count:1,subLinks:[]});
+    snapshot(); g.linked.push({id:qid,count:1,subLinks:[]});
     renderAll(); return;
   }
 }
@@ -670,13 +829,12 @@ function addAccumToGroup(gid) {
   for (const b of blocks) {
     const g=b.groups.find(x=>x.gid===gid); if(!g)continue;
     if (g.accum) {
-      // Already has Accumulation — increment, respecting CR limit
       if (globalCount('accumulation') >= cr) { showToast(`CR limit reached for Accumulation (max ${cr}).`,true); return; }
-      g.accum.count++; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
+      snapshot(); g.accum.count++; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
     }
     if (!groupCanHaveAccum(g)){showToast('Cannot add Accumulation to this group.',true);return;}
     if (globalCount('accumulation') >= cr) { showToast(`CR limit reached for Accumulation (max ${cr}).`,true); return; }
-    g.accum={count:1}; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
+    snapshot(); g.accum={count:1}; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
   }
 }
 
@@ -685,33 +843,36 @@ function addContagiousToLinked(gid,linkedId) {
     const g=b.groups.find(x=>x.gid===gid); if(!g||!g.isDuration)continue;
     const lk=g.linked.find(x=>x.id===linkedId); if(!lk)continue;
     if (!lk.subLinks)lk.subLinks=[];
-    const ex=lk.subLinks.find(x=>x.id==='contagious'); if(ex)ex.count++; else lk.subLinks.push({id:'contagious',count:1});
+    const ex=lk.subLinks.find(x=>x.id==='contagious');
+    snapshot();
+    if(ex)ex.count++; else lk.subLinks.push({id:'contagious',count:1});
     pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
   }
 }
 
-function decrementTarget(bid) { const b=blocks.find(x=>x.bid===bid);if(!b||!b.targetId)return;b.targetCount=(b.targetCount||1)-1;if(b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;}renderAll(); }
-function removeRangeFromBlock(bid) { const b=blocks.find(x=>x.bid===bid);if(b){b.rangeId=null;renderAll();} }
-function removeGroup(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(b){b.groups=b.groups.filter(x=>x.gid!==gid);renderAll();} }
-function removeAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(g)g.accum=null;renderAll(); }
-function decrementAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(!g||!g.accum)return;g.accum.count--;if(g.accum.count<=0)g.accum=null;renderAll(); }
-function removeBlock(bid) { blocks=blocks.filter(x=>x.bid!==bid);renderAll(); }
-function addCompoundBlock() { blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]});if(isMobile())showToast('Compound block added. Tap it to make it active.');renderAll(); }
-function clearAll() { blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];activeBlockId=null;renderAll(); }
+function decrementTarget(bid) { const b=blocks.find(x=>x.bid===bid);if(!b||!b.targetId)return;snapshot();b.targetCount=(b.targetCount||1)-1;if(b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;}renderAll(); }
+function removeRangeFromBlock(bid) { const b=blocks.find(x=>x.bid===bid);if(b){snapshot();b.rangeId=null;renderAll();} }
+function removeGroup(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(b){snapshot();b.groups=b.groups.filter(x=>x.gid!==gid);renderAll();} }
+function removeAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(g){snapshot();g.accum=null;renderAll();} }
+function decrementAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(!g||!g.accum)return;snapshot();g.accum.count--;if(g.accum.count<=0)g.accum=null;renderAll(); }
+function removeBlock(bid) { snapshot();blocks=blocks.filter(x=>x.bid!==bid);renderAll(); }
+function addCompoundBlock() { snapshot();blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]});if(isMobile())showToast('Compound block added. Tap it to make it active.');renderAll(); }
+function clearAll() { snapshot();blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];activeBlockId=null;renderAll(); }
 function blockPhase(b) { if(!b.targetId)return'target';if(!b.rangeId)return'range';return'effects'; }
 
 // ─── Chip ─────────────────────────────────────────────────────────────────────
 // onAdd: if provided AND quality is stackable, shows a + button
-function makeChip(id, count, extraClass, onRemove, onAdd) {
+// attr: optional attribute label shown as a small tag (for Burden/Boost)
+function makeChip(id, count, extraClass, onRemove, onAdd, attr) {
   const qdef=Q[id]; if(!qdef)return document.createTextNode('');
   const chip=document.createElement('div');
   chip.className=`q-chip ${catClass(qdef.cat)}${extraClass?' '+extraClass:''}`;
   const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
-  // Show + only if onAdd is provided and quality is stackable
+  const attrStr=attr?`<span class="chip-attr">${attr}</span>`:'';
   const showAdd = onAdd && !qdef.noStack;
-  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${stackStr}${showAdd?`<span class="chip-add" role="button" aria-label="Add one more ${qdef.name}">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button" aria-label="Remove ${qdef.name}">−</span>`:''}`;
-  if (showAdd) chip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();onAdd();});
-  if (onRemove) chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();onRemove();});
+  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${attrStr}${stackStr}${showAdd?`<span class="chip-add" role="button" aria-label="Add one more ${qdef.name}">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button" aria-label="Remove ${qdef.name}">−</span>`:''}`;
+  if (showAdd) chip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();snapshot();onAdd();});
+  if (onRemove) chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();onRemove();});
   return chip;
 }
 
@@ -748,8 +909,8 @@ function renderAll() {
       const ss=(b.targetCount||1)>1?`<span class="chip-stack">${b.targetCount}×${tq.cost}</span>`:'';
       const tCanAdd = tq.id!=='single';
       tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}${tCanAdd?`<span class="chip-add" role="button">＋</span>`:''}${`<span class="chip-remove" role="button">−</span>`}`;
-      if(tCanAdd) tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();if(canAddToBlock(tq,b.bid))b.targetCount++;renderAll();});
-      tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();decrementTarget(b.bid);});
+      if(tCanAdd) tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();if(canAddToBlock(tq,b.bid)){snapshot();b.targetCount++;}renderAll();});
+      tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();decrementTarget(b.bid);});
       tRow.appendChild(tChip);
       if (b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
       const gd=document.createElement('span');gd.className='group-delete';gd.textContent='✕';gd.addEventListener('click',e=>{e.stopPropagation();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();});tRow.appendChild(gd);
@@ -845,7 +1006,7 @@ function renderAll() {
             renderAll();
           },()=>{
             if(!canAddToBlock(Q[it.id],b.bid))return; it.count++; renderAll();
-          }));
+          },it.attr||null));
           const qd=Q[it.id];if(qd)summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:''));
         }
 
@@ -861,6 +1022,54 @@ function renderAll() {
           aBtn.addEventListener('click',e=>{e.stopPropagation();addAccumToGroup(g.gid);});gDiv.appendChild(aBtn);
         }
       }
+
+      // Drag-to-reorder handle
+      const handle=document.createElement('span');
+      handle.className='group-drag-handle';
+      handle.textContent='⠿';
+      handle.title='Drag to reorder';
+      handle.draggable=true;
+      handle.addEventListener('dragstart',e=>{
+        e.stopPropagation();
+        e.dataTransfer.effectAllowed='move';
+        e.dataTransfer.setData('reorder-gid', String(g.gid));
+        e.dataTransfer.setData('reorder-bid', String(b.bid));
+        setTimeout(()=>gDiv.classList.add('dragging-group'),0);
+      });
+      handle.addEventListener('dragend',()=>gDiv.classList.remove('dragging-group'));
+      gDiv.insertBefore(handle, gDiv.firstChild);
+
+      // Drop targets for reordering
+      gDiv.addEventListener('dragover',e=>{
+        if (!e.dataTransfer.types.includes('reorder-gid')) return;
+        e.preventDefault(); e.stopPropagation();
+        const rect=gDiv.getBoundingClientRect();
+        const mid=rect.top+rect.height/2;
+        gDiv.classList.remove('drop-above','drop-below');
+        gDiv.classList.add(e.clientY<mid?'drop-above':'drop-below');
+      });
+      gDiv.addEventListener('dragleave',()=>gDiv.classList.remove('drop-above','drop-below'));
+      gDiv.addEventListener('drop',e=>{
+        if (!e.dataTransfer.types.includes('reorder-gid')) return;
+        e.preventDefault(); e.stopPropagation();
+        gDiv.classList.remove('drop-above','drop-below');
+        const fromGid=parseInt(e.dataTransfer.getData('reorder-gid'));
+        const fromBid=parseInt(e.dataTransfer.getData('reorder-bid'));
+        if (fromGid===g.gid) return;
+        const srcBlock=blocks.find(x=>x.bid===fromBid);
+        const dstBlock=blocks.find(x=>x.bid===b.bid);
+        if (!srcBlock||!dstBlock) return;
+        const srcIdx=srcBlock.groups.findIndex(x=>x.gid===fromGid);
+        const dstIdx=dstBlock.groups.findIndex(x=>x.gid===g.gid);
+        if (srcIdx<0||dstIdx<0) return;
+        snapshot();
+        const [moved]=srcBlock.groups.splice(srcIdx,1);
+        const rect=gDiv.getBoundingClientRect();
+        const insertAfter=e.clientY>=(rect.top+rect.height/2);
+        const finalIdx=dstBlock.groups.findIndex(x=>x.gid===g.gid);
+        dstBlock.groups.splice(insertAfter?finalIdx+1:finalIdx,0,moved);
+        renderAll();
+      });
 
       const gDel=document.createElement('span');gDel.className='group-delete';gDel.textContent='✕';gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);});gDiv.appendChild(gDel);
       blockDiv.appendChild(gDiv);
@@ -951,7 +1160,7 @@ function exportAbility() {
         lines.push(line);
       } else {
         let line='   ';
-        const itemStrs=g.items.map(it=>{const qd=Q[it.id];return qd?` + ${qd.name} (${qd.cost}×${it.count})`:''}).join('');
+        const itemStrs=g.items.map(it=>{const qd=Q[it.id];return qd?` + ${qd.name}${it.attr?` [${it.attr}]`:''} (${qd.cost}×${it.count})`:''}).join('');
         line+=itemStrs;
         if(g.accum)line+=` - Accumulation (3×${g.accum.count})`;
         if(line.trim())lines.push(line);
@@ -965,6 +1174,65 @@ function exportAbility() {
     +lines.join('\n')
   ],{type:'text/plain'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${name.replace(/\s+/g,'_')}.txt`;a.click();
+}
+
+// ─── Saved abilities ──────────────────────────────────────────────────────────
+const SAVE_KEY = 'exemplar-saved-abilities';
+
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem(SAVE_KEY)||'[]'); } catch { return []; }
+}
+
+function saveAbility() {
+  const name = document.getElementById('ability-name').value.trim() || 'Unnamed Ability';
+  const {total} = calcCosts();
+  const saved = getSaved();
+  // Overwrite if same name exists
+  const idx = saved.findIndex(s=>s.name===name);
+  const entry = { name, total, blocks: JSON.parse(JSON.stringify(blocks)), nextBid, nextGid, cr: getCR(), isPreceptor, isBalancer, ts: Date.now() };
+  if (idx>=0) saved[idx]=entry; else saved.unshift(entry);
+  localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
+  showToast(`Saved "${name}".`);
+  renderSavedList();
+}
+
+function loadAbility(entry) {
+  snapshot();
+  blocks = JSON.parse(JSON.stringify(entry.blocks));
+  nextBid = entry.nextBid;
+  nextGid = entry.nextGid;
+  document.getElementById('ability-name').value = entry.name;
+  document.getElementById('cr-select').value = String(entry.cr||1);
+  isPreceptor = !!entry.isPreceptor;
+  isBalancer  = !!entry.isBalancer;
+  document.getElementById('preceptor-toggle').classList.toggle('active', isPreceptor);
+  document.getElementById('balancer-toggle').classList.toggle('active', isBalancer);
+  activeBlockId = blocks[0]?.bid || null;
+  renderAll();
+  showToast(`Loaded "${entry.name}".`);
+}
+
+function deleteSaved(name) {
+  const saved = getSaved().filter(s=>s.name!==name);
+  localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
+  renderSavedList();
+}
+
+function renderSavedList() {
+  const list = document.getElementById('saved-list');
+  const saved = getSaved();
+  if (!saved.length) { list.innerHTML='<div class="saved-empty">No saved abilities yet.</div>'; return; }
+  list.innerHTML='';
+  for (const entry of saved) {
+    const row=document.createElement('div'); row.className='saved-item';
+    const nm=document.createElement('span'); nm.className='saved-item-name'; nm.textContent=entry.name;
+    nm.addEventListener('click',()=>loadAbility(entry));
+    const pts=document.createElement('span'); pts.className='saved-item-pts'; pts.textContent=`${entry.total} pts`;
+    const del=document.createElement('span'); del.className='saved-item-del'; del.textContent='✕';
+    del.addEventListener('click',e=>{e.stopPropagation();deleteSaved(entry.name);});
+    row.appendChild(nm); row.appendChild(pts); row.appendChild(del);
+    list.appendChild(row);
+  }
 }
 
 // ─── Filters ──────────────────────────────────────────────────────────────────
@@ -1010,6 +1278,7 @@ blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null
 activeBlockId=blocks[0].bid;
 renderBank();
 renderAll();
+renderSavedList();
 </script>
 </body>
 </html>
