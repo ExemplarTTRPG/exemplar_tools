@@ -13,20 +13,6 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .header-sub { font-size: 12px; color: #a89fc7; flex: 1; display: none; }
 @media (min-width: 700px) { .header-sub { display: block; } }
 
-.design-toggle { display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 12px; cursor: pointer; user-select: none; transition: background 0.15s; border: 1px solid rgba(255,255,255,0.1); touch-action: manipulation; }
-.design-toggle:hover { background: rgba(255,255,255,0.12); }
-.design-toggle.preceptor.active { background: rgba(127,100,220,0.3); border-color: rgba(160,140,255,0.45); }
-.design-toggle.balancer.active  { background: rgba(30,140,100,0.3);  border-color: rgba(80,200,150,0.45); }
-.dt-label { font-size: 12px; font-weight: 600; color: #b0a8d8; white-space: nowrap; }
-.design-toggle.balancer .dt-label { color: #a8d8c0; }
-.design-toggle.preceptor.active .dt-label { color: #ddd8ff; }
-.design-toggle.balancer.active .dt-label  { color: #d8fff0; }
-.toggle-pip { width: 32px; height: 18px; border-radius: 9px; background: #444; position: relative; transition: background 0.2s; flex-shrink: 0; }
-.design-toggle.preceptor.active .toggle-pip { background: #8f7fdd; }
-.design-toggle.balancer.active  .toggle-pip { background: #2a9e72; }
-.toggle-pip::after { content: ''; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
-.design-toggle.active .toggle-pip::after { transform: translateX(14px); }
-
 .app { display: flex; flex: 1; overflow: hidden; }
 
 .panel-left { width: 300px; flex-shrink: 0; background: #fff; border-right: 1px solid #e2e0da; display: flex; flex-direction: column; overflow: hidden; }
@@ -86,6 +72,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .total-value.dmg  { color: #c0392b; }
 .total-value.heal { color: #27ae60; }
 .total-value.res  { color: #8e44ad; }
+.total-value.status { color: #639922; }
 .grade-select { font-size: 13px; font-weight: 600; color: #1a1a1a; background: #f5f4f0; border: 1px solid #d0cec8; border-radius: 6px; padding: 4px 8px; outline: none; cursor: pointer; min-height: 32px; }
 
 .builder-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
@@ -153,11 +140,9 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .fab:active { transform: scale(0.93); }
 @media (max-width: 699px) { .fab { display: flex; } }
 
-.pending-banner { display: none; background: #534ab7; color: #fff; padding: 8px 14px; font-size: 13px; font-weight: 500; text-align: center; flex-shrink: 0; border-radius: 8px; cursor: pointer; touch-action: manipulation; }
-.pending-banner.visible { display: block; }
 
 .cat-target { --cat: #1d9e75; } .cat-range     { --cat: #378add; }
-.cat-potency  { --cat: #d85a30; } .cat-general   { --cat: #ba7517; }
+.cat-potency  { --cat: #d85a30; } .cat-manipulation { --cat: #ba7517; }
 .cat-modifier { --cat: #7f77dd; } .cat-animation { --cat: #d4537e; }
 .cat-status   { --cat: #639922; } .cat-condition { --cat: #b5590c; }
 .cat-design   { --cat: #378add; } .cat-flaw      { --cat: #e24b4a; }
@@ -230,14 +215,6 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 <header>
   <h1>Exemplar Ability Builder</h1>
   <span class="header-sub">Drag or tap qualities to build your ability</span>
-  <div class="design-toggle preceptor" id="preceptor-toggle" title="Preceptors can link two Conditions to a single Duration quality">
-    <span class="dt-label">Preceptor Design</span>
-    <div class="toggle-pip"></div>
-  </div>
-  <div class="design-toggle balancer" id="balancer-toggle" title="Balancers can link two Status Effects to a single Duration or Accumulation">
-    <span class="dt-label">Balancer Design</span>
-    <div class="toggle-pip"></div>
-  </div>
 </header>
 
 <div class="drawer-overlay" id="drawer-overlay"></div>
@@ -251,7 +228,6 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
   </div>
 
   <div class="panel-right">
-    <div class="pending-banner" id="pending-banner">Tap a quality — or tap here to cancel</div>
     <div class="ability-meta">
       <div class="meta-row-1"><input type="text" id="ability-name" placeholder="Name your ability..."></div>
       <div class="meta-row-2">
@@ -271,7 +247,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
         <div class="flaw-budget" id="flaw-budget">Flaws: <span class="fb-nums"><span id="flaw-used">0</span>/<span id="flaw-max">0</span></span></div>
       </div>
     </div>
-    <!-- Totals row — shown only when ability has Damage, Healing, or Maladies -->
+    <!-- Totals row — shown only when ability has Damage, Healing, Maladies, or Status Effects -->
     <div class="totals-row" id="totals-row">
       <div class="total-item" id="total-dmg-wrap">
         <span class="total-label">Damage Attribute:</span>
@@ -289,16 +265,15 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
         <span class="total-label">Damage:</span>
         <span class="total-value dmg" id="total-dmg">—</span>
       </div>
-      <div class="meta-divider" id="total-divider-1"></div>
       <div class="total-item" id="total-heal-wrap">
         <span class="total-label">Healing:</span>
         <span class="total-value heal" id="total-heal">—</span>
       </div>
-      <div class="meta-divider" id="total-divider-2"></div>
       <div class="total-item" id="total-res-wrap">
         <span class="total-label">Resilience Damage:</span>
         <span class="total-value res" id="total-res">—</span>
       </div>
+      <div id="total-status-wrap" style="display:none;flex-wrap:wrap;gap:10px;align-items:center;"></div>
     </div>
     <div class="builder-area" id="builder-area"></div>
     <button class="btn-compound-desktop" onclick="addCompoundBlock()">＋ Add Compound Target</button>
@@ -357,212 +332,241 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 </div>
 
 <script>
+
+// ─── Quality Data ──────────────────────────────────────────────────────────────
 //
-// Group data model:
+// Data model (simplified — no more Duration linking):
 //
-//  Standalone group:
-//    { gid, isDuration:false, items:[{id,count}], accum:null|{count} }
-//    accum = Accumulation tail. When present, the group renders as:
-//      Status1 — Status2(Balancer only) — Accumulation
+//  Block: { bid, isCompound, targetId, targetCount, rangeId, groups:[] }
+//  Group: { gid, items:[{id, count, attr?}] }
 //
-//  Duration group:
-//    { gid, isDuration:true, durCount, linked:[{id,count,subLinks:[{id,count}]}], accum:null|{count} }
-//    linked = Status Effects or Conditions chained after Duration head
-//    accum = optional Accumulation tail (only when linked are all Status Effects)
-//    Full Balancer example: Duration ×N — StatusA — StatusB — Accumulation ×M
-//
-// Rules:
-//   - Accumulation can only be added when at least one Status Effect exists in the group
-//   - Balancer: up to 2 Status Effects per group (Duration or standalone) before Accumulation
-//   - Normal:   up to 1 Status Effect per group before Accumulation
-//   - Preceptor: up to 2 Conditions per Duration group (no Accumulation with Conditions)
-//   - Accumulation is incompatible with Conditions (only Status Effects)
+//  All qualities are standalone. Duration types are plain Modifiers.
+//  Status Effects and Conditions both follow the CR limit (noStack:true).
+//  Accumulation is a plain Modifier, one per ability (noStack:true).
 
 const QUALITIES = [
-  { id:'single',       name:'Single',        cat:'Target',   cost:1,  flaw:false },
-  { id:'multi-target', name:'Multi-Target',  cat:'Target',   cost:3,  flaw:false },
-  { id:'area',         name:'Area',          cat:'Target',   cost:3,  flaw:false, statusMax:5 },
-  { id:'melee',        name:'Melee',         cat:'Range',    cost:1,  flaw:false },
-  { id:'ranged',       name:'Ranged',        cat:'Range',    cost:2,  flaw:false },
-  { id:'long-ranged',  name:'Long Ranged',   cat:'Range',    cost:3,  flaw:false },
-  { id:'damage',       name:'Damage',        cat:'Potency',  cost:1,  flaw:false, durationLinkable:true },
-  { id:'healing',      name:'Healing',       cat:'Potency',  cost:1,  flaw:false, durationLinkable:true },
-  { id:'burden',       name:'Burden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true, requiresAttr:true },
-  { id:'boost',        name:'Boost',         cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true, requiresAttr:true },
-  { id:'tether',       name:'Tether',        cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
-  { id:'repel',        name:'Repel',         cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
-  { id:'hidden',       name:'Hidden',        cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
-  { id:'abjured',      name:'Abjured',       cat:'General',  cost:3,  flaw:false, durationLinkable:true, noStack:true },
-  { id:'accumulation', name:'Accumulation',  cat:'General',  cost:3,  flaw:false, isAccumulation:true },
-  { id:'artifice',     name:'Artifice',      cat:'Modifier', cost:1,  flaw:false },
-  { id:'cleave',       name:'Cleave',        cat:'Modifier', cost:1,  flaw:false },
-  { id:'cleave-15',    name:'Cleave Range 15',cat:'Modifier',cost:1,  flaw:false },
-  { id:'cleave-30',    name:'Cleave Range 30',cat:'Modifier',cost:2,  flaw:false },
-  { id:'concentrate',  name:'Concentrate',   cat:'Modifier', cost:1,  flaw:false },
-  { id:'contagious',   name:'Contagious',    cat:'Modifier', cost:1,  flaw:false, isSubLink:true, subLinkTarget:'Condition' },
-  { id:'defensive',    name:'Defensive',     cat:'Modifier', cost:1,  flaw:false, noStack:true },
-  { id:'disperse',     name:'Disperse',      cat:'Modifier', cost:3,  flaw:false },
-  { id:'duration',     name:'Duration',      cat:'Modifier', cost:2,  flaw:false, isDuration:true },
-  { id:'dynamic',      name:'Dynamic',       cat:'Modifier', cost:1,  flaw:false, noStack:true },
-  { id:'efficiency',   name:'Efficiency',    cat:'Modifier', cost:3,  flaw:false },
-  { id:'enjoin',       name:'Enjoin',        cat:'Modifier', cost:1,  flaw:false, noStack:true },
-  { id:'enjoin-trig',  name:'Enjoin Trigger Charge', cat:'Modifier', cost:2, flaw:false },
-  { id:'escalating',   name:'Escalating',    cat:'Modifier', cost:3,  flaw:false, noStack:true },
-  { id:'gambit',       name:'Gambit',        cat:'Modifier', cost:1,  flaw:false, noStack:true },
-  { id:'on-next',      name:'On Next',       cat:'Modifier', cost:1,  flaw:false, noStack:true },
-  { id:'reactive',     name:'Reactive',      cat:'Modifier', cost:1,  flaw:false, noStack:true },
-  { id:'repeating',    name:'Repeating',     cat:'Modifier', cost:1,  flaw:false },
-  { id:'reposition',   name:'Reposition',    cat:'Modifier', cost:1,  flaw:false },
-  { id:'suspend',      name:'Suspend',       cat:'Modifier', cost:1,  flaw:false },
-  { id:'animated',     name:'Animated',      cat:'Animation',cost:1,  flaw:false },
-  { id:'attach',       name:'Attach',        cat:'Animation',cost:2,  flaw:false },
-  { id:'detonate',     name:'Detonate',      cat:'Animation',cost:3,  flaw:false },
-  // Status Effects — Boons (durationLinkable = can link to Duration)
-  { id:'empower',      name:'Empower',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'hearten',      name:'Hearten',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'magnify',      name:'Magnify',       cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'protection',   name:'Protection',    cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
-  { id:'attrition',    name:'Attrition',     cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'fortify',      name:'Fortify',       cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noAccum:true },
-  { id:'inoculate',    name:'Inoculate',     cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  // Status Effects — Banes
-  { id:'weaken',       name:'Weaken',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'wither',       name:'Wither',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'quell',        name:'Quell',         cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:5,  durationLinkable:true },
-  { id:'amplification',name:'Amplification', cat:'Status',cost:1,flaw:false,isStatus:true,statusMax:10, durationLinkable:true },
-  { id:'expose',       name:'Expose',        cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true },
-  { id:'destabilize',  name:'Destabilize',   cat:'Status',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noAccum:true },
-  { id:'infect',       name:'Infect',        cat:'Status',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:false,noAccum:true },
-  // Conditions — Glories (do not stack)
-  { id:'invigorate',   name:'Invigorate',    cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'galvanize',    name:'Galvanize',     cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'determined',   name:'Determined',    cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'courage',      name:'Courage',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'prepare',      name:'Prepare',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'temper',       name:'Temper',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'hasten',       name:'Hasten',        cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'quicken',      name:'Quicken',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'elude',        name:'Elude',         cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'stimulate',    name:'Stimulate',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'freedom',      name:'Freedom',       cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'enkindle',     name:'Enkindle',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  // Conditions — Maladies (do not stack; Ambush also cannot have Duration increased)
-  { id:'fatigue',      name:'Fatigue',       cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'torpor',       name:'Torpor',        cat:'Condition',cost:1,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'blind',        name:'Blind',         cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'fear',         name:'Fear',          cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'unbalance',    name:'Unbalance',     cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'sunder',       name:'Sunder',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'root',         name:'Root',          cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'exhaust',      name:'Exhaust',       cat:'Condition',cost:2,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'ambush',       name:'Ambush',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:false,noStack:true },
-  { id:'strain',       name:'Strain',        cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'restrain',     name:'Restrain',      cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'disparage',    name:'Disparage',     cat:'Condition',cost:3,flaw:false,isStatus:true,statusMax:null,durationLinkable:true,noStack:true },
-  { id:'emp-limited',  name:'Employ Limited Design Action',  cat:'Design',cost:1,flaw:false },
-  { id:'emp-charge',   name:'Employ Charge Design Action',   cat:'Design',cost:2,flaw:false },
-  { id:'add-employ',   name:'Additional Employ',             cat:'Design',cost:3,flaw:false },
-  { id:'gain-limited', name:'Gain Limited Design Action',    cat:'Design',cost:2,flaw:false },
-  { id:'gain-charge',  name:'Gain Charge Design Action',     cat:'Design',cost:3,flaw:false },
-  { id:'gain-add-use', name:'Design Action Additional Use',  cat:'Design',cost:3,flaw:false },
-  { id:'flaw-suffer',  name:'Ends on Suffering Action',    cat:'Flaw',cost:-3,flaw:true },
-  { id:'flaw-malady',  name:'Ends on Receiving Malady',    cat:'Flaw',cost:-2,flaw:true },
-  { id:'flaw-glory',   name:'Ends on Receiving Glory',     cat:'Flaw',cost:-3,flaw:true },
-  { id:'flaw-cd',      name:'Enforced Cooldown',           cat:'Flaw',cost:-1,flaw:true },
-  { id:'flaw-harrow',  name:'Harrowing',                   cat:'Flaw',cost:-2,flaw:true },
-  { id:'flaw-remorse', name:'Remorseful',                  cat:'Flaw',cost:-3,flaw:true },
-  { id:'flaw-capric',  name:'Capricious',                  cat:'Flaw',cost:-2,flaw:true },
-  { id:'flaw-taxing',  name:'Taxing',                      cat:'Flaw',cost:-2,flaw:true },
-  { id:'flaw-demand',  name:'Demanding',                   cat:'Flaw',cost:-2,flaw:true },
-  { id:'flaw-seq',     name:'Sequenced',                   cat:'Flaw',cost:-1,flaw:true },
-  { id:'flaw-restr',   name:'Restricted Uses',             cat:'Flaw',cost:-3,flaw:true },
-  { id:'flaw-bself',   name:'Burden Self',                 cat:'Flaw',cost:-3,flaw:true },
-  { id:'flaw-mself',   name:'Malady to Self',              cat:'Flaw',cost:-1,flaw:true },
-  { id:'flaw-mdur',    name:'Malady to Self Duration',     cat:'Flaw',cost:-3,flaw:true },
-  { id:'flaw-minr',    name:'Minimum Range',               cat:'Flaw',cost:-1,flaw:true },
-  { id:'flaw-limr',    name:'Limited Range',               cat:'Flaw',cost:-1,flaw:true },
-  { id:'flaw-unique',  name:'Unique Requirement',          cat:'Flaw',cost:-1,flaw:true },
+  // Target
+  { id:'single',         name:'Single',                    cat:'Target',       cost:1,  flaw:false },
+  { id:'multi-target',   name:'Multi-Target',              cat:'Target',       cost:3,  flaw:false },
+  { id:'area',           name:'Area',                      cat:'Target',       cost:3,  flaw:false },
+  // Range
+  { id:'melee',          name:'Melee',                     cat:'Range',        cost:1,  flaw:false },
+  { id:'ranged',         name:'Ranged',                    cat:'Range',        cost:2,  flaw:false },
+  { id:'long-ranged',    name:'Long Ranged',               cat:'Range',        cost:3,  flaw:false },
+  // Potency
+  { id:'damage',         name:'Damage',                    cat:'Potency',      cost:1,  flaw:false },
+  { id:'healing',        name:'Healing',                   cat:'Potency',      cost:1,  flaw:false },
+  // Manipulation (formerly General Effects)
+  { id:'burden',         name:'Burden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true, requiresAttr:true },
+  { id:'boost',          name:'Boost',                     cat:'Manipulation', cost:3,  flaw:false, noStack:true, requiresAttr:true },
+  { id:'tether',         name:'Tether',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  { id:'repel',          name:'Repel',                     cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  { id:'hidden',         name:'Hidden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  { id:'abjured',        name:'Abjured',                   cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  // Modifiers
+  { id:'accumulation',   name:'Accumulation',              cat:'Modifier',     cost:3,  flaw:false },
+  { id:'artifice',       name:'Artifice',                  cat:'Modifier',     cost:1,  flaw:false },
+  { id:'cleave',         name:'Cleave',                    cat:'Modifier',     cost:1,  flaw:false },
+  { id:'cleave-15',      name:'Cleave Range Near',         cat:'Modifier',     cost:1,  flaw:false },
+  { id:'cleave-30',      name:'Cleave Range Short',        cat:'Modifier',     cost:2,  flaw:false },
+  { id:'concentrate',    name:'Concentrate',               cat:'Modifier',     cost:1,  flaw:false },
+  { id:'contagious',     name:'Contagious',                cat:'Modifier',     cost:1,  flaw:false },
+  { id:'defensive',      name:'Defensive',                 cat:'Modifier',     cost:1,  flaw:false, noStack:true },
+  { id:'disperse',       name:'Disperse',                  cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-conditions', name:'Duration - Conditions',     cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-status',     name:'Duration - Status',         cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-manipulate', name:'Duration - Manipulations',  cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-potency',    name:'Duration - Potency',        cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-objects',    name:'Duration - Objects',        cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dynamic',        name:'Dynamic',                   cat:'Modifier',     cost:1,  flaw:false, noStack:true },
+  { id:'efficiency',     name:'Efficiency',                cat:'Modifier',     cost:3,  flaw:false },
+  { id:'enjoin',         name:'Enjoin',                    cat:'Modifier',     cost:1,  flaw:false, noStack:true },
+  { id:'enjoin-adapt',   name:'Adaptive Enjoin',           cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  { id:'enjoin-trig',    name:'Enjoin Trigger Charge',     cat:'Modifier',     cost:3,  flaw:false },
+  { id:'escalating',     name:'Escalating',                cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  { id:'gambit',         name:'Gambit',                    cat:'Modifier',     cost:1,  flaw:false, noStack:true },
+  { id:'on-next',        name:'On Next',                   cat:'Modifier',     cost:1,  flaw:false, noStack:true },
+  { id:'reactive',       name:'Reactive',                  cat:'Modifier',     cost:1,  flaw:false, noStack:true },
+  { id:'repeating',      name:'Repeating',                 cat:'Modifier',     cost:1,  flaw:false },
+  { id:'reposition',     name:'Reposition',                cat:'Modifier',     cost:1,  flaw:false },
+  { id:'suspend',        name:'Suspend',                   cat:'Modifier',     cost:1,  flaw:false },
+  { id:'versatile',      name:'Versatile',                 cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  // Animation
+  { id:'animated',       name:'Animated',                  cat:'Animation',    cost:1,  flaw:false },
+  { id:'attach',         name:'Attach',                    cat:'Animation',    cost:2,  flaw:false },
+  { id:'detonate',       name:'Detonate',                  cat:'Animation',    cost:3,  flaw:false },
+  // Status Effects — all noStack:true, cost:3, CR-limited
+  { id:'empower',        name:'Empower',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'hearten',        name:'Hearten',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'magnify',        name:'Magnify',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'protection',     name:'Protection',                cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'attrition',      name:'Attrition',                 cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'fortify',        name:'Fortify',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'inoculate',      name:'Inoculate',                 cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'weaken',         name:'Weaken',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'wither',         name:'Wither',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'quell',          name:'Quell',                     cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'amplification',  name:'Amplification',             cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'expose',         name:'Expose',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'destabilize',    name:'Destabilize',               cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'infect',         name:'Infect',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
+  // Conditions — Glories (noStack:true, CR-limited)
+  { id:'invigorate',     name:'Invigorate',                cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'galvanize',      name:'Galvanize',                 cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'determined',     name:'Determined',                cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'courage',        name:'Courage',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'prepare',        name:'Prepare',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'temper',         name:'Temper',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'hasten',         name:'Hasten',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'quicken',        name:'Quicken',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'elude',          name:'Elude',                     cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'stimulate',      name:'Stimulate',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'freedom',        name:'Freedom',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'enkindle',       name:'Enkindle',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  // Conditions — Maladies (noStack:true, CR-limited)
+  { id:'fatigue',        name:'Fatigue',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'torpor',         name:'Torpor',                    cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'blind',          name:'Blind',                     cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'fear',           name:'Fear',                      cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'unbalance',      name:'Unbalance',                 cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'sunder',         name:'Sunder',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'root',           name:'Root',                      cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'exhaust',        name:'Exhaust',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'ambush',         name:'Ambush',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'strain',         name:'Strain',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'restrain',       name:'Restrain',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'disparage',      name:'Disparage',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  // Design Actions
+  { id:'emp-limited',    name:'Employ Limited Design Action',      cat:'Design', cost:1, flaw:false },
+  { id:'emp-charge',     name:'Employ Charge Design Action',       cat:'Design', cost:2, flaw:false },
+  { id:'add-employ',     name:'Additional Employ',                 cat:'Design', cost:3, flaw:false },
+  { id:'gain-limited',   name:'Gain Limited Design Action',        cat:'Design', cost:2, flaw:false },
+  { id:'gain-charge',    name:'Gain Charge Design Action',         cat:'Design', cost:3, flaw:false },
+  { id:'gain-add-use',   name:'Design Action Additional Use',      cat:'Design', cost:3, flaw:false },
+  // Flaws
+  { id:'flaw-suffer',    name:'Ends on Suffering Action',          cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-malady',    name:'Ends on Receiving Malady',          cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-glory',     name:'Ends on Receiving Glory',           cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-cd',        name:'Enforced Cooldown',                 cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-harrow',    name:'Harrowing',                         cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-remorse',   name:'Remorseful',                        cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-capric',    name:'Capricious',                        cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-taxing',    name:'Taxing',                            cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-demand',    name:'Demanding',                         cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-seq',       name:'Sequenced',                         cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-restr',     name:'Restricted Uses',                   cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-bself',     name:'Burden Self',                       cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-mself',     name:'Malady to Self',                    cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-mdur',      name:'Malady to Self Duration',           cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-minr',      name:'Minimum Range',                     cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-limr',      name:'Limited Range',                     cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-unique',    name:'Unique Requirement',                cat:'Flaw',   cost:-1, flaw:true },
 ];
 
 const Q = Object.fromEntries(QUALITIES.map(q=>[q.id,q]));
-const CAT_CSS = { Target:'cat-target',Range:'cat-range',Potency:'cat-potency',General:'cat-general',Modifier:'cat-modifier',Animation:'cat-animation',Status:'cat-status',Condition:'cat-condition',Design:'cat-design',Flaw:'cat-flaw' };
+const CAT_CSS = {
+  Target:'cat-target', Range:'cat-range', Potency:'cat-potency',
+  Manipulation:'cat-manipulation', Modifier:'cat-modifier', Animation:'cat-animation',
+  Status:'cat-status', Condition:'cat-condition', Design:'cat-design', Flaw:'cat-flaw',
+};
 const CATEGORIES = [...new Set(QUALITIES.map(q=>q.cat))];
 const ATTRIBUTES = ['Power','Finesse','Resolve','Intensity','Awareness'];
 
-// Malady → Resilience damage (from wiki Conditions table)
 const RESILIENCE_DMG = {
   fear:1, unbalance:1, exhaust:1,
   blind:3, sunder:3, root:3, restrain:3, disparage:3,
   torpor:5, fatigue:5, ambush:5, strain:5,
 };
 
+// Status Effect CR multipliers for value display
+// value = multiplier × CR  (e.g. empower: 5 means 5 × CR)
+const STATUS_VALUES = {
+  empower:5, hearten:5, magnify:5, protection:5,
+  weaken:5, wither:5, quell:5, amplification:5,
+  attrition:2, expose:2, inoculate:2,
+  fortify:1, destabilize:1, infect:1,
+};
+
+// ─── Totals ────────────────────────────────────────────────────────────────────
 function calcTotals() {
   let dmgCount=0, healCount=0, resTotal=0;
+  const statusPresent=new Set();
   for (const b of blocks) {
     for (const g of b.groups) {
-      if (g.isDuration) {
-        for (const lk of g.linked) {
-          if (lk.id==='damage')  dmgCount  += lk.count;
-          if (lk.id==='healing') healCount += lk.count;
-          if (RESILIENCE_DMG[lk.id]) resTotal += RESILIENCE_DMG[lk.id] * lk.count;
-        }
-      } else {
-        for (const it of g.items) {
-          if (it.id==='damage')  dmgCount  += it.count;
-          if (it.id==='healing') healCount += it.count;
-          if (RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id] * it.count;
-        }
+      for (const it of g.items) {
+        if (it.id==='damage')  dmgCount  += it.count;
+        if (it.id==='healing') healCount += it.count;
+        if (RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id];
+        if (STATUS_VALUES[it.id]) statusPresent.add(it.id);
       }
     }
   }
-  return { dmgCount, healCount, resTotal };
+  return { dmgCount, healCount, resTotal, statusPresent };
 }
 
 function updateTotals() {
-  const { dmgCount, healCount, resTotal } = calcTotals();
-  const hasDmg  = dmgCount  > 0;
-  const hasHeal = healCount > 0;
-  const hasRes  = resTotal  > 0;
-  const visible = hasDmg || hasHeal || hasRes;
+  const { dmgCount, healCount, resTotal, statusPresent } = calcTotals();
+  const cr = getCR();
+  const hasDmg    = dmgCount > 0;
+  const hasHeal   = healCount > 0;
+  const hasRes    = resTotal > 0;
+  const hasStatus = statusPresent.size > 0;
+  const visible   = hasDmg || hasHeal || hasRes || hasStatus;
 
   document.getElementById('totals-row').classList.toggle('visible', visible);
+  document.getElementById('total-dmg-wrap').style.display    = hasDmg    ? 'flex' : 'none';
+  document.getElementById('total-heal-wrap').style.display   = hasHeal   ? 'flex' : 'none';
+  document.getElementById('total-res-wrap').style.display    = hasRes    ? 'flex' : 'none';
+  document.getElementById('total-status-wrap').style.display = hasStatus ? 'flex' : 'none';
 
-  const dmgWrap  = document.getElementById('total-dmg-wrap');
-  const healWrap = document.getElementById('total-heal-wrap');
-  const resWrap  = document.getElementById('total-res-wrap');
-  const div1     = document.getElementById('total-divider-1');
-  const div2     = document.getElementById('total-divider-2');
-
-  dmgWrap.style.display  = hasDmg  ? 'flex' : 'none';
-  healWrap.style.display = hasHeal ? 'flex' : 'none';
-  resWrap.style.display  = hasRes  ? 'flex' : 'none';
-  div1.style.display = (hasDmg  && (hasHeal || hasRes)) ? '' : 'none';
-  div2.style.display = (hasHeal && hasRes)               ? '' : 'none';
+  // Dividers — between each visible section
+  const sections = [hasDmg, hasHeal, hasRes, hasStatus];
+  const dividers = document.querySelectorAll('.total-divider-dyn');
+  dividers.forEach(d=>d.remove());
+  // Re-insert dividers between visible items dynamically
+  const wrapIds = ['total-dmg-wrap','total-heal-wrap','total-res-wrap','total-status-wrap'];
+  const visibleWraps = wrapIds.filter(id=>document.getElementById(id).style.display!=='none');
+  const row = document.getElementById('totals-row');
+  for (let i=0; i<visibleWraps.length-1; i++) {
+    const el = document.getElementById(visibleWraps[i]);
+    const div = document.createElement('div');
+    div.className='meta-divider total-divider-dyn';
+    el.insertAdjacentElement('afterend', div);
+  }
 
   if (hasDmg) {
-    const gradeVal = parseInt(document.getElementById('dmg-grade-select').value, 10);
-    document.getElementById('total-dmg').textContent = dmgCount * gradeVal;
+    const g=parseInt(document.getElementById('dmg-grade-select').value,10);
+    document.getElementById('total-dmg').textContent=dmgCount*g;
   }
-  if (hasHeal) {
-    document.getElementById('total-heal').textContent = healCount * getCR();
-  }
-  if (hasRes) {
-    document.getElementById('total-res').textContent = resTotal;
+  if (hasHeal) document.getElementById('total-heal').textContent=healCount*cr;
+  if (hasRes)  document.getElementById('total-res').textContent=resTotal;
+
+  if (hasStatus) {
+    const wrap = document.getElementById('total-status-wrap');
+    wrap.innerHTML='';
+    for (const id of [...statusPresent].sort()) {
+      const qdef=Q[id]; if(!qdef)continue;
+      const val=STATUS_VALUES[id]*cr;
+      const item=document.createElement('div');
+      item.className='total-item';
+      item.innerHTML=`<span class="total-label">${qdef.name}:</span><span class="total-value status">${val}</span>`;
+      wrap.appendChild(item);
+    }
   }
 }
 
 // ─── State ─────────────────────────────────────────────────────────────────────
 let blocks=[], nextBid=1, nextGid=1;
-let dragId=null, pendingLinkCtx=null, activeBlockId=null;
+let dragId=null, activeBlockId=null;
 let activeFilter='All', searchText='';
-let isPreceptor=false, isBalancer=false, isDrawerOpen=false, toastTimer=null;
-let undoStack=[];           // array of JSON snapshots
-let quickStack=false;       // skip dialog, always stack onto first existing instance
+let isDrawerOpen=false, toastTimer=null;
+let undoStack=[], quickStack=false;
 
 function getCR() { return parseInt(document.getElementById('cr-select').value,10); }
 function catClass(c) { return CAT_CSS[c]||''; }
 function isMobile() { return window.innerWidth<700; }
 
+// ─── Toast ─────────────────────────────────────────────────────────────────────
 function showToast(msg,err=false) {
   const t=document.getElementById('toast'); t.textContent=msg;
   t.className='toast'+(err?' error':'')+' show';
@@ -570,85 +574,26 @@ function showToast(msg,err=false) {
   toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
 }
 
+// ─── Drawer ────────────────────────────────────────────────────────────────────
 function openDrawer()  { isDrawerOpen=true;  document.getElementById('panel-left').classList.add('open');    document.getElementById('drawer-overlay').classList.add('visible'); }
 function closeDrawer() { isDrawerOpen=false; document.getElementById('panel-left').classList.remove('open'); document.getElementById('drawer-overlay').classList.remove('visible'); }
-
-// ─── Stack/New choice dialog ──────────────────────────────────────────────────
-// options = [{label, desc, icon, action}]
-function showStackDialog(qualityName, options) {
-  const overlay = document.getElementById('stack-dialog-overlay');
-  const title   = document.getElementById('stack-dialog-title');
-  const sub     = document.getElementById('stack-dialog-sub');
-  const opts    = document.getElementById('stack-dialog-opts');
-  title.textContent = qualityName;
-  sub.textContent   = 'This quality already exists. Choose what to do:';
-  opts.innerHTML    = '';
-  for (const o of options) {
-    const btn = document.createElement('button');
-    btn.className = 'stack-opt';
-    btn.innerHTML = `<span class="stack-opt-icon">${o.icon}</span><div class="stack-opt-text"><div class="stack-opt-label">${o.label}</div><div class="stack-opt-desc">${o.desc}</div></div>`;
-    btn.addEventListener('click', () => { hideStackDialog(); o.action(); });
-    opts.appendChild(btn);
-  }
-  overlay.classList.add('visible');
-}
-function hideStackDialog() { document.getElementById('stack-dialog-overlay').classList.remove('visible'); }
-document.getElementById('stack-dialog-cancel').addEventListener('click', hideStackDialog);
-document.getElementById('stack-dialog-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideStackDialog(); });
-
-// ─── Attribute picker dialog ──────────────────────────────────────────────────
-function showAttrDialog(qid, bid, usedAttrs, onPick) {
-  const qdef = Q[qid];
-  const overlay = document.getElementById('attr-dialog-overlay');
-  document.getElementById('attr-dialog-title').textContent = `Choose Attribute — ${qdef.name}`;
-  document.getElementById('attr-dialog-sub').textContent =
-    usedAttrs.length ? `Already used: ${usedAttrs.join(', ')}. Pick a different attribute.`
-                     : 'Choose one attribute. Each instance must target a different one.';
-  const opts = document.getElementById('attr-dialog-opts');
-  opts.innerHTML = '';
-  const available = ATTRIBUTES.filter(a => !usedAttrs.includes(a));
-  for (const attr of available) {
-    const btn = document.createElement('button');
-    btn.className = 'stack-opt';
-    btn.innerHTML = `<span class="stack-opt-icon">◈</span><div class="stack-opt-text"><div class="stack-opt-label">${attr}</div></div>`;
-    btn.addEventListener('click', () => {
-      hideAttrDialog();
-      if (onPick) { onPick(attr); return; }
-      // Default: add as standalone row
-      snapshot();
-      const b = blocks.find(x => x.bid === bid);
-      if (b) { b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1,attr}],accum:null}); }
-      renderAll();
-    });
-    opts.appendChild(btn);
-  }
-  overlay.classList.add('visible');
-}
-function hideAttrDialog() { document.getElementById('attr-dialog-overlay').classList.remove('visible'); }
-document.getElementById('attr-dialog-cancel').addEventListener('click', hideAttrDialog);
-document.getElementById('attr-dialog-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) hideAttrDialog(); });
-
 document.getElementById('fab').addEventListener('click',()=>isDrawerOpen?closeDrawer():openDrawer());
 document.getElementById('drawer-overlay').addEventListener('click',closeDrawer);
 document.getElementById('drawer-handle').addEventListener('click',closeDrawer);
 
-// ─── Undo ─────────────────────────────────────────────────────────────────────
+// ─── Undo ──────────────────────────────────────────────────────────────────────
 function snapshot() {
   undoStack.push(JSON.stringify({blocks,nextBid,nextGid,activeBlockId}));
-  if (undoStack.length>50) undoStack.shift();
-  const btn=document.getElementById('btn-undo');
-  const btnM=document.getElementById('btn-undo-mobile');
-  if(btn)btn.disabled=false;
-  if(btnM)btnM.disabled=false;
+  if(undoStack.length>50)undoStack.shift();
+  const btn=document.getElementById('btn-undo'); if(btn)btn.disabled=false;
+  const btnM=document.getElementById('btn-undo-mobile'); if(btnM)btnM.disabled=false;
 }
 function undo() {
-  if (!undoStack.length) return;
+  if(!undoStack.length)return;
   const state=JSON.parse(undoStack.pop());
   ({blocks,nextBid,nextGid,activeBlockId}=state);
-  const btn=document.getElementById('btn-undo');
-  const btnM=document.getElementById('btn-undo-mobile');
-  if(btn)btn.disabled=undoStack.length===0;
-  if(btnM)btnM.disabled=undoStack.length===0;
+  const btn=document.getElementById('btn-undo'); if(btn)btn.disabled=undoStack.length===0;
+  const btnM=document.getElementById('btn-undo-mobile'); if(btnM)btnM.disabled=undoStack.length===0;
   renderAll();
 }
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}});
@@ -659,118 +604,108 @@ document.getElementById('quick-stack-toggle').addEventListener('click',()=>{
   document.getElementById('quick-stack-toggle').classList.toggle('on',quickStack);
 });
 
-document.getElementById('preceptor-toggle').addEventListener('click',()=>{
-  isPreceptor=!isPreceptor;
-  document.getElementById('preceptor-toggle').classList.toggle('active',isPreceptor);
-  showToast(isPreceptor?'Preceptor Design enabled.':'Preceptor Design disabled.');
-  renderAll();
-});
-document.getElementById('balancer-toggle').addEventListener('click',()=>{
-  isBalancer=!isBalancer;
-  document.getElementById('balancer-toggle').classList.toggle('active',isBalancer);
-  showToast(isBalancer?'Balancer Design enabled.':'Balancer Design disabled.');
-  renderAll();
-});
-
-function updatePendingBanner() {
-  const banner=document.getElementById('pending-banner');
-  if (!pendingLinkCtx) { banner.classList.remove('visible'); return; }
-  let msg='Tap a quality — or tap here to cancel';
-  if (pendingLinkCtx.type==='link') msg='Tap a quality to link to Duration — or tap here to cancel';
-  else if (pendingLinkCtx.type==='accum') msg='Click + Accumulation in your ability to place it — or tap here to cancel';
-  else if (pendingLinkCtx.type==='contagious') msg='Tap + Contagious next to a Condition in a Duration row — or tap here to cancel';
-  banner.textContent=msg; banner.classList.add('visible');
+// ─── Stack/New dialog ──────────────────────────────────────────────────────────
+function showStackDialog(qualityName, options) {
+  const overlay=document.getElementById('stack-dialog-overlay');
+  document.getElementById('stack-dialog-title').textContent=qualityName;
+  document.getElementById('stack-dialog-sub').textContent='This quality already exists. Choose what to do:';
+  const opts=document.getElementById('stack-dialog-opts'); opts.innerHTML='';
+  for (const o of options) {
+    const btn=document.createElement('button'); btn.className='stack-opt';
+    btn.innerHTML=`<span class="stack-opt-icon">${o.icon}</span><div class="stack-opt-text"><div class="stack-opt-label">${o.label}</div><div class="stack-opt-desc">${o.desc}</div></div>`;
+    btn.addEventListener('click',()=>{hideStackDialog();o.action();});
+    opts.appendChild(btn);
+  }
+  overlay.classList.add('visible');
 }
-document.getElementById('pending-banner').addEventListener('click',()=>{ pendingLinkCtx=null; updatePendingBanner(); renderAll(); });
+function hideStackDialog() { document.getElementById('stack-dialog-overlay').classList.remove('visible'); }
+document.getElementById('stack-dialog-cancel').addEventListener('click',hideStackDialog);
+document.getElementById('stack-dialog-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)hideStackDialog();});
+
+// ─── Attribute picker dialog ───────────────────────────────────────────────────
+function showAttrDialog(qid, bid, usedAttrs, onPick) {
+  const qdef=Q[qid];
+  document.getElementById('attr-dialog-title').textContent=`Choose Attribute — ${qdef.name}`;
+  document.getElementById('attr-dialog-sub').textContent=usedAttrs.length
+    ?`Already used: ${usedAttrs.join(', ')}. Pick a different attribute.`
+    :'Choose one attribute. Each instance must target a different one.';
+  const opts=document.getElementById('attr-dialog-opts'); opts.innerHTML='';
+  const available=ATTRIBUTES.filter(a=>!usedAttrs.includes(a));
+  for (const attr of available) {
+    const btn=document.createElement('button'); btn.className='stack-opt';
+    btn.innerHTML=`<span class="stack-opt-icon">◈</span><div class="stack-opt-text"><div class="stack-opt-label">${attr}</div></div>`;
+    btn.addEventListener('click',()=>{
+      hideAttrDialog();
+      if (onPick){onPick(attr);return;}
+      snapshot();
+      const b=blocks.find(x=>x.bid===bid);
+      if(b)b.groups.push({gid:nextGid++,items:[{id:qid,count:1,attr}]});
+      renderAll();
+    });
+    opts.appendChild(btn);
+  }
+  document.getElementById('attr-dialog-overlay').classList.add('visible');
+}
+function hideAttrDialog() { document.getElementById('attr-dialog-overlay').classList.remove('visible'); }
+document.getElementById('attr-dialog-cancel').addEventListener('click',hideAttrDialog);
+document.getElementById('attr-dialog-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)hideAttrDialog();});
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
-function maxStatusLinks() { return isBalancer?2:1; }
-function maxConditionLinks() { return isPreceptor?2:1; }
-
-// Count how many Status Effects are in a group's linked array (Duration) or items array (standalone)
-function statusCountInGroup(g) {
-  if (g.isDuration) return g.linked.filter(lk=>Q[lk.id]?.cat==='Status').length;
-  return g.items.filter(it=>Q[it.id]?.cat==='Status').length;
-}
-
-// Returns true if this group can accept an Accumulation tail (or stack onto existing)
-function groupCanHaveAccum(g) {
-  const sc = statusCountInGroup(g);
-  if (sc===0) return false;
-  if (g.isDuration) {
-    if (g.linked.some(lk=>Q[lk.id]?.cat!=='Status')) return false;
-    if (g.linked.some(lk=>Q[lk.id]?.noAccum)) return false;
-  } else {
-    if (g.items.some(it=>Q[it.id]?.noAccum)) return false;
-  }
-  return true;
-}
-
 function globalCount(id) {
   let n=0;
   for (const b of blocks) {
-    if (b.targetId===id) n+=(b.targetCount||1);
-    if (b.rangeId===id) n++;
-    for (const g of b.groups) {
-      if (id==='accumulation' && g.accum) n+=g.accum.count;
-      if (g.isDuration) {
-        if (id==='duration') n+=g.durCount;
-        for (const lk of g.linked) { if(lk.id===id)n+=lk.count; for(const sl of(lk.subLinks||[]))if(sl.id===id)n+=sl.count; }
-      } else {
-        for (const it of g.items) { if(it.id===id)n+=it.count; }
-      }
-    }
+    if(b.targetId===id)n+=(b.targetCount||1);
+    if(b.rangeId===id)n++;
+    for (const g of b.groups) for (const it of g.items) if(it.id===id)n+=it.count;
   }
   return n;
 }
-function totalDurCount() { let n=0; for(const b of blocks)for(const g of b.groups)if(g.isDuration)n+=g.durCount; return n; }
+
+// Count distinct quality IDs in a given category across ALL blocks
+function globalCatCount(cat) {
+  const seen=new Set();
+  for (const b of blocks) {
+    if(b.targetId&&Q[b.targetId]?.cat===cat)seen.add(b.targetId);
+    if(b.rangeId&&Q[b.rangeId]?.cat===cat)seen.add(b.rangeId);
+    for (const g of b.groups) for (const it of g.items) { if(Q[it.id]?.cat===cat)seen.add(it.id); }
+  }
+  return seen.size;
+}
+
+function blockPhase(b) { if(!b.targetId)return'target'; if(!b.rangeId)return'range'; return'effects'; }
 
 function flawBudgetOk(qdef) {
   const {baseCost,flawCost}=calcCosts();
   const max=Math.round(baseCost*0.333);
-  if (flawCost+Math.abs(qdef.cost)>max) { showToast(`Flaw budget exceeded. Max: ${max} (33% of ${baseCost}).`,true); return false; }
+  if(flawCost+Math.abs(qdef.cost)>max){showToast(`Flaw budget exceeded. Max: ${max} (33% of ${baseCost}).`,true);return false;}
   return true;
 }
 
 function canAddToBlock(qdef,bid) {
-  if (qdef.flaw&&!flawBudgetOk(qdef)) return false;
+  if(qdef.flaw&&!flawBudgetOk(qdef))return false;
   const cr=getCR(), b=blocks.find(x=>x.bid===bid);
-  if (qdef.cat==='Target') {
-    if (qdef.id==='single'&&b?.targetId==='single') { showToast('Only one Single target per block.',true); return false; }
-    if (qdef.id==='area'&&b?.targetId==='area'&&(b.targetCount||1)>=5) { showToast('Area maximum is 5.',true); return false; }
-    if (globalCount(qdef.id)>=cr) { showToast(`CR limit reached for ${qdef.name}.`,true); return false; }
+  if(qdef.cat==='Target'){
+    if(qdef.id==='single'&&b?.targetId==='single'){showToast('Only one Single target per block.',true);return false;}
+    if(qdef.id==='area'&&b?.targetId==='area'&&(b.targetCount||1)>=5){showToast('Area maximum is 5.',true);return false;}
+    if(globalCount(qdef.id)>=cr){showToast(`CR limit reached for ${qdef.name}.`,true);return false;}
     return true;
   }
-  if (qdef.cat==='Range') { if(b?.rangeId){showToast('Only one Range per block.',true);return false;} return true; }
-  if (qdef.isDuration) { if(totalDurCount()>=cr){showToast('CR limit reached for Duration.',true);return false;} return true; }
-  if (qdef.isStatus) {
-    if (qdef.statusMax!=null) {
-      if (globalCount(qdef.id)>=qdef.statusMax) { showToast(`${qdef.name} limit reached (max ${qdef.statusMax}).`,true); return false; }
-      return true; // has own cap, ignores CR
-    }
-    // No specific max — falls through to CR check below
-  }
-  if (qdef.flaw) return true;
-  if (globalCount(qdef.id)>=cr) { showToast(`CR limit reached for ${qdef.name}.`,true); return false; }
-  return true;
-}
-
-function canLinkToDuration(qdef,g) {
-  if (!qdef.durationLinkable) { showToast(`${qdef.name} cannot link to Duration.`,true); return false; }
-  if (g.accum) { showToast('Remove Accumulation from this group before adding more linked qualities.',true); return false; }
-  if (g.linked.length===0) return true;
-  const firstCat=Q[g.linked[0].id]?.cat;
-  if (qdef.cat==='Status') {
-    if (firstCat&&firstCat!=='Status') { showToast('Cannot mix Status Effects and Conditions on the same Duration.',true); return false; }
-    if (g.linked.filter(lk=>Q[lk.id]?.cat==='Status').length>=maxStatusLinks()) { showToast(isBalancer?'Balancer: max two Status Effects per Duration.':'One Status Effect per Duration. Enable Balancer Design for two.',true); return false; }
+  if(qdef.cat==='Range'){if(b?.rangeId){showToast('Only one Range per block.',true);return false;}return true;}
+  if(qdef.flaw)return true;
+  // Status Effects and Conditions: CR limit on distinct types
+  if(qdef.cat==='Status'||qdef.cat==='Condition'){
+    // noStack:true — one per ability
+    if(globalCount(qdef.id)>0){showToast(`${qdef.name} can only be added once per ability.`,true);return false;}
+    // CR limit on total distinct Status or Condition qualities
+    if(globalCatCount(qdef.cat)>=cr){showToast(`CR limit reached for ${qdef.cat} qualities (max ${cr}).`,true);return false;}
     return true;
   }
-  if (qdef.cat==='Condition') {
-    if (firstCat&&firstCat!=='Condition') { showToast('Cannot mix Conditions and Status Effects on the same Duration.',true); return false; }
-    if (g.linked.filter(lk=>Q[lk.id]?.cat==='Condition').length>=maxConditionLinks()) { showToast(isPreceptor?'Preceptor: max two Conditions per Duration.':'One Condition per Duration. Enable Preceptor Design for two.',true); return false; }
-    return true;
+  // noStack qualities: one per ability
+  if(qdef.noStack&&globalCount(qdef.id)>0){
+    showToast(`${qdef.name} can only be added once per ability.`,true);return false;
   }
-  if (g.linked.length>=1) { showToast('Duration can only link one quality of this type.',true); return false; }
+  // All others: CR limit on count
+  if(globalCount(qdef.id)>=cr){showToast(`CR limit reached for ${qdef.name}.`,true);return false;}
   return true;
 }
 
@@ -778,15 +713,12 @@ function canLinkToDuration(qdef,g) {
 function calcCosts() {
   let baseCost=0, flawCost=0;
   for (const b of blocks) {
-    if (b.targetId) baseCost+=Q[b.targetId].cost*(b.targetCount||1);
-    if (b.rangeId)  baseCost+=Q[b.rangeId].cost;
+    if(b.targetId)baseCost+=Q[b.targetId].cost*(b.targetCount||1);
+    if(b.rangeId)baseCost+=Q[b.rangeId].cost;
     for (const g of b.groups) {
-      if (g.accum) baseCost+=3*g.accum.count;
-      if (g.isDuration) {
-        baseCost+=2*g.durCount;
-        for (const lk of g.linked) { const qd=Q[lk.id];if(qd)baseCost+=qd.cost*lk.count; for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)baseCost+=sq.cost*sl.count;} }
-      } else {
-        for (const it of g.items) { const qd=Q[it.id];if(!qd)continue; qd.flaw?flawCost+=Math.abs(qd.cost)*it.count:baseCost+=qd.cost*it.count; }
+      for (const it of g.items) {
+        const qd=Q[it.id]; if(!qd)continue;
+        qd.flaw?flawCost+=Math.abs(qd.cost)*it.count:baseCost+=qd.cost*it.count;
       }
     }
   }
@@ -796,217 +728,80 @@ function calcCosts() {
 // ─── Mutations ─────────────────────────────────────────────────────────────────
 function addToBlock(bid,qid) {
   const b=blocks.find(x=>x.bid===bid), qdef=Q[qid];
-  if (!b||!qdef) return;
+  if(!b||!qdef)return;
   const phase=blockPhase(b);
-  if (phase==='target'&&qdef.cat!=='Target') { showToast('Choose a Target quality first.',true); return; }
+  if(phase==='target'&&qdef.cat!=='Target'){showToast('Choose a Target quality first.',true);return;}
 
-  if (qdef.isAccumulation) {
-    // Find all groups in this ability that can accept an Accumulation tail
-    const eligible=[];
-    for (const bl of blocks) for (const g of bl.groups) if (groupCanHaveAccum(g)) eligible.push({bid:bl.bid,gid:g.gid});
-    if (eligible.length===0) {
-      showToast('Add a Status Effect first. Accumulation must be paired with at least one Status Effect.',true); return;
-    }
-    if (eligible.length===1) {
-      snapshot();
-      addAccumToGroup(eligible[0].gid); return;
-    }
-    // Multiple options — enter pending mode, show + Accumulation buttons on each eligible group
-    pendingLinkCtx={type:'accum'}; updatePendingBanner(); renderAll(); return;
+  if(!canAddToBlock(qdef,bid))return;
+
+  if(qdef.cat==='Target'){
+    if(!b.targetId){b.targetId=qid;b.targetCount=1;}
+    else if(b.targetId===qid&&qid!=='single')b.targetCount++;
+    else{showToast('Only one Target type per block.',true);return;}
+    snapshot();renderAll();return;
+  }
+  if(qdef.cat==='Range'){snapshot();b.rangeId=qid;renderAll();return;}
+
+  // Attribute picker for Burden/Boost
+  if(qdef.requiresAttr){
+    const usedAttrs=[];
+    for(const bl of blocks)for(const g of bl.groups)for(const it of g.items)if(it.id===qid&&it.attr)usedAttrs.push(it.attr);
+    if(usedAttrs.length>=ATTRIBUTES.length){showToast(`All attributes already used for ${qdef.name}.`,true);return;}
+    if(isMobile())closeDrawer();
+    showAttrDialog(qid,bid,usedAttrs);
+    return;
   }
 
-  if (qdef.isSubLink) {
-    // Contagious — needs a Condition inside a Duration group
-    const matches=[];
-    for (const bl of blocks) for (const g of bl.groups) { if(!g.isDuration)continue; for(const lk of g.linked){const lkDef=Q[lk.id];if(lkDef&&lkDef.cat==='Condition')matches.push({gid:g.gid,linkedId:lk.id});} }
-    if (matches.length===0) { showToast('Add a Condition to a Duration row first, then click Contagious.',true); return; }
-    pendingLinkCtx={type:'contagious',filterCat:'Condition'}; updatePendingBanner(); renderAll(); return;
-  }
+  // Check if exists elsewhere (for stackable qualities and dialog)
+  const existingGroups=[];
+  for(const bl of blocks)for(const g of bl.groups){const it=g.items.find(x=>x.id===qid);if(it)existingGroups.push({g,it});}
 
-  if (!canAddToBlock(qdef,bid)) return;
+  if(existingGroups.length>0&&!qdef.noStack){
+    if(quickStack){snapshot();existingGroups[0].it.count++;renderAll();return;}
+    const opts=existingGroups.map(({it})=>({
+      icon:'＋',label:`Stack onto ${qdef.name}×${it.count}`,desc:`Increase to ×${it.count+1}`,
+      action:()=>{snapshot();it.count++;renderAll();}
+    }));
+    opts.push({icon:'◈',label:`Add new ${qdef.name}`,desc:'Create a separate instance',
+      action:()=>{snapshot();b.groups.push({gid:nextGid++,items:[{id:qid,count:1}]});renderAll();}
+    });
+    if(isMobile())closeDrawer();
+    showStackDialog(qdef.name,opts);return;
+  }
 
   snapshot();
-  if (qdef.cat==='Target') {
-    if (!b.targetId){b.targetId=qid;b.targetCount=1;}
-    else if (b.targetId===qid&&qid!=='single') b.targetCount++;
-    else { showToast('Only one Target type per block.',true); return; }
-    renderAll(); return;
-  }
-  if (qdef.cat==='Range') { b.rangeId=qid; renderAll(); return; }
-  if (qdef.isDuration) { b.groups.push({gid:nextGid++,isDuration:true,durCount:1,linked:[],accum:null}); renderAll(); return; }
-
-  // Standard quality — check if it already exists anywhere in the ability
-  const existingInStandalone = [];
-  for (const bl of blocks) for (const g of bl.groups) if (!g.isDuration) { const it=g.items.find(x=>x.id===qid); if(it) existingInStandalone.push({g,it,bl}); }
-  const existingInDuration = [];
-  for (const bl of blocks) for (const g of bl.groups) if (g.isDuration) { const lk=g.linked.find(x=>x.id===qid); if(lk) existingInDuration.push({g,lk,bl}); }
-  const hasExisting = existingInStandalone.length > 0 || existingInDuration.length > 0;
-
-  if (hasExisting && qdef.noStack) {
-    // Special case: requiresAttr qualities (Burden/Boost) can have multiple instances
-    // as long as each has a different attribute — show attr picker
-    if (qdef.requiresAttr) {
-      const usedAttrs = existingInStandalone.map(e=>e.it.attr).filter(Boolean);
-      if (usedAttrs.length >= ATTRIBUTES.length) {
-        showToast(`All attributes already used for ${qdef.name}.`, true); return;
-      }
-      if(isMobile())closeDrawer();
-      showAttrDialog(qid, bid, usedAttrs);
-      return;
-    }
-    showToast(`${qdef.name} does not stack. Use the − button to remove the existing one first.`, true); return;
-  }
-
-  // requiresAttr with no existing instance — still need to pick attribute
-  if (qdef.requiresAttr) {
-    if(isMobile())closeDrawer();
-    showAttrDialog(qid, bid, []);
-    return;
-  }
-
-  if (hasExisting) {
-    // Quick-stack: bypass dialog, stack onto first existing instance
-    if (quickStack) {
-      const first = existingInStandalone[0] || existingInDuration[0];
-      const target = existingInStandalone.length ? first.it : first.lk;
-      target.count++; renderAll(); return;
-    }
-    const opts = [];
-    // Stack options — one per existing instance
-    for (const {g,it} of existingInStandalone) {
-      const label = `Stack onto ${qdef.name}${it.count>1?` ×${it.count}`:''}`;
-      const desc  = `Increase to ×${it.count+1} (standalone)`;
-      opts.push({ icon:'＋', label, desc, action:()=>{ if(canAddToBlock(qdef,b.bid)){it.count++;renderAll();} } });
-    }
-    for (const {g,lk} of existingInDuration) {
-      const label = `Stack onto ${qdef.name}${lk.count>1?` ×${lk.count}`:''}`;
-      const desc  = `Increase to ×${lk.count+1} (inside Duration)`;
-      opts.push({ icon:'＋', label, desc, action:()=>{ if(canAddToBlock(qdef,b.bid)){lk.count++;renderAll();} } });
-    }
-    // New option
-    opts.push({ icon:'◈', label:`Add new ${qdef.name}`, desc:'Create a separate new instance', action:()=>{
-      if(!canAddToBlock(qdef,bid))return;
-      b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1}],accum:null});
-      renderAll();
-    }});
-    if(isMobile())closeDrawer();
-    showStackDialog(qdef.name, opts);
-    return;
-  }
-
-  // No existing instance — each quality gets its own row
-  b.groups.push({gid:nextGid++,isDuration:false,items:[{id:qid,count:1}],accum:null});
+  b.groups.push({gid:nextGid++,items:[{id:qid,count:1}]});
   renderAll();
-}
-
-function linkToGroup(gid,qid) {
-  const qdef=Q[qid]; if(!qdef)return;
-  for (const b of blocks) {
-    const g=b.groups.find(x=>x.gid===gid); if(!g||!g.isDuration)continue;
-    if (qdef.isDuration){if(!canAddToBlock(qdef,b.bid))return;snapshot();g.durCount++;renderAll();return;}
-    const ex=g.linked.find(x=>x.id===qid);
-    if (ex) {
-      // requiresAttr qualities never stack — each needs a different attr
-      if (qdef.requiresAttr) {
-        const usedAttrs=g.linked.filter(lk=>lk.id===qid).map(lk=>lk.attr).filter(Boolean);
-        if (usedAttrs.length>=ATTRIBUTES.length){showToast(`All attributes already used for ${qdef.name}.`,true);return;}
-        if(!canLinkToDuration(qdef,g))return;
-        if(!canAddToBlock(qdef,b.bid))return;
-        showAttrDialog(qid, b.bid, usedAttrs, (attr)=>{
-          snapshot(); g.linked.push({id:qid,count:1,subLinks:[],attr}); renderAll();
-        });
-        return;
-      }
-      showStackDialog(qdef.name,[
-        { icon:'＋', label:`Stack onto ${qdef.name} ×${ex.count}`, desc:`Increase to ×${ex.count+1} (inside this Duration)`,
-          action:()=>{ if(!canAddToBlock(qdef,b.bid))return; snapshot(); ex.count++; renderAll(); } },
-        { icon:'◈', label:`Add new ${qdef.name}`, desc:'Link as a separate instance on this Duration (if slots available)',
-          action:()=>{
-            if(!canLinkToDuration(qdef,g))return;
-            if(!canAddToBlock(qdef,b.bid))return;
-            snapshot(); g.linked.push({id:qid,count:1,subLinks:[]});
-            renderAll();
-          }
-        }
-      ]);
-      return;
-    }
-    if (!canLinkToDuration(qdef,g))return;
-    if (!canAddToBlock(qdef,b.bid))return;
-    // requiresAttr: show attr picker before linking
-    if (qdef.requiresAttr) {
-      const usedAttrs=g.linked.filter(lk=>lk.id===qid).map(lk=>lk.attr).filter(Boolean);
-      showAttrDialog(qid, b.bid, usedAttrs, (attr)=>{
-        snapshot(); g.linked.push({id:qid,count:1,subLinks:[],attr}); renderAll();
-      });
-      return;
-    }
-    snapshot(); g.linked.push({id:qid,count:1,subLinks:[]});
-    renderAll(); return;
-  }
-}
-
-function addAccumToGroup(gid) {
-  const cr=getCR();
-  for (const b of blocks) {
-    const g=b.groups.find(x=>x.gid===gid); if(!g)continue;
-    if (g.accum) {
-      if (globalCount('accumulation') >= cr) { showToast(`CR limit reached for Accumulation (max ${cr}).`,true); return; }
-      snapshot(); g.accum.count++; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
-    }
-    if (!groupCanHaveAccum(g)){showToast('Cannot add Accumulation to this group.',true);return;}
-    if (globalCount('accumulation') >= cr) { showToast(`CR limit reached for Accumulation (max ${cr}).`,true); return; }
-    snapshot(); g.accum={count:1}; pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
-  }
-}
-
-function addContagiousToLinked(gid,linkedId) {
-  for (const b of blocks) {
-    const g=b.groups.find(x=>x.gid===gid); if(!g||!g.isDuration)continue;
-    const lk=g.linked.find(x=>x.id===linkedId); if(!lk)continue;
-    if (!lk.subLinks)lk.subLinks=[];
-    const ex=lk.subLinks.find(x=>x.id==='contagious');
-    snapshot();
-    if(ex)ex.count++; else lk.subLinks.push({id:'contagious',count:1});
-    pendingLinkCtx=null; updatePendingBanner(); renderAll(); return;
-  }
 }
 
 function decrementTarget(bid) { const b=blocks.find(x=>x.bid===bid);if(!b||!b.targetId)return;snapshot();b.targetCount=(b.targetCount||1)-1;if(b.targetCount<=0){b.targetId=null;b.targetCount=0;b.rangeId=null;}renderAll(); }
 function removeRangeFromBlock(bid) { const b=blocks.find(x=>x.bid===bid);if(b){snapshot();b.rangeId=null;renderAll();} }
 function removeGroup(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(b){snapshot();b.groups=b.groups.filter(x=>x.gid!==gid);renderAll();} }
-function removeAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(g){snapshot();g.accum=null;renderAll();} }
-function decrementAccum(bid,gid) { const b=blocks.find(x=>x.bid===bid);if(!b)return;const g=b.groups.find(x=>x.gid===gid);if(!g||!g.accum)return;snapshot();g.accum.count--;if(g.accum.count<=0)g.accum=null;renderAll(); }
 function removeBlock(bid) { snapshot();blocks=blocks.filter(x=>x.bid!==bid);renderAll(); }
-function addCompoundBlock() { snapshot();blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]});if(isMobile())showToast('Compound block added. Tap it to make it active.');renderAll(); }
+function addCompoundBlock() { snapshot();blocks.push({bid:nextBid++,isCompound:true,targetId:null,targetCount:0,rangeId:null,groups:[]});if(isMobile())showToast('Compound block added.');renderAll(); }
 function clearAll() { snapshot();blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];activeBlockId=null;renderAll(); }
-function blockPhase(b) { if(!b.targetId)return'target';if(!b.rangeId)return'range';return'effects'; }
+function setActiveBlock(bid) { activeBlockId=bid;renderAll(); }
 
-// ─── Chip ─────────────────────────────────────────────────────────────────────
-// onAdd: if provided AND quality is stackable, shows a + button
-// attr: optional attribute label shown as a small tag (for Burden/Boost)
+// ─── Chip ──────────────────────────────────────────────────────────────────────
 function makeChip(id, count, extraClass, onRemove, onAdd, attr) {
   const qdef=Q[id]; if(!qdef)return document.createTextNode('');
   const chip=document.createElement('div');
   chip.className=`q-chip ${catClass(qdef.cat)}${extraClass?' '+extraClass:''}`;
   const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
   const attrStr=attr?`<span class="chip-attr">${attr}</span>`:'';
-  const showAdd = onAdd && !qdef.noStack;
-  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${attrStr}${stackStr}${showAdd?`<span class="chip-add" role="button" aria-label="Add one more ${qdef.name}">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button" aria-label="Remove ${qdef.name}">−</span>`:''}`;
-  if (showAdd) chip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();snapshot();onAdd();});
-  if (onRemove) chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();onRemove();});
+  const showAdd=onAdd&&!qdef.noStack;
+  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${attrStr}${stackStr}${showAdd?`<span class="chip-add" role="button">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button">−</span>`:''}`;
+  if(showAdd)chip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();snapshot();onAdd();});
+  if(onRemove)chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();onRemove();});
   return chip;
 }
 
-// ─── Active block ─────────────────────────────────────────────────────────────
-function setActiveBlock(bid) { activeBlockId=bid; renderAll(); }
-
-// ─── Render ───────────────────────────────────────────────────────────────────
+// ─── Render ────────────────────────────────────────────────────────────────────
 function renderAll() {
   const area=document.getElementById('builder-area'); area.innerHTML='';
   const summaryParts=[];
-  if (activeBlockId&&!blocks.find(b=>b.bid===activeBlockId))activeBlockId=null;
-  if (!activeBlockId&&blocks.length)activeBlockId=blocks[0].bid;
+  if(activeBlockId&&!blocks.find(b=>b.bid===activeBlockId))activeBlockId=null;
+  if(!activeBlockId&&blocks.length)activeBlockId=blocks[0].bid;
 
   for (const b of blocks) {
     const phase=blockPhase(b);
@@ -1014,200 +809,80 @@ function renderAll() {
     blockDiv.className='target-block'+(b.targetId?' has-target':'')+(b.bid===activeBlockId?' active-block':'');
     blockDiv.dataset.bid=b.bid;
     blockDiv.addEventListener('click',e=>{
-      if(e.target.closest('.chip-remove,.group-delete,.block-delete,.link-target,.q-chip,.q-group'))return;
+      if(e.target.closest('.chip-remove,.group-delete,.block-delete,.q-chip,.q-group'))return;
       setActiveBlock(b.bid);
     });
 
-    const hdr=document.createElement('div'); hdr.className='block-header';
-    const lbl=document.createElement('span'); lbl.className='block-label'+(b.isCompound?' compound':'');
-    lbl.textContent=b.isCompound?'⊕ Compound Target':'◈ Primary Target'; hdr.appendChild(lbl);
-    if (b.bid===activeBlockId){const badge=document.createElement('span');badge.className='block-active-badge';badge.textContent='ACTIVE';hdr.appendChild(badge);}
-    if (b.isCompound){const del=document.createElement('span');del.className='block-delete';del.textContent='✕';del.addEventListener('click',e=>{e.stopPropagation();removeBlock(b.bid);});hdr.appendChild(del);}
+    // Header
+    const hdr=document.createElement('div');hdr.className='block-header';
+    const lbl=document.createElement('span');lbl.className='block-label'+(b.isCompound?' compound':'');
+    lbl.textContent=b.isCompound?'⊕ Compound Target':'◈ Primary Target';hdr.appendChild(lbl);
+    if(b.bid===activeBlockId){const badge=document.createElement('span');badge.className='block-active-badge';badge.textContent='ACTIVE';hdr.appendChild(badge);}
+    if(b.isCompound){const del=document.createElement('span');del.className='block-delete';del.textContent='✕';del.addEventListener('click',e=>{e.stopPropagation();removeBlock(b.bid);});hdr.appendChild(del);}
     blockDiv.appendChild(hdr);
 
-    if (b.targetId) {
-      const tRow=document.createElement('div'); tRow.className='q-group';
-      const tq=Q[b.targetId]; const tChip=document.createElement('div'); tChip.className=`q-chip ${catClass(tq.cat)}`;
+    // Target + Range row
+    if(b.targetId){
+      const tRow=document.createElement('div');tRow.className='q-group';
+      const tq=Q[b.targetId];const tChip=document.createElement('div');tChip.className=`q-chip ${catClass(tq.cat)}`;
       const ss=(b.targetCount||1)>1?`<span class="chip-stack">${b.targetCount}×${tq.cost}</span>`:'';
-      const tCanAdd = tq.id!=='single';
-      tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}${tCanAdd?`<span class="chip-add" role="button">＋</span>`:''}${`<span class="chip-remove" role="button">−</span>`}`;
-      if(tCanAdd) tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();if(canAddToBlock(tq,b.bid)){snapshot();b.targetCount++;}renderAll();});
+      const tCanAdd=tq.id!=='single';
+      tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}${tCanAdd?'<span class="chip-add" role="button">＋</span>':''}<span class="chip-remove" role="button">−</span>`;
+      if(tCanAdd)tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();if(canAddToBlock(tq,b.bid)){snapshot();b.targetCount++;}renderAll();});
       tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();decrementTarget(b.bid);});
       tRow.appendChild(tChip);
-      if (b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
-      const gd=document.createElement('span');gd.className='group-delete';gd.textContent='✕';gd.addEventListener('click',e=>{e.stopPropagation();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();});tRow.appendChild(gd);
+      if(b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
+      const gd=document.createElement('span');gd.className='group-delete';gd.textContent='✕';gd.addEventListener('click',e=>{e.stopPropagation();snapshot();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();});tRow.appendChild(gd);
       blockDiv.appendChild(tRow);
       let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`;if(b.rangeId)bLabel+=` / ${Q[b.rangeId].name}`;summaryParts.push(bLabel);
     }
 
-    if (phase!=='effects'){const ph=document.createElement('div');ph.className='block-phase';ph.textContent=phase==='target'?'← Tap a Target quality first (Single, Multi-Target, or Area)':'← Tap a Range quality next, or skip and add an effect quality';blockDiv.appendChild(ph);}
+    if(phase!=='effects'){const ph=document.createElement('div');ph.className='block-phase';ph.textContent=phase==='target'?'← Tap a Target quality first':'← Tap a Range quality, or add an effect quality';blockDiv.appendChild(ph);}
 
+    // Effect groups — each quality on its own row
     for (const g of b.groups) {
-      const gDiv=document.createElement('div');
-      gDiv.className='q-group'+(g.isDuration?' has-duration':'');
-
-      if (g.isDuration) {
-        // Duration head
-        gDiv.appendChild(makeChip('duration',g.durCount,'duration-head',()=>{
-          g.durCount--; if(g.durCount<=0)b.groups=b.groups.filter(x=>x.gid!==g.gid); renderAll();
-        },()=>{
-          if(!canAddToBlock(Q['duration'],b.bid))return; g.durCount++; renderAll();
-        }));
-
-        // Linked qualities (Status Effects or Conditions)
-        for (const lk of g.linked) {
-          const dash=document.createElement('span');dash.className='link-dash';dash.textContent='—';gDiv.appendChild(dash);
-          gDiv.appendChild(makeChip(lk.id,lk.count,null,()=>{
-            lk.count--;
-            if(lk.count<=0){g.linked=g.linked.filter(x=>x.id!==lk.id);if(g.linked.length===0)g.accum=null;}
-            renderAll();
-          },()=>{
-            if(!canAddToBlock(Q[lk.id],b.bid))return; lk.count++; renderAll();
-          },lk.attr||null));
-          // Contagious sub-links
-          for (const sl of (lk.subLinks||[])) {
-            const slDash=document.createElement('span');slDash.className='link-dash';slDash.textContent='—';gDiv.appendChild(slDash);
-            gDiv.appendChild(makeChip(sl.id,sl.count,null,()=>{
-              sl.count--;if(sl.count<=0)lk.subLinks=lk.subLinks.filter(x=>x.id!==sl.id);renderAll();
-            },()=>{ sl.count++; renderAll(); }));
-          }
-          // + Contagious button when pending
-          if (pendingLinkCtx?.type==='contagious'&&Q[lk.id]?.cat==='Condition') {
-            const existingSub=(lk.subLinks||[]).find(x=>x.id==='contagious');
-            const cBtn=document.createElement('button');cBtn.className='link-target sub-lt';cBtn.textContent=existingSub?'+1 Contagious':'+ Contagious';
-            cBtn.addEventListener('click',e=>{e.stopPropagation();addContagiousToLinked(g.gid,lk.id);});gDiv.appendChild(cBtn);
-          }
-        }
-
-        // Accumulation tail
-        if (g.accum) {
-          const aDash=document.createElement('span');aDash.className='link-dash';aDash.textContent='—';gDiv.appendChild(aDash);
-          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid),()=>{const cr=getCR();if(globalCount('accumulation')>=cr){showToast(`CR limit reached for Accumulation (max ${cr}).`,true);return;}g.accum.count++;renderAll();}));
-        }
-        // + Accumulation button (when pending and this group is eligible)
-        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)&&!g.accum) {
-          const aBtn=document.createElement('button');aBtn.className='link-target accum-lt';aBtn.textContent='+ Accumulation';
-          aBtn.addEventListener('click',e=>{e.stopPropagation();addAccumToGroup(g.gid);});gDiv.appendChild(aBtn);
-        }
-
-        const durLinked=g.linked.length;
-        const canLinkMore=(()=>{
-          if(g.accum)return false;
-          if(durLinked===0)return true;
-          const fc=Q[g.linked[0].id]?.cat;
-          if(fc==='Status')return durLinked<maxStatusLinks();
-          if(fc==='Condition')return durLinked<maxConditionLinks();
-          return false;
-        })();
-        if (canLinkMore) {
-          const lBtn=document.createElement('button');
-          const isLinkPending=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;
-          lBtn.className='link-target'+(isLinkPending?' pending':'');lBtn.textContent='+ Link Quality';
-          lBtn.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.add('drag-hover');});
-          lBtn.addEventListener('dragleave',()=>lBtn.classList.remove('drag-hover'));
-          lBtn.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();lBtn.classList.remove('drag-hover');if(dragId){linkToGroup(g.gid,dragId);dragId=null;pendingLinkCtx=null;closeDrawer();}});
-          lBtn.addEventListener('click',e=>{e.stopPropagation();const already=pendingLinkCtx?.type==='link'&&pendingLinkCtx.gid===g.gid;pendingLinkCtx=already?null:{type:'link',gid:g.gid};updatePendingBanner();if(pendingLinkCtx&&isMobile())openDrawer();renderAll();});
-          gDiv.appendChild(lBtn);
-        }
-
-        const dLabel=`Duration${g.durCount>1?` ×${g.durCount}`:''}`;
-        const lParts=g.linked.map(lk=>{const qd=Q[lk.id];let s=qd?qd.name+(lk.count>1?` ×${lk.count}`:''):'';for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)s+=` — ${sq.name}`;}return s;}).filter(Boolean);
-        let dSummary=lParts.length?`${dLabel} — ${lParts.join(', ')}`:dLabel;
-        if(g.accum)dSummary+=` — Accumulation${g.accum.count>1?` ×${g.accum.count}`:''}`;
-        summaryParts.push(dSummary);
-
-      } else {
-        // Standalone group — each item on its own row within the group.
-        // If the group has an accum tail (Status Effect + Accumulation), they stay together.
-        gDiv.className='q-group';
-        for (const it of g.items) {
-          gDiv.appendChild(makeChip(it.id,it.count,null,()=>{
-            it.count--;
-            if(it.count<=0){g.items=g.items.filter(x=>x.id!==it.id);if(g.items.filter(x=>Q[x.id]?.cat==='Status').length===0)g.accum=null;}
-            if(g.items.length===0)b.groups=b.groups.filter(x=>x.gid!==g.gid);
-            renderAll();
-          },()=>{
-            if(!canAddToBlock(Q[it.id],b.bid))return; it.count++; renderAll();
-          },it.attr||null));
-          const qd=Q[it.id];if(qd)summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:''));
-        }
-
-        // Accumulation tail
-        if (g.accum) {
-          const aDash=document.createElement('span');aDash.className='link-dash';aDash.textContent='—';gDiv.appendChild(aDash);
-          gDiv.appendChild(makeChip('accumulation',g.accum.count,'accum-tail',()=>decrementAccum(b.bid,g.gid),()=>{const cr=getCR();if(globalCount('accumulation')>=cr){showToast(`CR limit reached for Accumulation (max ${cr}).`,true);return;}g.accum.count++;renderAll();}));
-        }
-
-        // + Accumulation button (when pending and this group is eligible)
-        if (pendingLinkCtx?.type==='accum'&&groupCanHaveAccum(g)&&!g.accum) {
-          const aBtn=document.createElement('button');aBtn.className='link-target accum-lt';aBtn.textContent='+ Accumulation';
-          aBtn.addEventListener('click',e=>{e.stopPropagation();addAccumToGroup(g.gid);});gDiv.appendChild(aBtn);
-        }
-      }
+      const gDiv=document.createElement('div');gDiv.className='q-group';
 
       // Drag-to-reorder handle
-      const handle=document.createElement('span');
-      handle.className='group-drag-handle';
-      handle.textContent='⠿';
-      handle.title='Drag to reorder';
-      handle.draggable=true;
-      handle.addEventListener('dragstart',e=>{
-        e.stopPropagation();
-        e.dataTransfer.effectAllowed='move';
-        e.dataTransfer.setData('reorder-gid', String(g.gid));
-        e.dataTransfer.setData('reorder-bid', String(b.bid));
-        setTimeout(()=>gDiv.classList.add('dragging-group'),0);
-      });
+      const handle=document.createElement('span');handle.className='group-drag-handle';handle.textContent='⠿';handle.title='Drag to reorder';handle.draggable=true;
+      handle.addEventListener('dragstart',e=>{e.stopPropagation();e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('reorder-gid',String(g.gid));e.dataTransfer.setData('reorder-bid',String(b.bid));setTimeout(()=>gDiv.classList.add('dragging-group'),0);});
       handle.addEventListener('dragend',()=>gDiv.classList.remove('dragging-group'));
-      gDiv.insertBefore(handle, gDiv.firstChild);
+      gDiv.insertBefore(handle,gDiv.firstChild);
 
-      // Drop targets for reordering
-      gDiv.addEventListener('dragover',e=>{
-        if (!e.dataTransfer.types.includes('reorder-gid')) return;
-        e.preventDefault(); e.stopPropagation();
-        const rect=gDiv.getBoundingClientRect();
-        const mid=rect.top+rect.height/2;
-        gDiv.classList.remove('drop-above','drop-below');
-        gDiv.classList.add(e.clientY<mid?'drop-above':'drop-below');
-      });
+      gDiv.addEventListener('dragover',e=>{if(!e.dataTransfer.types.includes('reorder-gid'))return;e.preventDefault();e.stopPropagation();const rect=gDiv.getBoundingClientRect();gDiv.classList.remove('drop-above','drop-below');gDiv.classList.add(e.clientY<rect.top+rect.height/2?'drop-above':'drop-below');});
       gDiv.addEventListener('dragleave',()=>gDiv.classList.remove('drop-above','drop-below'));
       gDiv.addEventListener('drop',e=>{
-        if (!e.dataTransfer.types.includes('reorder-gid')) return;
-        e.preventDefault(); e.stopPropagation();
-        gDiv.classList.remove('drop-above','drop-below');
-        const fromGid=parseInt(e.dataTransfer.getData('reorder-gid'));
-        const fromBid=parseInt(e.dataTransfer.getData('reorder-bid'));
-        if (fromGid===g.gid) return;
-        const srcBlock=blocks.find(x=>x.bid===fromBid);
-        const dstBlock=blocks.find(x=>x.bid===b.bid);
-        if (!srcBlock||!dstBlock) return;
-        const srcIdx=srcBlock.groups.findIndex(x=>x.gid===fromGid);
-        const dstIdx=dstBlock.groups.findIndex(x=>x.gid===g.gid);
-        if (srcIdx<0||dstIdx<0) return;
-        snapshot();
-        const [moved]=srcBlock.groups.splice(srcIdx,1);
-        const rect=gDiv.getBoundingClientRect();
-        const insertAfter=e.clientY>=(rect.top+rect.height/2);
+        if(!e.dataTransfer.types.includes('reorder-gid'))return;
+        e.preventDefault();e.stopPropagation();gDiv.classList.remove('drop-above','drop-below');
+        const fromGid=parseInt(e.dataTransfer.getData('reorder-gid'));const fromBid=parseInt(e.dataTransfer.getData('reorder-bid'));
+        if(fromGid===g.gid)return;
+        const srcBlock=blocks.find(x=>x.bid===fromBid);const dstBlock=blocks.find(x=>x.bid===b.bid);if(!srcBlock||!dstBlock)return;
+        const srcIdx=srcBlock.groups.findIndex(x=>x.gid===fromGid);const dstIdx=dstBlock.groups.findIndex(x=>x.gid===g.gid);if(srcIdx<0||dstIdx<0)return;
+        snapshot();const[moved]=srcBlock.groups.splice(srcIdx,1);
+        const rect=gDiv.getBoundingClientRect();const insertAfter=e.clientY>=(rect.top+rect.height/2);
         const finalIdx=dstBlock.groups.findIndex(x=>x.gid===g.gid);
-        dstBlock.groups.splice(insertAfter?finalIdx+1:finalIdx,0,moved);
-        renderAll();
+        dstBlock.groups.splice(insertAfter?finalIdx+1:finalIdx,0,moved);renderAll();
       });
+
+      for (const it of g.items) {
+        gDiv.appendChild(makeChip(it.id,it.count,null,
+          ()=>{it.count--;if(it.count<=0){g.items=g.items.filter(x=>x.id!==it.id);}if(g.items.length===0)b.groups=b.groups.filter(x=>x.gid!==g.gid);renderAll();},
+          ()=>{if(!canAddToBlock(Q[it.id],b.bid))return;it.count++;renderAll();},
+          it.attr||null
+        ));
+        const qd=Q[it.id];if(qd)summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:'')+(it.attr?` [${it.attr}]`:''));
+      }
 
       const gDel=document.createElement('span');gDel.className='group-delete';gDel.textContent='✕';gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);});gDiv.appendChild(gDel);
       blockDiv.appendChild(gDiv);
     }
 
     // Block drag/drop
-    blockDiv.addEventListener('dragover',e=>{if(!e.target.closest('.link-target')){e.preventDefault();blockDiv.classList.add('drag-over');}});
+    blockDiv.addEventListener('dragover',e=>{if(!e.dataTransfer.types.includes('reorder-gid')){e.preventDefault();blockDiv.classList.add('drag-over');}});
     blockDiv.addEventListener('dragleave',e=>{if(!blockDiv.contains(e.relatedTarget))blockDiv.classList.remove('drag-over');});
     blockDiv.addEventListener('drop',e=>{
-      blockDiv.classList.remove('drag-over'); if(e.target.closest('.link-target'))return; e.preventDefault();
-      if(dragId){
-        if(pendingLinkCtx?.type==='link')linkToGroup(pendingLinkCtx.gid,dragId);
-        else addToBlock(b.bid,dragId);
-        if(pendingLinkCtx&&pendingLinkCtx.type==='link'){pendingLinkCtx=null;updatePendingBanner();}
-        dragId=null;
-      }
+      blockDiv.classList.remove('drag-over');if(e.dataTransfer.types.includes('reorder-gid'))return;
+      e.preventDefault();if(dragId){addToBlock(b.bid,dragId);dragId=null;}
     });
     area.appendChild(blockDiv);
   }
@@ -1223,18 +898,16 @@ function renderAll() {
   updateTotals();
 }
 
-// ─── Bank render ──────────────────────────────────────────────────────────────
+// ─── Bank render ───────────────────────────────────────────────────────────────
 function renderBank() {
   const list=document.getElementById('quality-list');
   const s=searchText.toLowerCase();
-  const forceCat=pendingLinkCtx?.filterCat||null;
-  const filtered=QUALITIES.filter(q=>{
-    if(forceCat&&q.cat!==forceCat)return false;
-    return (!s||q.name.toLowerCase().includes(s)||q.cat.toLowerCase().includes(s))&&(activeFilter==='All'||q.cat===activeFilter||forceCat);
-  });
+  const filtered=QUALITIES.filter(q=>
+    (!s||q.name.toLowerCase().includes(s)||q.cat.toLowerCase().includes(s))&&
+    (activeFilter==='All'||q.cat===activeFilter)
+  );
   if(!filtered.length){list.innerHTML='<div class="no-results">No qualities match.</div>';return;}
-  const byCat={};
-  filtered.forEach(q=>{(byCat[q.cat]=byCat[q.cat]||[]).push(q);});
+  const byCat={};filtered.forEach(q=>{(byCat[q.cat]=byCat[q.cat]||[]).push(q);});
   list.innerHTML=Object.entries(byCat).map(([cat,items])=>`
     <div class="category-group">
       <div class="category-label">${cat}</div>
@@ -1250,55 +923,37 @@ function renderBank() {
     card.addEventListener('dragstart',e=>{dragId=card.dataset.id;card.classList.add('dragging');e.dataTransfer.effectAllowed='copy';});
     card.addEventListener('dragend',()=>card.classList.remove('dragging'));
     card.addEventListener('click',()=>{
-      if(pendingLinkCtx?.type==='link'){
-        linkToGroup(pendingLinkCtx.gid,card.dataset.id);
-        pendingLinkCtx=null;updatePendingBanner();if(isMobile())closeDrawer();
-      } else if(pendingLinkCtx?.type==='contagious') {
-        showToast('Tap the + Contagious button next to a Condition in a Duration row.',false);
-      } else if(pendingLinkCtx?.type==='accum') {
-        showToast('Tap the + Accumulation button next to a group in your ability.',false);
-      } else {
-        const bid=activeBlockId||(blocks[blocks.length-1]?.bid);
-        if(bid!=null)addToBlock(bid,card.dataset.id);
-        if(isMobile())closeDrawer();
-      }
+      const bid=activeBlockId||(blocks[blocks.length-1]?.bid);
+      if(bid!=null)addToBlock(bid,card.dataset.id);
+      if(isMobile())closeDrawer();
     });
   });
 }
 
-// ─── Export ───────────────────────────────────────────────────────────────────
+// ─── Export ────────────────────────────────────────────────────────────────────
 function exportAbility() {
   const name=document.getElementById('ability-name').value||'Unnamed Ability';
   const cr=getCR();const{baseCost,flawCost,total}=calcCosts();const lines=[];
-  const designs=[isPreceptor?'Preceptor':null,isBalancer?'Balancer':null].filter(Boolean);
   for(const b of blocks){
     if(b.isCompound)lines.push('');
     if(b.targetId){const tq=Q[b.targetId];lines.push(`  + ${tq.name} (${tq.cost}×${b.targetCount||1})`);}
     if(b.rangeId){const rq=Q[b.rangeId];lines.push(`    + ${rq.name} (${rq.cost}×1)`);}
     for(const g of b.groups){
-      if(g.isDuration){
-        let line=`    + Duration (2×${g.durCount})`;
-        for(const lk of g.linked){const qd=Q[lk.id];if(!qd)continue;line+=` - ${qd.name} (${qd.cost}×${lk.count})`;for(const sl of(lk.subLinks||[])){const sq=Q[sl.id];if(sq)line+=` - ${sq.name} (${sq.cost}×${sl.count})`;}}
-        if(g.accum)line+=` - Accumulation (3×${g.accum.count})`;
-        lines.push(line);
-      } else {
-        let line='   ';
-        const itemStrs=g.items.map(it=>{const qd=Q[it.id];return qd?` + ${qd.name}${it.attr?` [${it.attr}]`:''} (${qd.cost}×${it.count})`:''}).join('');
-        line+=itemStrs;
-        if(g.accum)line+=` - Accumulation (3×${g.accum.count})`;
-        if(line.trim())lines.push(line);
+      for(const it of g.items){
+        const qd=Q[it.id];if(!qd)continue;
+        lines.push(`    ${qd.flaw?'*':'+'} ${qd.name}${it.attr?` [${it.attr}]`:''} (${qd.cost}×${it.count})`);
       }
     }
   }
   const flawMax=Math.round(baseCost*0.333);
-  const {dmgCount,healCount,resTotal} = calcTotals();
-  const dmgGrade = parseInt(document.getElementById('dmg-grade-select').value, 10);
+  const{dmgCount,healCount,resTotal}=calcTotals();
+  const dmgGrade=parseInt(document.getElementById('dmg-grade-select').value,10);
   const totalLines=[];
-  if (dmgCount>0)  totalLines.push(`Damage: ${dmgCount * dmgGrade} (${dmgCount} × grade ${dmgGrade})`);
-  if (healCount>0) totalLines.push(`Healing: ${healCount * cr} (${healCount} × CR ${cr})`);
-  if (resTotal>0)  totalLines.push(`Resilience Damage: ${resTotal}`);
+  if(dmgCount>0)totalLines.push(`Damage: ${dmgCount*dmgGrade} (${dmgCount} × grade ${dmgGrade})`);
+  if(healCount>0)totalLines.push(`Healing: ${healCount*cr} (${healCount} × CR ${cr})`);
+  if(resTotal>0)totalLines.push(`Resilience Damage: ${resTotal}`);
   const blob=new Blob([
-    `Ability: ${name}\nCrown Rank: CR ${cr}${designs.length?' ['+designs.join(', ')+']':''}\n`
+    `Ability: ${name}\nCrown Rank: CR ${cr}\n`
     +`Base Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n`
     +(totalLines.length?totalLines.join('  ·  ')+'\n':'')
     +'\n'+lines.join('\n')
@@ -1306,80 +961,63 @@ function exportAbility() {
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${name.replace(/\s+/g,'_')}.txt`;a.click();
 }
 
-// ─── Saved abilities ──────────────────────────────────────────────────────────
-const SAVE_KEY = 'exemplar-saved-abilities';
+// ─── Saved abilities ───────────────────────────────────────────────────────────
+const SAVE_KEY='exemplar-saved-abilities';
+function getSaved(){try{return JSON.parse(localStorage.getItem(SAVE_KEY)||'[]');}catch{return[];}}
 
-function getSaved() {
-  try { return JSON.parse(localStorage.getItem(SAVE_KEY)||'[]'); } catch { return []; }
+function saveAbility(){
+  const name=document.getElementById('ability-name').value.trim()||'Unnamed Ability';
+  const{total}=calcCosts();const{dmgCount,healCount,resTotal}=calcTotals();const cr=getCR();
+  const dmgGrade=parseInt(document.getElementById('dmg-grade-select').value,10);
+  const dmgTotal=dmgCount>0?dmgCount*dmgGrade:null;
+  const healTotal=healCount>0?healCount*cr:null;
+  const saved=getSaved();const idx=saved.findIndex(s=>s.name===name);
+  const entry={name,total,dmgTotal,healTotal,resTotal:resTotal||null,dmgGrade,blocks:JSON.parse(JSON.stringify(blocks)),nextBid,nextGid,cr,ts:Date.now()};
+  if(idx>=0)saved[idx]=entry;else saved.unshift(entry);
+  localStorage.setItem(SAVE_KEY,JSON.stringify(saved));
+  showToast(`Saved "${name}".`);renderSavedList();
 }
 
-function saveAbility() {
-  const name = document.getElementById('ability-name').value.trim() || 'Unnamed Ability';
-  const {total} = calcCosts();
-  const {dmgCount,healCount,resTotal} = calcTotals();
-  const cr = getCR();
-  const dmgGrade = parseInt(document.getElementById('dmg-grade-select').value, 10);
-  const dmgTotal  = dmgCount  > 0 ? dmgCount * dmgGrade : null;
-  const healTotal = healCount > 0 ? healCount * cr       : null;
-  const saved = getSaved();
-  const idx = saved.findIndex(s=>s.name===name);
-  const entry = { name, total, dmgTotal, healTotal, resTotal: resTotal||null, dmgGrade, blocks: JSON.parse(JSON.stringify(blocks)), nextBid, nextGid, cr, isPreceptor, isBalancer, ts: Date.now() };
-  if (idx>=0) saved[idx]=entry; else saved.unshift(entry);
-  localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
-  showToast(`Saved "${name}".`);
-  renderSavedList();
-}
-
-function loadAbility(entry) {
+function loadAbility(entry){
   snapshot();
-  blocks = JSON.parse(JSON.stringify(entry.blocks));
-  nextBid = entry.nextBid;
-  nextGid = entry.nextGid;
-  document.getElementById('ability-name').value = entry.name;
-  document.getElementById('cr-select').value = String(entry.cr||1);
-  if (entry.dmgGrade) document.getElementById('dmg-grade-select').value = String(entry.dmgGrade);
-  isPreceptor = !!entry.isPreceptor;
-  isBalancer  = !!entry.isBalancer;
-  document.getElementById('preceptor-toggle').classList.toggle('active', isPreceptor);
-  document.getElementById('balancer-toggle').classList.toggle('active', isBalancer);
-  activeBlockId = blocks[0]?.bid || null;
-  renderAll();
-  showToast(`Loaded "${entry.name}".`);
+  blocks=JSON.parse(JSON.stringify(entry.blocks));
+  nextBid=entry.nextBid;nextGid=entry.nextGid;
+  document.getElementById('ability-name').value=entry.name;
+  document.getElementById('cr-select').value=String(entry.cr||1);
+  if(entry.dmgGrade)document.getElementById('dmg-grade-select').value=String(entry.dmgGrade);
+  activeBlockId=blocks[0]?.bid||null;
+  renderAll();showToast(`Loaded "${entry.name}".`);
 }
 
-function deleteSaved(name) {
-  const saved = getSaved().filter(s=>s.name!==name);
-  localStorage.setItem(SAVE_KEY, JSON.stringify(saved));
-  renderSavedList();
+function deleteSaved(name){
+  const saved=getSaved().filter(s=>s.name!==name);
+  localStorage.setItem(SAVE_KEY,JSON.stringify(saved));renderSavedList();
 }
 
-function renderSavedList() {
-  const list = document.getElementById('saved-list');
-  const saved = getSaved();
-  if (!saved.length) { list.innerHTML='<div class="saved-empty">No saved abilities yet.</div>'; return; }
+function renderSavedList(){
+  const list=document.getElementById('saved-list');const saved=getSaved();
+  if(!saved.length){list.innerHTML='<div class="saved-empty">No saved abilities yet.</div>';return;}
   list.innerHTML='';
-  for (const entry of saved) {
-    const row=document.createElement('div'); row.className='saved-item';
-    const nm=document.createElement('span'); nm.className='saved-item-name'; nm.textContent=entry.name;
+  for(const entry of saved){
+    const row=document.createElement('div');row.className='saved-item';
+    const nm=document.createElement('span');nm.className='saved-item-name';nm.textContent=entry.name;
     nm.addEventListener('click',()=>loadAbility(entry));
     const statParts=[`${entry.total} pts`];
-    if (entry.dmgTotal  != null) statParts.push(`${entry.dmgTotal} dmg`);
-    if (entry.healTotal != null) statParts.push(`${entry.healTotal} heal`);
-    if (entry.resTotal  != null) statParts.push(`${entry.resTotal} res`);
-    const pts=document.createElement('span'); pts.className='saved-item-pts'; pts.textContent=statParts.join(' · ');
-    const del=document.createElement('span'); del.className='saved-item-del'; del.textContent='✕';
+    if(entry.dmgTotal!=null)statParts.push(`${entry.dmgTotal} dmg`);
+    if(entry.healTotal!=null)statParts.push(`${entry.healTotal} heal`);
+    if(entry.resTotal!=null)statParts.push(`${entry.resTotal} res`);
+    const pts=document.createElement('span');pts.className='saved-item-pts';pts.textContent=statParts.join(' · ');
+    const del=document.createElement('span');del.className='saved-item-del';del.textContent='✕';
     del.addEventListener('click',e=>{e.stopPropagation();deleteSaved(entry.name);});
-    row.appendChild(nm); row.appendChild(pts); row.appendChild(del);
-    list.appendChild(row);
+    row.appendChild(nm);row.appendChild(pts);row.appendChild(del);list.appendChild(row);
   }
 }
 
-// ─── Filters ──────────────────────────────────────────────────────────────────
+// ─── Filters ───────────────────────────────────────────────────────────────────
 const filterRow=document.getElementById('filter-row');
-const CAT_COLORS = { Target:'#1d9e75',Range:'#378add',Potency:'#d85a30',General:'#ba7517',Modifier:'#7f77dd',Animation:'#d4537e',Status:'#639922',Condition:'#b5590c',Design:'#378add',Flaw:'#e24b4a' };
+const CAT_COLORS={Target:'#1d9e75',Range:'#378add',Potency:'#d85a30',Manipulation:'#ba7517',Modifier:'#7f77dd',Animation:'#d4537e',Status:'#639922',Condition:'#b5590c',Design:'#378add',Flaw:'#e24b4a'};
 ['All',...CATEGORIES].forEach(cat=>{
-  const btn=document.createElement('button');
-  btn.className='filter-btn'+(cat==='All'?' active':'');
+  const btn=document.createElement('button');btn.className='filter-btn'+(cat==='All'?' active':'');
   const dot=CAT_COLORS[cat]?`<span class="filter-dot" style="background:${CAT_COLORS[cat]}"></span>`:'';
   btn.innerHTML=`${dot}${cat}`;
   btn.addEventListener('click',()=>{activeFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderBank();});
@@ -1387,34 +1025,25 @@ const CAT_COLORS = { Target:'#1d9e75',Range:'#378add',Potency:'#d85a30',General:
 });
 document.getElementById('search').addEventListener('input',e=>{searchText=e.target.value;renderBank();});
 
-document.addEventListener('click',e=>{
-  if(pendingLinkCtx&&!e.target.closest('.panel-left')&&!e.target.closest('.link-target')&&!e.target.closest('#pending-banner')){pendingLinkCtx=null;updatePendingBanner();renderAll();}
-});
-
 document.getElementById('cr-select').addEventListener('change',()=>{
   const cr=getCR();let changed=false;
   for(const b of blocks){
     for(const g of b.groups){
-      if(g.isDuration){
-        if(g.durCount>cr){g.durCount=cr;changed=true;}
-        for(const lk of g.linked){const qd=Q[lk.id];if(qd&&!qd.isStatus&&!qd.flaw&&lk.count>cr){lk.count=cr;changed=true;}}
-        g.linked=g.linked.filter(lk=>lk.count>0);
-        if(g.linked.filter(lk=>Q[lk.id]?.cat==='Status').length===0)g.accum=null;
-      } else {
-        for(const it of g.items){const qd=Q[it.id];if(qd&&!qd.isStatus&&!qd.flaw&&it.count>cr){it.count=cr;changed=true;}}
-        g.items=g.items.filter(it=>it.count>0);
-        if(g.items.filter(it=>Q[it.id]?.cat==='Status').length===0)g.accum=null;
+      for(const it of g.items){
+        const qd=Q[it.id];
+        if(qd&&!qd.flaw&&!qd.noStack&&it.count>cr){it.count=cr;changed=true;}
       }
+      g.items=g.items.filter(it=>it.count>0);
     }
-    b.groups=b.groups.filter(g=>g.isDuration?g.durCount>0:g.items.length>0);
+    b.groups=b.groups.filter(g=>g.items.length>0);
   }
   if(changed)showToast(`Qualities reduced to match CR ${cr}.`);
   renderAll();
 });
 
-document.getElementById('dmg-grade-select').addEventListener('change', updateTotals);
+document.getElementById('dmg-grade-select').addEventListener('change',updateTotals);
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+// ─── Init ──────────────────────────────────────────────────────────────────────
 blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];
 activeBlockId=blocks[0].bid;
 renderBank();
