@@ -13,6 +13,17 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .header-sub { font-size: 12px; color: #a89fc7; flex: 1; display: none; }
 @media (min-width: 700px) { .header-sub { display: block; } }
 
+.design-toggle { display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 12px; cursor: pointer; user-select: none; transition: background 0.15s; border: 1px solid rgba(255,255,255,0.1); touch-action: manipulation; }
+.design-toggle:hover { background: rgba(255,255,255,0.12); }
+.design-toggle.balancer.active  { background: rgba(30,140,100,0.3);  border-color: rgba(80,200,150,0.45); }
+.dt-label { font-size: 12px; font-weight: 600; color: #b0a8d8; white-space: nowrap; }
+.design-toggle.balancer .dt-label { color: #a8d8c0; }
+.design-toggle.balancer.active .dt-label  { color: #d8fff0; }
+.toggle-pip { width: 32px; height: 18px; border-radius: 9px; background: #444; position: relative; transition: background 0.2s; flex-shrink: 0; }
+.design-toggle.balancer.active  .toggle-pip { background: #2a9e72; }
+.toggle-pip::after { content: ''; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
+.design-toggle.active .toggle-pip::after { transform: translateX(14px); }
+
 .app { display: flex; flex: 1; overflow: hidden; }
 
 .panel-left { width: 300px; flex-shrink: 0; background: #fff; border-right: 1px solid #e2e0da; display: flex; flex-direction: column; overflow: hidden; }
@@ -72,7 +83,6 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .total-value.dmg  { color: #c0392b; }
 .total-value.heal { color: #27ae60; }
 .total-value.res  { color: #8e44ad; }
-.total-value.status { color: #639922; }
 .grade-select { font-size: 13px; font-weight: 600; color: #1a1a1a; background: #f5f4f0; border: 1px solid #d0cec8; border-radius: 6px; padding: 4px 8px; outline: none; cursor: pointer; min-height: 32px; }
 
 .builder-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
@@ -90,6 +100,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .block-phase { font-size: 11px; color: #bbb; font-style: italic; padding: 2px 0; }
 
 .q-group { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; padding: 6px 8px; border-radius: 8px; border: 1px solid #eeece6; background: #fafaf8; }
+.q-group.has-contagious-link { border-color: color-mix(in srgb,#b5590c 25%,#e2e0da); background: color-mix(in srgb,#b5590c 4%,#fff); }
 .q-group.has-duration { border-color: color-mix(in srgb,#7f77dd 30%,#e2e0da); background: color-mix(in srgb,#7f77dd 4%,#fff); }
 
 .q-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid #e2e0da; background: #f9f8f6; font-size: 13px; font-weight: 500; cursor: default; white-space: nowrap; animation: popIn 0.12s ease; min-height: 32px; }
@@ -105,6 +116,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .q-chip { border-color: color-mix(in srgb,var(--cat,#e2e0da) 25%,#e2e0da); }
 .q-chip .chip-stack { color: var(--cat,#888); }
 .q-chip .chip-attr { font-size: 10px; font-weight: 700; background: color-mix(in srgb,var(--cat,#ba7517) 15%,#fff); color: color-mix(in srgb,var(--cat,#ba7517) 70%,#333); border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
+.q-chip .chip-link-tag { font-size: 10px; font-weight: 700; background: color-mix(in srgb,#b5590c 12%,#fff); color: #b5590c; border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
 .link-dash { font-size: 16px; font-weight: 700; color: #aaa; padding: 0 2px; }
 
 .link-target { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px; border: 1px dashed #7f77dd; color: #7f77dd; font-size: 12px; cursor: pointer; transition: background 0.12s; background: transparent; white-space: nowrap; min-height: 32px; touch-action: manipulation; }
@@ -247,7 +259,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
         <div class="flaw-budget" id="flaw-budget">Flaws: <span class="fb-nums"><span id="flaw-used">0</span>/<span id="flaw-max">0</span></span></div>
       </div>
     </div>
-    <!-- Totals row — shown only when ability has Damage, Healing, Maladies, or Status Effects -->
+    <!-- Totals row — shown only when ability has Damage, Healing, or Maladies -->
     <div class="totals-row" id="totals-row">
       <div class="total-item" id="total-dmg-wrap">
         <span class="total-label">Damage Attribute:</span>
@@ -273,7 +285,6 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
         <span class="total-label">Resilience Damage:</span>
         <span class="total-value res" id="total-res">—</span>
       </div>
-      <div id="total-status-wrap" style="display:none;flex-wrap:wrap;gap:10px;align-items:center;"></div>
     </div>
     <div class="builder-area" id="builder-area"></div>
     <button class="btn-compound-desktop" onclick="addCompoundBlock()">＋ Add Compound Target</button>
@@ -331,6 +342,16 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
   </div>
 </div>
 
+<!-- Contagious condition picker dialog -->
+<div class="stack-dialog-overlay" id="contagious-dialog-overlay">
+  <div class="stack-dialog">
+    <div class="stack-dialog-title">Link Contagious to a Condition</div>
+    <div class="stack-dialog-sub">Choose which Condition this Contagious spreads.</div>
+    <div class="stack-dialog-opts" id="contagious-dialog-opts"></div>
+    <div class="stack-dialog-cancel" id="contagious-dialog-cancel">Cancel</div>
+  </div>
+</div>
+
 <script>
 
 // ─── Quality Data ──────────────────────────────────────────────────────────────
@@ -364,13 +385,13 @@ const QUALITIES = [
   { id:'hidden',         name:'Hidden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   { id:'abjured',        name:'Abjured',                   cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   // Modifiers
-  { id:'accumulation',   name:'Accumulation',              cat:'Modifier',     cost:3,  flaw:false },
+  { id:'accumulation',   name:'Accumulation',              cat:'Modifier',     cost:3,  flaw:false, noStack:true },
   { id:'artifice',       name:'Artifice',                  cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave',         name:'Cleave',                    cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave-15',      name:'Cleave Range Near',         cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave-30',      name:'Cleave Range Short',        cat:'Modifier',     cost:2,  flaw:false },
   { id:'concentrate',    name:'Concentrate',               cat:'Modifier',     cost:1,  flaw:false },
-  { id:'contagious',     name:'Contagious',                cat:'Modifier',     cost:1,  flaw:false },
+  { id:'contagious',     name:'Contagious',                cat:'Modifier',     cost:1,  flaw:false, requiresCondition:true },
   { id:'defensive',      name:'Defensive',                 cat:'Modifier',     cost:1,  flaw:false, noStack:true },
   { id:'disperse',       name:'Disperse',                  cat:'Modifier',     cost:3,  flaw:false },
   { id:'dur-conditions', name:'Duration - Conditions',     cat:'Modifier',     cost:3,  flaw:false },
@@ -478,81 +499,46 @@ const RESILIENCE_DMG = {
   torpor:5, fatigue:5, ambush:5, strain:5,
 };
 
-// Status Effect CR multipliers for value display
-// value = multiplier × CR  (e.g. empower: 5 means 5 × CR)
-const STATUS_VALUES = {
-  empower:5, hearten:5, magnify:5, protection:5,
-  weaken:5, wither:5, quell:5, amplification:5,
-  attrition:2, expose:2, inoculate:2,
-  fortify:1, destabilize:1, infect:1,
-};
-
 // ─── Totals ────────────────────────────────────────────────────────────────────
 function calcTotals() {
   let dmgCount=0, healCount=0, resTotal=0;
-  const statusPresent=new Set();
   for (const b of blocks) {
     for (const g of b.groups) {
       for (const it of g.items) {
         if (it.id==='damage')  dmgCount  += it.count;
         if (it.id==='healing') healCount += it.count;
         if (RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id];
-        if (STATUS_VALUES[it.id]) statusPresent.add(it.id);
       }
     }
   }
-  return { dmgCount, healCount, resTotal, statusPresent };
+  return { dmgCount, healCount, resTotal };
 }
 
 function updateTotals() {
-  const { dmgCount, healCount, resTotal, statusPresent } = calcTotals();
-  const cr = getCR();
-  const hasDmg    = dmgCount > 0;
-  const hasHeal   = healCount > 0;
-  const hasRes    = resTotal > 0;
-  const hasStatus = statusPresent.size > 0;
-  const visible   = hasDmg || hasHeal || hasRes || hasStatus;
-
-  document.getElementById('totals-row').classList.toggle('visible', visible);
-  document.getElementById('total-dmg-wrap').style.display    = hasDmg    ? 'flex' : 'none';
-  document.getElementById('total-heal-wrap').style.display   = hasHeal   ? 'flex' : 'none';
-  document.getElementById('total-res-wrap').style.display    = hasRes    ? 'flex' : 'none';
-  document.getElementById('total-status-wrap').style.display = hasStatus ? 'flex' : 'none';
-
-  // Dividers — between each visible section
-  const sections = [hasDmg, hasHeal, hasRes, hasStatus];
-  const dividers = document.querySelectorAll('.total-divider-dyn');
-  dividers.forEach(d=>d.remove());
-  // Re-insert dividers between visible items dynamically
-  const wrapIds = ['total-dmg-wrap','total-heal-wrap','total-res-wrap','total-status-wrap'];
-  const visibleWraps = wrapIds.filter(id=>document.getElementById(id).style.display!=='none');
-  const row = document.getElementById('totals-row');
-  for (let i=0; i<visibleWraps.length-1; i++) {
-    const el = document.getElementById(visibleWraps[i]);
-    const div = document.createElement('div');
-    div.className='meta-divider total-divider-dyn';
-    el.insertAdjacentElement('afterend', div);
+  const { dmgCount, healCount, resTotal } = calcTotals();
+  const hasDmg  = dmgCount  > 0;
+  const hasHeal = healCount > 0;
+  const hasRes  = resTotal  > 0;
+  const hasStatus = false; // status totals not in this version
+  document.getElementById('totals-row').classList.toggle('visible', hasDmg||hasHeal||hasRes);
+  document.getElementById('total-dmg-wrap').style.display  = hasDmg  ? 'flex' : 'none';
+  document.getElementById('total-heal-wrap').style.display = hasHeal ? 'flex' : 'none';
+  document.getElementById('total-res-wrap').style.display  = hasRes  ? 'flex' : 'none';
+  // Dynamic dividers between visible sections
+  document.querySelectorAll('.total-divider-dyn').forEach(d=>d.remove());
+  const wrapIds=['total-dmg-wrap','total-heal-wrap','total-res-wrap'];
+  const visibleWraps=wrapIds.filter(id=>document.getElementById(id).style.display!=='none');
+  for (let i=0;i<visibleWraps.length-1;i++){
+    const el=document.getElementById(visibleWraps[i]);
+    const div=document.createElement('div');div.className='meta-divider total-divider-dyn';
+    el.insertAdjacentElement('afterend',div);
   }
-
   if (hasDmg) {
     const g=parseInt(document.getElementById('dmg-grade-select').value,10);
     document.getElementById('total-dmg').textContent=dmgCount*g;
   }
-  if (hasHeal) document.getElementById('total-heal').textContent=healCount*cr;
+  if (hasHeal) document.getElementById('total-heal').textContent=healCount*getCR();
   if (hasRes)  document.getElementById('total-res').textContent=resTotal;
-
-  if (hasStatus) {
-    const wrap = document.getElementById('total-status-wrap');
-    wrap.innerHTML='';
-    for (const id of [...statusPresent].sort()) {
-      const qdef=Q[id]; if(!qdef)continue;
-      const val=STATUS_VALUES[id]*cr;
-      const item=document.createElement('div');
-      item.className='total-item';
-      item.innerHTML=`<span class="total-label">${qdef.name}:</span><span class="total-value status">${val}</span>`;
-      wrap.appendChild(item);
-    }
-  }
 }
 
 // ─── State ─────────────────────────────────────────────────────────────────────
@@ -604,6 +590,7 @@ document.getElementById('quick-stack-toggle').addEventListener('click',()=>{
   document.getElementById('quick-stack-toggle').classList.toggle('on',quickStack);
 });
 
+// ─── Balancer toggle ───────────────────────────────────────────────────────────
 // ─── Stack/New dialog ──────────────────────────────────────────────────────────
 function showStackDialog(qualityName, options) {
   const overlay=document.getElementById('stack-dialog-overlay');
@@ -649,6 +636,37 @@ function showAttrDialog(qid, bid, usedAttrs, onPick) {
 function hideAttrDialog() { document.getElementById('attr-dialog-overlay').classList.remove('visible'); }
 document.getElementById('attr-dialog-cancel').addEventListener('click',hideAttrDialog);
 document.getElementById('attr-dialog-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)hideAttrDialog();});
+
+// ─── Contagious condition picker ───────────────────────────────────────────────
+function getConditionsInAbility() {
+  const found=[];
+  for (const b of blocks) for (const g of b.groups) for (const it of g.items)
+    if(Q[it.id]?.cat==='Condition') found.push(it);
+  return found;
+}
+
+function showContagiousDialog(bid) {
+  const conditions=getConditionsInAbility();
+  if(!conditions.length){ showToast('Add a Condition to the ability first, then add Contagious.',true); return; }
+  const opts=document.getElementById('contagious-dialog-opts'); opts.innerHTML='';
+  for (const it of conditions) {
+    const qdef=Q[it.id]; if(!qdef)continue;
+    const btn=document.createElement('button'); btn.className='stack-opt';
+    btn.innerHTML=`<span class="stack-opt-icon" style="font-size:11px;font-weight:700;background:color-mix(in srgb,#b5590c 12%,#fff);border-radius:6px;padding:3px 7px;color:#b5590c;">${qdef.name.slice(0,4).toUpperCase()}</span><div class="stack-opt-text"><div class="stack-opt-label">${qdef.name}</div><div class="stack-opt-desc">Contagious spreads this Condition</div></div>`;
+    btn.addEventListener('click',()=>{
+      hideContagiousDialog();
+      snapshot();
+      const b=blocks.find(x=>x.bid===bid);
+      if(b) b.groups.push({gid:nextGid++,items:[{id:'contagious',count:1,linkedCondition:it.id}]});
+      renderAll();
+    });
+    opts.appendChild(btn);
+  }
+  document.getElementById('contagious-dialog-overlay').classList.add('visible');
+}
+function hideContagiousDialog() { document.getElementById('contagious-dialog-overlay').classList.remove('visible'); }
+document.getElementById('contagious-dialog-cancel').addEventListener('click',hideContagiousDialog);
+document.getElementById('contagious-dialog-overlay').addEventListener('click',e=>{if(e.target===e.currentTarget)hideContagiousDialog();});
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 function globalCount(id) {
@@ -732,6 +750,14 @@ function addToBlock(bid,qid) {
   const phase=blockPhase(b);
   if(phase==='target'&&qdef.cat!=='Target'){showToast('Choose a Target quality first.',true);return;}
 
+  // Contagious: requires a Condition, shows picker dialog
+  if(qdef.requiresCondition){
+    if(!canAddToBlock(qdef,bid))return;
+    if(isMobile())closeDrawer();
+    showContagiousDialog(bid);
+    return;
+  }
+
   if(!canAddToBlock(qdef,bid))return;
 
   if(qdef.cat==='Target'){
@@ -783,14 +809,15 @@ function clearAll() { snapshot();blocks=[{bid:nextBid++,isCompound:false,targetI
 function setActiveBlock(bid) { activeBlockId=bid;renderAll(); }
 
 // ─── Chip ──────────────────────────────────────────────────────────────────────
-function makeChip(id, count, extraClass, onRemove, onAdd, attr) {
+function makeChip(id, count, extraClass, onRemove, onAdd, attr, linkedCondition) {
   const qdef=Q[id]; if(!qdef)return document.createTextNode('');
   const chip=document.createElement('div');
   chip.className=`q-chip ${catClass(qdef.cat)}${extraClass?' '+extraClass:''}`;
   const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
   const attrStr=attr?`<span class="chip-attr">${attr}</span>`:'';
+  const linkStr=linkedCondition&&Q[linkedCondition]?`<span class="chip-link-tag">→ ${Q[linkedCondition].name}</span>`:'';
   const showAdd=onAdd&&!qdef.noStack;
-  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${attrStr}${stackStr}${showAdd?`<span class="chip-add" role="button">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button">−</span>`:''}`;
+  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${attrStr}${linkStr}${stackStr}${showAdd?`<span class="chip-add" role="button">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button">−</span>`:''}`;
   if(showAdd)chip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();snapshot();onAdd();});
   if(onRemove)chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();onRemove();});
   return chip;
@@ -799,11 +826,12 @@ function makeChip(id, count, extraClass, onRemove, onAdd, attr) {
 // ─── Render ────────────────────────────────────────────────────────────────────
 function renderAll() {
   const area=document.getElementById('builder-area'); area.innerHTML='';
-  const summaryParts=[];
+  const blockParts=[];
   if(activeBlockId&&!blocks.find(b=>b.bid===activeBlockId))activeBlockId=null;
   if(!activeBlockId&&blocks.length)activeBlockId=blocks[0].bid;
 
   for (const b of blocks) {
+    const summaryParts=[];
     const phase=blockPhase(b);
     const blockDiv=document.createElement('div');
     blockDiv.className='target-block'+(b.targetId?' has-target':'')+(b.bid===activeBlockId?' active-block':'');
@@ -834,14 +862,16 @@ function renderAll() {
       if(b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
       const gd=document.createElement('span');gd.className='group-delete';gd.textContent='✕';gd.addEventListener('click',e=>{e.stopPropagation();snapshot();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();});tRow.appendChild(gd);
       blockDiv.appendChild(tRow);
-      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`;if(b.rangeId)bLabel+=` / ${Q[b.rangeId].name}`;summaryParts.push(bLabel);
+      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`;if(b.rangeId)bLabel+=` · ${Q[b.rangeId].name}`;summaryParts.push(bLabel);
     }
 
     if(phase!=='effects'){const ph=document.createElement('div');ph.className='block-phase';ph.textContent=phase==='target'?'← Tap a Target quality first':'← Tap a Range quality, or add an effect quality';blockDiv.appendChild(ph);}
 
     // Effect groups — each quality on its own row
     for (const g of b.groups) {
-      const gDiv=document.createElement('div');gDiv.className='q-group';
+      const gDiv=document.createElement('div');
+      const hasContagiousLink=g.items.some(it=>it.id==='contagious'&&it.linkedCondition);
+      gDiv.className='q-group'+(hasContagiousLink?' has-contagious-link':'');
 
       // Drag-to-reorder handle
       const handle=document.createElement('span');handle.className='group-drag-handle';handle.textContent='⠿';handle.title='Drag to reorder';handle.draggable=true;
@@ -868,9 +898,15 @@ function renderAll() {
         gDiv.appendChild(makeChip(it.id,it.count,null,
           ()=>{it.count--;if(it.count<=0){g.items=g.items.filter(x=>x.id!==it.id);}if(g.items.length===0)b.groups=b.groups.filter(x=>x.gid!==g.gid);renderAll();},
           ()=>{if(!canAddToBlock(Q[it.id],b.bid))return;it.count++;renderAll();},
-          it.attr||null
+          it.attr||null,
+          it.linkedCondition||null
         ));
-        const qd=Q[it.id];if(qd)summaryParts.push(qd.name+(it.count>1?` ×${it.count}`:'')+(it.attr?` [${it.attr}]`:''));
+        const qd=Q[it.id];
+        if(qd){
+          let label=qd.name+(it.count>1?` ×${it.count}`:'')+(it.attr?` [${it.attr}]`:'');
+          if(it.linkedCondition&&Q[it.linkedCondition])label+=` → ${Q[it.linkedCondition].name}`;
+          summaryParts.push(label);
+        }
       }
 
       const gDel=document.createElement('span');gDel.className='group-delete';gDel.textContent='✕';gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);});gDiv.appendChild(gDel);
@@ -885,6 +921,7 @@ function renderAll() {
       e.preventDefault();if(dragId){addToBlock(b.bid,dragId);dragId=null;}
     });
     area.appendChild(blockDiv);
+    blockParts.push(summaryParts.join(' · '));
   }
 
   const {baseCost,flawCost,total}=calcCosts();
@@ -894,7 +931,7 @@ function renderAll() {
   document.getElementById('flaw-used').textContent=flawCost;
   document.getElementById('flaw-max').textContent=flawMax;
   document.getElementById('flaw-budget').className='flaw-budget'+(flawCost>flawMax?' over':'');
-  document.getElementById('breakdown').textContent=summaryParts.join(' · ')||'No qualities added yet.';
+  document.getElementById('breakdown').textContent=blockParts.filter(Boolean).join(' | ')||'No qualities added yet.';
   updateTotals();
 }
 
@@ -941,7 +978,7 @@ function exportAbility() {
     for(const g of b.groups){
       for(const it of g.items){
         const qd=Q[it.id];if(!qd)continue;
-        lines.push(`    ${qd.flaw?'*':'+'} ${qd.name}${it.attr?` [${it.attr}]`:''} (${qd.cost}×${it.count})`);
+        lines.push(`    ${qd.flaw?'*':'+'} ${qd.name}${it.attr?` [${it.attr}]`:''}${it.linkedCondition&&Q[it.linkedCondition]?` → ${Q[it.linkedCondition].name}`:''} (${qd.cost}×${it.count})`);
       }
     }
   }
@@ -953,7 +990,7 @@ function exportAbility() {
   if(healCount>0)totalLines.push(`Healing: ${healCount*cr} (${healCount} × CR ${cr})`);
   if(resTotal>0)totalLines.push(`Resilience Damage: ${resTotal}`);
   const blob=new Blob([
-    `Ability: ${name}\nCrown Rank: CR ${cr}\n`
+    `Ability: ${name}\nCrown Rank: CR ${cr}${designs.length?' ['+designs.join(', ')+']':''}\n`
     +`Base Cost: ${baseCost}  Flaw Reduction: ${flawCost} (max ${flawMax})  Total: ${total}\n`
     +(totalLines.length?totalLines.join('  ·  ')+'\n':'')
     +'\n'+lines.join('\n')
