@@ -13,16 +13,6 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .header-sub { font-size: 12px; color: #a89fc7; flex: 1; display: none; }
 @media (min-width: 700px) { .header-sub { display: block; } }
 
-.design-toggle { display: flex; align-items: center; gap: 8px; flex-shrink: 0; background: rgba(255,255,255,0.07); border-radius: 8px; padding: 7px 12px; cursor: pointer; user-select: none; transition: background 0.15s; border: 1px solid rgba(255,255,255,0.1); touch-action: manipulation; }
-.design-toggle:hover { background: rgba(255,255,255,0.12); }
-.design-toggle.balancer.active  { background: rgba(30,140,100,0.3);  border-color: rgba(80,200,150,0.45); }
-.dt-label { font-size: 12px; font-weight: 600; color: #b0a8d8; white-space: nowrap; }
-.design-toggle.balancer .dt-label { color: #a8d8c0; }
-.design-toggle.balancer.active .dt-label  { color: #d8fff0; }
-.toggle-pip { width: 32px; height: 18px; border-radius: 9px; background: #444; position: relative; transition: background 0.2s; flex-shrink: 0; }
-.design-toggle.balancer.active  .toggle-pip { background: #2a9e72; }
-.toggle-pip::after { content: ''; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #fff; transition: transform 0.2s; }
-.design-toggle.active .toggle-pip::after { transform: translateX(14px); }
 
 .app { display: flex; flex: 1; overflow: hidden; }
 
@@ -101,7 +91,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 
 .q-group { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; padding: 6px 8px; border-radius: 8px; border: 1px solid #eeece6; background: #fafaf8; }
 .q-group.has-contagious-link { border-color: color-mix(in srgb,#b5590c 25%,#e2e0da); background: color-mix(in srgb,#b5590c 4%,#fff); }
-.q-group.has-duration { border-color: color-mix(in srgb,#7f77dd 30%,#e2e0da); background: color-mix(in srgb,#7f77dd 4%,#fff); }
+.effect-section-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; padding:2px 6px 0; color:#888; }
 
 .q-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 7px; border: 1px solid #e2e0da; background: #f9f8f6; font-size: 13px; font-weight: 500; cursor: default; white-space: nowrap; animation: popIn 0.12s ease; min-height: 32px; }
 @keyframes popIn { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
@@ -111,22 +101,11 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .q-chip .chip-add:hover, .q-chip .chip-add:active { color: #534ab7; background: rgba(83,74,183,0.1); }
 .q-chip .chip-remove { cursor: pointer; color: #bbb; font-size: 16px; line-height: 1; transition: color 0.1s; margin-left: 3px; padding: 4px; margin: -4px -4px -4px 0; border-radius: 4px; touch-action: manipulation; display: flex; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; }
 .q-chip .chip-remove:hover, .q-chip .chip-remove:active { color: #e24b4a; background: rgba(226,75,74,0.08); }
-.q-chip.duration-head { border-color: color-mix(in srgb,#7f77dd 40%,#e2e0da); background: color-mix(in srgb,#7f77dd 10%,#fff); }
-.q-chip.accum-tail { border-color: color-mix(in srgb,#639922 45%,#e2e0da); background: color-mix(in srgb,#639922 12%,#fff); }
 .q-chip { border-color: color-mix(in srgb,var(--cat,#e2e0da) 25%,#e2e0da); }
 .q-chip .chip-stack { color: var(--cat,#888); }
 .q-chip .chip-attr { font-size: 10px; font-weight: 700; background: color-mix(in srgb,var(--cat,#ba7517) 15%,#fff); color: color-mix(in srgb,var(--cat,#ba7517) 70%,#333); border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
 .q-chip .chip-link-tag { font-size: 10px; font-weight: 700; background: color-mix(in srgb,#b5590c 12%,#fff); color: #b5590c; border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
-.link-dash { font-size: 16px; font-weight: 700; color: #aaa; padding: 0 2px; }
 
-.link-target { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 6px; border: 1px dashed #7f77dd; color: #7f77dd; font-size: 12px; cursor: pointer; transition: background 0.12s; background: transparent; white-space: nowrap; min-height: 32px; touch-action: manipulation; }
-.link-target:hover, .link-target:active, .link-target.drag-hover { background: color-mix(in srgb,#7f77dd 12%,#fff); border-style: solid; }
-.link-target.pending { background: color-mix(in srgb,#7f77dd 18%,#fff); border-style: solid; color: #534ab7; }
-.link-target.sub-lt { border-color: #b5590c; color: #b5590c; }
-.link-target.sub-lt:hover, .link-target.sub-lt:active, .link-target.sub-lt.drag-hover { background: color-mix(in srgb,#b5590c 10%,#fff); border-style: solid; }
-.link-target.sub-lt.pending { background: color-mix(in srgb,#b5590c 16%,#fff); border-style: solid; color: #7a3a08; }
-.link-target.accum-lt { border-color: #3b6d11; color: #3b6d11; }
-.link-target.accum-lt:hover, .link-target.accum-lt:active { background: color-mix(in srgb,#639922 10%,#fff); border-style: solid; }
 
 .q-group .group-delete { margin-left: auto; cursor: pointer; color: #ccc; font-size: 15px; transition: color 0.1s; flex-shrink: 0; padding: 4px 6px; min-width: 30px; min-height: 30px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
 .q-group .group-delete:hover, .q-group .group-delete:active { color: #e24b4a; }
@@ -158,6 +137,10 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .cat-modifier { --cat: #7f77dd; } .cat-animation { --cat: #d4537e; }
 .cat-status   { --cat: #639922; } .cat-condition { --cat: #b5590c; }
 .cat-design   { --cat: #378add; } .cat-flaw      { --cat: #e24b4a; }
+.cat-terrain        { --cat: #1a7a5e; }
+.cat-terrain-effect { --cat: #0f5c45; }
+.cat-obstacle        { --cat: #6b4a9e; }
+.cat-obstacle-effect { --cat: #4e2d82; }
 .q-cat-dot { background: var(--cat,#ccc); }
 
 .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); color: #fff; font-size: 13px; font-weight: 500; padding: 10px 20px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.25); opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 300; background: #2c2950; max-width: 90vw; text-align: center; }
@@ -285,6 +268,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
         <span class="total-label">Resilience Damage:</span>
         <span class="total-value res" id="total-res">—</span>
       </div>
+      <div id="total-status-wrap" style="display:none;flex-wrap:wrap;gap:10px;align-items:center;"></div>
     </div>
     <div class="builder-area" id="builder-area"></div>
     <button class="btn-compound-desktop" onclick="addCompoundBlock()">＋ Add Compound Target</button>
@@ -457,6 +441,41 @@ const QUALITIES = [
   { id:'strain',         name:'Strain',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
   { id:'restrain',       name:'Restrain',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
   { id:'disparage',      name:'Disparage',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  // ── Shared Terrain & Obstacle ──────────────────────────────────────────────
+  { id:'to-tenacity',    name:'Tenacity',                  cat:'Terrain',      cost:3,  flaw:false },
+  { id:'to-disperse',    name:'Disperse',                  cat:'Terrain',      cost:3,  flaw:false, noStack:true },
+  // ── Terrain Size (head of terrain group) ──────────────────────────────────
+  { id:'t-size',         name:'Terrain Size',              cat:'Target',       cost:2,  flaw:false },
+  // ── Terrain Effects & Modifiers ────────────────────────────────────────────
+  { id:'t-damage',       name:'Damage',                    cat:'Terrain Effect', cost:1, flaw:false },
+  { id:'t-healing',      name:'Healing',                   cat:'Terrain Effect', cost:1, flaw:false },
+  { id:'t-slippery',     name:'Slippery',                  cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-unstable',     name:'Unstable',                  cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-rough',        name:'Rough',                     cat:'Terrain Effect', cost:1, flaw:false, noStack:true },
+  { id:'t-rallying',     name:'Rallying',                  cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-inspiring',    name:'Inspiring',                 cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-heaving',      name:'Heaving',                   cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-energizing',   name:'Energizing',                cat:'Terrain Effect', cost:2, flaw:false, noStack:true },
+  { id:'t-bless',        name:'Bless',                     cat:'Terrain Effect', cost:3, flaw:false },
+  { id:'t-curse',        name:'Curse',                     cat:'Terrain Effect', cost:3, flaw:false },
+  { id:'t-consecrate',   name:'Consecrate',                cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-profane',      name:'Profane',                   cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  // ── Obstacle Size (head of obstacle group) ────────────────────────────────
+  { id:'o-size',         name:'Obstacle Size',             cat:'Target',       cost:1,  flaw:false },
+  // ── Obstacle Effects & Modifiers ───────────────────────────────────────────
+  { id:'o-tenacity',     name:'Tenacity',                  cat:'Obstacle',     cost:3,  flaw:false },
+  { id:'o-disperse',     name:'Disperse',                  cat:'Obstacle',     cost:3,  flaw:false, noStack:true },
+  { id:'o-damage',       name:'Damage',                    cat:'Obstacle Effect', cost:1, flaw:false },
+  { id:'o-healing',      name:'Healing',                   cat:'Obstacle Effect', cost:1, flaw:false },
+  { id:'o-repelling',    name:'Repelling',                 cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-guiding',      name:'Guiding',                   cat:'Obstacle Effect', cost:1, flaw:false },
+  { id:'o-paling',       name:'Paling',                    cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-volleying',    name:'Volleying',                 cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-aura',         name:'Aura',                      cat:'Obstacle Effect', cost:3, flaw:false },
+  { id:'o-bless',        name:'Bless',                     cat:'Obstacle Effect', cost:3, flaw:false },
+  { id:'o-curse',        name:'Curse',                     cat:'Obstacle Effect', cost:3, flaw:false },
+  { id:'o-consecrate',   name:'Consecrate',                cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-profane',      name:'Profane',                   cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
   // Design Actions
   { id:'emp-limited',    name:'Employ Limited Design Action',      cat:'Design', cost:1, flaw:false },
   { id:'emp-charge',     name:'Employ Charge Design Action',       cat:'Design', cost:2, flaw:false },
@@ -489,9 +508,14 @@ const CAT_CSS = {
   Target:'cat-target', Range:'cat-range', Potency:'cat-potency',
   Manipulation:'cat-manipulation', Modifier:'cat-modifier', Animation:'cat-animation',
   Status:'cat-status', Condition:'cat-condition', Design:'cat-design', Flaw:'cat-flaw',
+  Terrain:'cat-terrain', 'Terrain Effect':'cat-terrain-effect',
+  Obstacle:'cat-obstacle', 'Obstacle Effect':'cat-obstacle-effect',
 };
 const CATEGORIES = [...new Set(QUALITIES.map(q=>q.cat))];
 const ATTRIBUTES = ['Power','Finesse','Resolve','Intensity','Awareness'];
+
+const T_TIERS=['','Tiny (4 sp)','Small (16 sp)','Average (36 sp)','Large (64 sp)','Huge (100 sp)'];
+const O_TIERS=['','Tiny (1 sp)','Small (4 sp)','Average (9 sp)','Large (16 sp)','Huge (25 sp)'];
 
 const RESILIENCE_DMG = {
   fear:1, unbalance:1, exhaust:1,
@@ -499,46 +523,62 @@ const RESILIENCE_DMG = {
   torpor:5, fatigue:5, ambush:5, strain:5,
 };
 
+const STATUS_VALUES = {
+  empower:5, hearten:5, magnify:5, protection:5,
+  weaken:5, wither:5, quell:5, amplification:5,
+  attrition:2, expose:2, inoculate:2,
+  fortify:1, destabilize:1, infect:1,
+};
+
 // ─── Totals ────────────────────────────────────────────────────────────────────
 function calcTotals() {
   let dmgCount=0, healCount=0, resTotal=0;
+  const statusPresent=new Set();
   for (const b of blocks) {
     for (const g of b.groups) {
       for (const it of g.items) {
-        if (it.id==='damage')  dmgCount  += it.count;
-        if (it.id==='healing') healCount += it.count;
-        if (RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id];
+        if(it.id==='damage')  dmgCount  += it.count;
+        if(it.id==='healing') healCount += it.count;
+        if(RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id];
+        if(STATUS_VALUES[it.id])  statusPresent.add(it.id);
       }
     }
   }
-  return { dmgCount, healCount, resTotal };
+  return { dmgCount, healCount, resTotal, statusPresent };
 }
 
 function updateTotals() {
-  const { dmgCount, healCount, resTotal } = calcTotals();
-  const hasDmg  = dmgCount  > 0;
-  const hasHeal = healCount > 0;
-  const hasRes  = resTotal  > 0;
-  const hasStatus = false; // status totals not in this version
-  document.getElementById('totals-row').classList.toggle('visible', hasDmg||hasHeal||hasRes);
-  document.getElementById('total-dmg-wrap').style.display  = hasDmg  ? 'flex' : 'none';
-  document.getElementById('total-heal-wrap').style.display = hasHeal ? 'flex' : 'none';
-  document.getElementById('total-res-wrap').style.display  = hasRes  ? 'flex' : 'none';
-  // Dynamic dividers between visible sections
+  const { dmgCount, healCount, resTotal, statusPresent } = calcTotals();
+  const cr=getCR();
+  const hasDmg    = dmgCount > 0;
+  const hasHeal   = healCount > 0;
+  const hasRes    = resTotal > 0;
+  const hasStatus = statusPresent.size > 0;
+  document.getElementById('totals-row').classList.toggle('visible', hasDmg||hasHeal||hasRes||hasStatus);
+  document.getElementById('total-dmg-wrap').style.display    = hasDmg    ? 'flex' : 'none';
+  document.getElementById('total-heal-wrap').style.display   = hasHeal   ? 'flex' : 'none';
+  document.getElementById('total-res-wrap').style.display    = hasRes    ? 'flex' : 'none';
+  document.getElementById('total-status-wrap').style.display = hasStatus ? 'flex' : 'none';
   document.querySelectorAll('.total-divider-dyn').forEach(d=>d.remove());
-  const wrapIds=['total-dmg-wrap','total-heal-wrap','total-res-wrap'];
+  const wrapIds=['total-dmg-wrap','total-heal-wrap','total-res-wrap','total-status-wrap'];
   const visibleWraps=wrapIds.filter(id=>document.getElementById(id).style.display!=='none');
   for (let i=0;i<visibleWraps.length-1;i++){
     const el=document.getElementById(visibleWraps[i]);
     const div=document.createElement('div');div.className='meta-divider total-divider-dyn';
     el.insertAdjacentElement('afterend',div);
   }
-  if (hasDmg) {
-    const g=parseInt(document.getElementById('dmg-grade-select').value,10);
-    document.getElementById('total-dmg').textContent=dmgCount*g;
+  if(hasDmg){ const g=parseInt(document.getElementById('dmg-grade-select').value,10); document.getElementById('total-dmg').textContent=dmgCount*g; }
+  if(hasHeal) document.getElementById('total-heal').textContent=healCount*cr;
+  if(hasRes)  document.getElementById('total-res').textContent=resTotal;
+  if(hasStatus){
+    const wrap=document.getElementById('total-status-wrap'); wrap.innerHTML='';
+    for(const id of [...statusPresent].sort()){
+      const qdef=Q[id]; if(!qdef)continue;
+      const item=document.createElement('div'); item.className='total-item';
+      item.innerHTML=`<span class="total-label">${qdef.name}:</span><span class="total-value status">${STATUS_VALUES[id]*cr}</span>`;
+      wrap.appendChild(item);
+    }
   }
-  if (hasHeal) document.getElementById('total-heal').textContent=healCount*getCR();
-  if (hasRes)  document.getElementById('total-res').textContent=resTotal;
 }
 
 // ─── State ─────────────────────────────────────────────────────────────────────
@@ -674,7 +714,9 @@ function globalCount(id) {
   for (const b of blocks) {
     if(b.targetId===id)n+=(b.targetCount||1);
     if(b.rangeId===id)n++;
-    for (const g of b.groups) for (const it of g.items) if(it.id===id)n+=it.count;
+    for (const g of b.groups) {
+      for (const it of g.items) if(it.id===id)n+=it.count;
+    }
   }
   return n;
 }
@@ -704,6 +746,7 @@ function canAddToBlock(qdef,bid) {
   const cr=getCR(), b=blocks.find(x=>x.bid===bid);
   if(qdef.cat==='Target'){
     if(qdef.id==='single'&&b?.targetId==='single'){showToast('Only one Single target per block.',true);return false;}
+    if((qdef.id==='t-size'||qdef.id==='o-size')&&b?.targetId===qdef.id&&(b.targetCount||1)>=5){showToast('Maximum size (Huge) reached.',true);return false;}
     if(qdef.id==='area'&&b?.targetId==='area'&&(b.targetCount||1)>=5){showToast('Area maximum is 5.',true);return false;}
     if(globalCount(qdef.id)>=cr){showToast(`CR limit reached for ${qdef.name}.`,true);return false;}
     return true;
@@ -750,6 +793,8 @@ function addToBlock(bid,qid) {
   const phase=blockPhase(b);
   if(phase==='target'&&qdef.cat!=='Target'){showToast('Choose a Target quality first.',true);return;}
 
+
+
   // Contagious: requires a Condition, shows picker dialog
   if(qdef.requiresCondition){
     if(!canAddToBlock(qdef,bid))return;
@@ -780,7 +825,9 @@ function addToBlock(bid,qid) {
 
   // Check if exists elsewhere (for stackable qualities and dialog)
   const existingGroups=[];
-  for(const bl of blocks)for(const g of bl.groups){const it=g.items.find(x=>x.id===qid);if(it)existingGroups.push({g,it});}
+  for(const bl of blocks)for(const g of bl.groups){
+    const it=g.items.find(x=>x.id===qid);if(it)existingGroups.push({g,it});
+  }
 
   if(existingGroups.length>0&&!qdef.noStack){
     if(quickStack){snapshot();existingGroups[0].it.count++;renderAll();return;}
@@ -813,11 +860,15 @@ function makeChip(id, count, extraClass, onRemove, onAdd, attr, linkedCondition)
   const qdef=Q[id]; if(!qdef)return document.createTextNode('');
   const chip=document.createElement('div');
   chip.className=`q-chip ${catClass(qdef.cat)}${extraClass?' '+extraClass:''}`;
+
+  // Size tier label is shown on target chip, not here
+  let tierStr='';
+
   const stackStr=count>1?`<span class="chip-stack">${count}×${qdef.cost}</span>`:'';
   const attrStr=attr?`<span class="chip-attr">${attr}</span>`:'';
   const linkStr=linkedCondition&&Q[linkedCondition]?`<span class="chip-link-tag">→ ${Q[linkedCondition].name}</span>`:'';
   const showAdd=onAdd&&!qdef.noStack;
-  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${attrStr}${linkStr}${stackStr}${showAdd?`<span class="chip-add" role="button">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button">−</span>`:''}`;
+  chip.innerHTML=`<span class="chip-name">${qdef.name}</span>${attrStr}${tierStr}${linkStr}${stackStr}${showAdd?`<span class="chip-add" role="button">＋</span>`:''}${onRemove?`<span class="chip-remove" role="button">−</span>`:''}`;
   if(showAdd)chip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();snapshot();onAdd();});
   if(onRemove)chip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();onRemove();});
   return chip;
@@ -855,8 +906,12 @@ function renderAll() {
       const tq=Q[b.targetId];const tChip=document.createElement('div');tChip.className=`q-chip ${catClass(tq.cat)}`;
       const ss=(b.targetCount||1)>1?`<span class="chip-stack">${b.targetCount}×${tq.cost}</span>`:'';
       const tCanAdd=tq.id!=='single';
-      tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${ss}${tCanAdd?'<span class="chip-add" role="button">＋</span>':''}<span class="chip-remove" role="button">−</span>`;
-      if(tCanAdd)tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();if(canAddToBlock(tq,b.bid)){snapshot();b.targetCount++;}renderAll();});
+      // Show tier label for terrain/obstacle size targets
+      const tCount=b.targetCount||1;
+      const tTierTag=(tq.id==='t-size'&&tCount<=5)?`<span class="chip-attr">${T_TIERS[tCount]}</span>`
+                    :(tq.id==='o-size'&&tCount<=5)?`<span class="chip-attr">${O_TIERS[tCount]}</span>`:'';
+      tChip.innerHTML=`<span class="chip-name">${tq.name}</span>${tTierTag}${ss}${tCanAdd?'<span class="chip-add" role="button">＋</span>':''}<span class="chip-remove" role="button">−</span>`;
+      if(tCanAdd)tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();const maxCount=(tq.id==='t-size'||tq.id==='o-size')?5:Infinity;if((b.targetCount||1)>=maxCount){showToast('Maximum size (Huge) reached.',true);return;}if(canAddToBlock(tq,b.bid)){snapshot();b.targetCount++;}renderAll();});
       tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();decrementTarget(b.bid);});
       tRow.appendChild(tChip);
       if(b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
@@ -867,18 +922,23 @@ function renderAll() {
 
     if(phase!=='effects'){const ph=document.createElement('div');ph.className='block-phase';ph.textContent=phase==='target'?'← Tap a Target quality first':'← Tap a Range quality, or add an effect quality';blockDiv.appendChild(ph);}
 
-    // Effect groups — each quality on its own row
-    for (const g of b.groups) {
-      const gDiv=document.createElement('div');
-      const hasContagiousLink=g.items.some(it=>it.id==='contagious'&&it.linkedCondition);
-      gDiv.className='q-group'+(hasContagiousLink?' has-contagious-link':'');
 
-      // Drag-to-reorder handle
+    // Effect groups — render in two passes so terrain/obstacle sections always appear last
+    // and are never interleaved with regular qualities
+    const isTEGroup=g=>{ const cat=Q[g.items?.[0]?.id]?.cat; return cat==='Terrain Effect'||cat==='Terrain'; };
+    const isOEGroup=g=>{ const cat=Q[g.items?.[0]?.id]?.cat; return cat==='Obstacle Effect'||cat==='Obstacle'; };
+    const regularGroups=b.groups.filter(g=>!isTEGroup(g)&&!isOEGroup(g));
+    const terrainGroups=b.groups.filter(g=>isTEGroup(g));
+    const obstacleGroups=b.groups.filter(g=>isOEGroup(g));
+
+    const renderGroup=(g)=>{
+      const gDiv=document.createElement('div');
+      const hasContagiousLink=g.items?.some(it=>it.id==='contagious'&&it.linkedCondition);
+      gDiv.className='q-group'+(hasContagiousLink?' has-contagious-link':'');
       const handle=document.createElement('span');handle.className='group-drag-handle';handle.textContent='⠿';handle.title='Drag to reorder';handle.draggable=true;
       handle.addEventListener('dragstart',e=>{e.stopPropagation();e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('reorder-gid',String(g.gid));e.dataTransfer.setData('reorder-bid',String(b.bid));setTimeout(()=>gDiv.classList.add('dragging-group'),0);});
       handle.addEventListener('dragend',()=>gDiv.classList.remove('dragging-group'));
       gDiv.insertBefore(handle,gDiv.firstChild);
-
       gDiv.addEventListener('dragover',e=>{if(!e.dataTransfer.types.includes('reorder-gid'))return;e.preventDefault();e.stopPropagation();const rect=gDiv.getBoundingClientRect();gDiv.classList.remove('drop-above','drop-below');gDiv.classList.add(e.clientY<rect.top+rect.height/2?'drop-above':'drop-below');});
       gDiv.addEventListener('dragleave',()=>gDiv.classList.remove('drop-above','drop-below'));
       gDiv.addEventListener('drop',e=>{
@@ -893,13 +953,11 @@ function renderAll() {
         const finalIdx=dstBlock.groups.findIndex(x=>x.gid===g.gid);
         dstBlock.groups.splice(insertAfter?finalIdx+1:finalIdx,0,moved);renderAll();
       });
-
       for (const it of g.items) {
         gDiv.appendChild(makeChip(it.id,it.count,null,
           ()=>{it.count--;if(it.count<=0){g.items=g.items.filter(x=>x.id!==it.id);}if(g.items.length===0)b.groups=b.groups.filter(x=>x.gid!==g.gid);renderAll();},
           ()=>{if(!canAddToBlock(Q[it.id],b.bid))return;it.count++;renderAll();},
-          it.attr||null,
-          it.linkedCondition||null
+          it.attr||null, it.linkedCondition||null
         ));
         const qd=Q[it.id];
         if(qd){
@@ -908,9 +966,19 @@ function renderAll() {
           summaryParts.push(label);
         }
       }
-
       const gDel=document.createElement('span');gDel.className='group-delete';gDel.textContent='✕';gDel.addEventListener('click',e=>{e.stopPropagation();removeGroup(b.bid,g.gid);});gDiv.appendChild(gDel);
       blockDiv.appendChild(gDiv);
+    };
+
+    for(const g of regularGroups) renderGroup(g);
+
+    if(terrainGroups.length>0){
+      const lbl=document.createElement('div');lbl.className='effect-section-label cat-terrain';lbl.textContent='Terrain';lbl.style.cssText='color:var(--cat);width:100%;padding:4px 2px 0;';blockDiv.appendChild(lbl);
+      for(const g of terrainGroups) renderGroup(g);
+    }
+    if(obstacleGroups.length>0){
+      const lbl=document.createElement('div');lbl.className='effect-section-label cat-obstacle';lbl.textContent='Obstacle';lbl.style.cssText='color:var(--cat);width:100%;padding:4px 2px 0;';blockDiv.appendChild(lbl);
+      for(const g of obstacleGroups) renderGroup(g);
     }
 
     // Block drag/drop
@@ -1052,7 +1120,7 @@ function renderSavedList(){
 
 // ─── Filters ───────────────────────────────────────────────────────────────────
 const filterRow=document.getElementById('filter-row');
-const CAT_COLORS={Target:'#1d9e75',Range:'#378add',Potency:'#d85a30',Manipulation:'#ba7517',Modifier:'#7f77dd',Animation:'#d4537e',Status:'#639922',Condition:'#b5590c',Design:'#378add',Flaw:'#e24b4a'};
+const CAT_COLORS={Target:'#1d9e75',Range:'#378add',Potency:'#d85a30',Manipulation:'#ba7517',Modifier:'#7f77dd',Animation:'#d4537e',Status:'#639922',Condition:'#b5590c',Design:'#378add',Flaw:'#e24b4a',Terrain:'#1a7a5e','Terrain Effect':'#0f5c45',Obstacle:'#6b4a9e','Obstacle Effect':'#4e2d82'};
 ['All',...CATEGORIES].forEach(cat=>{
   const btn=document.createElement('button');btn.className='filter-btn'+(cat==='All'?' active':'');
   const dot=CAT_COLORS[cat]?`<span class="filter-dot" style="background:${CAT_COLORS[cat]}"></span>`:'';
