@@ -537,8 +537,8 @@ function calcTotals() {
   for (const b of blocks) {
     for (const g of b.groups) {
       for (const it of g.items) {
-        if(it.id==='damage')  dmgCount  += it.count;
-        if(it.id==='healing') healCount += it.count;
+        if(it.id==='damage'||it.id==='t-damage'||it.id==='o-damage') dmgCount += it.count;
+        if(it.id==='healing'||it.id==='t-healing'||it.id==='o-healing') healCount += it.count;
         if(RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id];
         if(STATUS_VALUES[it.id])  statusPresent.add(it.id);
       }
