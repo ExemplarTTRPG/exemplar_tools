@@ -85,6 +85,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .block-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #999; }
 .block-label.compound { color: #7f77dd; }
 .block-active-badge { font-size: 10px; font-weight: 700; color: #534ab7; background: #eeedfe; border-radius: 8px; padding: 1px 7px; letter-spacing: 0.04em; }
+.block-range-tag { font-size: 11px; font-weight: 600; color: #378add; background: color-mix(in srgb,#378add 10%,#fff); border-radius: 6px; padding: 2px 8px; white-space: nowrap; margin-left: auto; margin-right: 4px; }
 .block-delete { margin-left: auto; cursor: pointer; color: #ccc; font-size: 16px; transition: color 0.1s; padding: 4px 6px; min-width: 32px; min-height: 32px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; }
 .block-delete:hover { color: #e24b4a; }
 .block-phase { font-size: 11px; color: #bbb; font-style: italic; padding: 2px 0; }
@@ -362,8 +363,8 @@ const QUALITIES = [
   { id:'damage',         name:'Damage',                    cat:'Potency',      cost:1,  flaw:false },
   { id:'healing',        name:'Healing',                   cat:'Potency',      cost:1,  flaw:false },
   // Manipulation (formerly General Effects)
-  { id:'burden',         name:'Burden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true, requiresAttr:true },
-  { id:'boost',          name:'Boost',                     cat:'Manipulation', cost:3,  flaw:false, noStack:true, requiresAttr:true },
+  { id:'burden',         name:'Burden',                    cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
+  { id:'boost',          name:'Boost',                     cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
   { id:'tether',         name:'Tether',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   { id:'repel',          name:'Repel',                     cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   { id:'hidden',         name:'Hidden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
@@ -513,6 +514,12 @@ const CAT_CSS = {
 };
 const CATEGORIES = [...new Set(QUALITIES.map(q=>q.cat))];
 const ATTRIBUTES = ['Power','Finesse','Resolve','Intensity','Awareness'];
+
+const RANGE_DESC = {
+  melee:         'Adjacent',
+  ranged:        '10–30 ft',
+  'long-ranged': '10–100 ft',
+};
 
 const T_TIERS=['','Tiny (4 sp)','Small (16 sp)','Average (36 sp)','Large (64 sp)','Huge (100 sp)'];
 const O_TIERS=['','Tiny (1 sp)','Small (4 sp)','Average (9 sp)','Large (16 sp)','Huge (25 sp)'];
@@ -813,10 +820,12 @@ function addToBlock(bid,qid) {
   }
   if(qdef.cat==='Range'){snapshot();b.rangeId=qid;renderAll();return;}
 
-  // Attribute picker for Burden/Boost
+  // Attribute picker for Burden/Boost — multiple allowed up to CR, each with a unique attribute
   if(qdef.requiresAttr){
     const usedAttrs=[];
     for(const bl of blocks)for(const g of bl.groups)for(const it of g.items)if(it.id===qid&&it.attr)usedAttrs.push(it.attr);
+    const cr=getCR();
+    if(usedAttrs.length>=cr){showToast(`CR limit reached for ${qdef.name} (max ${cr}).`,true);return;}
     if(usedAttrs.length>=ATTRIBUTES.length){showToast(`All attributes already used for ${qdef.name}.`,true);return;}
     if(isMobile())closeDrawer();
     showAttrDialog(qid,bid,usedAttrs);
@@ -892,21 +901,26 @@ function renderAll() {
       setActiveBlock(b.bid);
     });
 
-    // Header
+    // Header — includes Effective Range if a range is set
     const hdr=document.createElement('div');hdr.className='block-header';
     const lbl=document.createElement('span');lbl.className='block-label'+(b.isCompound?' compound':'');
     lbl.textContent=b.isCompound?'⊕ Compound Target':'◈ Primary Target';hdr.appendChild(lbl);
     if(b.bid===activeBlockId){const badge=document.createElement('span');badge.className='block-active-badge';badge.textContent='ACTIVE';hdr.appendChild(badge);}
+    if(b.rangeId&&RANGE_DESC[b.rangeId]){
+      const rangeTag=document.createElement('span');
+      rangeTag.className='block-range-tag';
+      rangeTag.textContent=`Effective Range: ${RANGE_DESC[b.rangeId]}`;
+      hdr.appendChild(rangeTag);
+    }
     if(b.isCompound){const del=document.createElement('span');del.className='block-delete';del.textContent='✕';del.addEventListener('click',e=>{e.stopPropagation();removeBlock(b.bid);});hdr.appendChild(del);}
     blockDiv.appendChild(hdr);
 
-    // Target + Range row
+    // Target row (own row)
     if(b.targetId){
       const tRow=document.createElement('div');tRow.className='q-group';
       const tq=Q[b.targetId];const tChip=document.createElement('div');tChip.className=`q-chip ${catClass(tq.cat)}`;
       const ss=(b.targetCount||1)>1?`<span class="chip-stack">${b.targetCount}×${tq.cost}</span>`:'';
       const tCanAdd=tq.id!=='single';
-      // Show tier label for terrain/obstacle size targets
       const tCount=b.targetCount||1;
       const tTierTag=(tq.id==='t-size'&&tCount<=5)?`<span class="chip-attr">${T_TIERS[tCount]}</span>`
                     :(tq.id==='o-size'&&tCount<=5)?`<span class="chip-attr">${O_TIERS[tCount]}</span>`:'';
@@ -914,10 +928,21 @@ function renderAll() {
       if(tCanAdd)tChip.querySelector('.chip-add').addEventListener('click',e=>{e.stopPropagation();const maxCount=(tq.id==='t-size'||tq.id==='o-size')?5:Infinity;if((b.targetCount||1)>=maxCount){showToast('Maximum size (Huge) reached.',true);return;}if(canAddToBlock(tq,b.bid)){snapshot();b.targetCount++;}renderAll();});
       tChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();snapshot();decrementTarget(b.bid);});
       tRow.appendChild(tChip);
-      if(b.rangeId){const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});tRow.appendChild(rChip);}
-      const gd=document.createElement('span');gd.className='group-delete';gd.textContent='✕';gd.addEventListener('click',e=>{e.stopPropagation();snapshot();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();});tRow.appendChild(gd);
+      const tgd=document.createElement('span');tgd.className='group-delete';tgd.textContent='✕';tgd.addEventListener('click',e=>{e.stopPropagation();snapshot();b.targetId=null;b.targetCount=0;b.rangeId=null;renderAll();});tRow.appendChild(tgd);
       blockDiv.appendChild(tRow);
-      let bLabel=`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`;if(b.rangeId)bLabel+=` · ${Q[b.rangeId].name}`;summaryParts.push(bLabel);
+      summaryParts.push(`${tq.name}${(b.targetCount||1)>1?` ×${b.targetCount}`:''}`);
+    }
+
+    // Range row (own row, only if set)
+    if(b.rangeId){
+      const rRow=document.createElement('div');rRow.className='q-group';
+      const rq=Q[b.rangeId];const rChip=document.createElement('div');rChip.className=`q-chip ${catClass(rq.cat)}`;
+      rChip.innerHTML=`<span class="chip-name">${rq.name}</span><span class="chip-remove" role="button">−</span>`;
+      rChip.querySelector('.chip-remove').addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});
+      rRow.appendChild(rChip);
+      const rgd=document.createElement('span');rgd.className='group-delete';rgd.textContent='✕';rgd.addEventListener('click',e=>{e.stopPropagation();removeRangeFromBlock(b.bid);});rRow.appendChild(rgd);
+      blockDiv.appendChild(rRow);
+      summaryParts.push(rq.name);
     }
 
     if(phase!=='effects'){const ph=document.createElement('div');ph.className='block-phase';ph.textContent=phase==='target'?'← Tap a Target quality first':'← Tap a Range quality, or add an effect quality';blockDiv.appendChild(ph);}
