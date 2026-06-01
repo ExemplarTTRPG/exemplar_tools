@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Exemplar Ability Builder</title>
+<title>Exemplar Builder</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: system-ui, -apple-system, sans-serif; background: #f5f4f0; color: #1a1a1a; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; -webkit-tap-highlight-color: transparent; }
@@ -12,6 +12,72 @@ header { background: #1e1b2e; color: #fff; padding: 10px 16px; display: flex; al
 header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .header-sub { font-size: 12px; color: #a89fc7; flex: 1; display: none; }
 @media (min-width: 700px) { .header-sub { display: block; } }
+
+/* ── Tabs ── */
+.tab-bar { background: #1e1b2e; padding: 0 16px; display: flex; gap: 4px; flex-shrink: 0; border-bottom: 2px solid #2d2850; }
+.tab-btn { font-size: 13px; font-weight: 600; padding: 8px 18px; cursor: pointer; color: #a89fc7; background: transparent; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s, border-color 0.15s; touch-action: manipulation; white-space: nowrap; }
+.tab-btn:hover { color: #fff; }
+.tab-btn.active { color: #fff; border-bottom-color: #7f77dd; }
+.tab-panel { display: none; flex: 1; overflow: hidden; }
+.tab-panel.active { display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── Stance Builder ── */
+.stance-outer { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.stance-meta { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
+@media (min-width: 700px) { .stance-meta { flex-direction: row; align-items: center; gap: 16px; } }
+.stance-meta input { flex: 1; font-size: 17px; font-weight: 600; border: none; outline: none; color: #1a1a1a; background: transparent; min-width: 0; }
+.stance-meta input::placeholder { color: #bbb; }
+.stance-meta-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* Stance cost display */
+.stance-costs { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; flex-shrink: 0; }
+.stance-cost-item { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.stance-cost-label { font-size: 12px; color: #888; white-space: nowrap; }
+.stance-cost-value { font-size: 20px; font-weight: 700; color: #534ab7; min-width: 24px; }
+.stance-cost-ap { font-size: 20px; font-weight: 700; color: #c0392b; min-width: 24px; }
+
+/* Reflexive toggle */
+.reflexive-row { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 16px; flex-shrink: 0; cursor: pointer; user-select: none; touch-action: manipulation; }
+.reflexive-row.active { border-color: #7f77dd; background: color-mix(in srgb,#7f77dd 5%,#fff); }
+.reflexive-icon { font-size: 18px; }
+.reflexive-text { flex: 1; }
+.reflexive-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.reflexive-desc { font-size: 12px; color: #888; margin-top: 1px; }
+.reflexive-cost { font-size: 12px; font-weight: 700; color: #534ab7; white-space: nowrap; }
+.reflexive-pip { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #d0cec8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
+.reflexive-row.active .reflexive-pip { border-color: #534ab7; background: #534ab7; color: #fff; font-size: 13px; }
+
+/* Gain sections */
+.gain-section { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+.gain-section-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+.gain-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; }
+.gain-section-rule { font-size: 11px; color: #aaa; }
+.gain-grid { display: flex; flex-direction: column; gap: 6px; }
+.gain-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid #e8e6e0; background: #fafaf8; min-height: 44px; }
+.gain-row.has-count { border-color: color-mix(in srgb,#534ab7 30%,#e2e0da); background: color-mix(in srgb,#534ab7 4%,#fff); }
+.gain-row.adv.has-count { border-color: color-mix(in srgb,#c0392b 30%,#e2e0da); background: color-mix(in srgb,#c0392b 4%,#fff); }
+.gain-name { flex: 1; font-size: 13px; font-weight: 500; color: #1a1a1a; }
+.gain-desc { font-size: 11px; color: #888; margin-top: 1px; }
+.gain-name-wrap { flex: 1; min-width: 0; }
+.gain-cost-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: #eeedfe; color: #534ab7; white-space: nowrap; flex-shrink: 0; }
+.gain-cost-tag.adv { background: #fceaea; color: #a32d2d; }
+.gain-counter { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.gain-count-display { font-size: 15px; font-weight: 700; color: #534ab7; min-width: 20px; text-align: center; }
+.gain-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid #d0cec8; background: #f5f4f0; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; transition: all 0.1s; color: #555; }
+.gain-btn:hover, .gain-btn:active { border-color: #534ab7; color: #534ab7; background: #eeedfe; }
+.gain-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+.gain-attr-tag { font-size: 11px; font-weight: 700; background: color-mix(in srgb,#534ab7 12%,#fff); color: #534ab7; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.adv-toggle { width: 44px; height: 24px; border-radius: 12px; background: #d0cec8; position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; border: none; }
+.adv-toggle.on { background: #c0392b; }
+.adv-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.adv-toggle.on::after { transform: translateX(20px); }
+
+/* Stance summary bar */
+.stance-bar { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+@media (max-width: 699px) { .stance-bar { display: none; } }
+.stance-bar .breakdown { flex: 1; font-size: 12px; color: #777; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.stance-bottom-bar { display: flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 8px 12px; background: #fff; border-top: 1px solid #e2e0da; }
+@media (min-width: 700px) { .stance-bottom-bar { display: none; } }
 
 
 .app { display: flex; flex: 1; overflow: hidden; }
@@ -209,10 +275,16 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 <body>
 
 <header>
-  <h1>Exemplar Ability Builder</h1>
-  <span class="header-sub">Drag or tap qualities to build your ability</span>
+  <h1>Exemplar Builder</h1>
+  <span class="header-sub">Build abilities and stances for Exemplar RPG</span>
 </header>
 
+<div class="tab-bar">
+  <button class="tab-btn active" id="tab-ability" onclick="switchTab('ability')">⚔ Ability Builder</button>
+  <button class="tab-btn" id="tab-stance" onclick="switchTab('stance')">🛡 Stance Builder</button>
+</div>
+
+<div class="tab-panel active" id="panel-ability">
 <div class="drawer-overlay" id="drawer-overlay"></div>
 
 <div class="app">
@@ -303,6 +375,77 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
     </div>
   </div>
 </div>
+</div><!-- end #panel-ability -->
+
+<!-- ══ STANCE BUILDER TAB ══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-stance">
+  <div class="stance-outer">
+    <!-- Meta row -->
+    <div class="stance-meta">
+      <input type="text" id="stance-name" placeholder="Name your stance...">
+      <div class="stance-meta-right">
+        <div class="cr-display">
+          <span class="cr-label">Crown Rank:</span>
+          <select class="cr-select" id="stance-cr-select">
+            <option value="1" selected>CR 1</option><option value="2">CR 2</option>
+            <option value="3">CR 3</option><option value="4">CR 4</option>
+            <option value="5">CR 5</option><option value="6">CR 6</option>
+            <option value="7">CR 7</option><option value="8">CR 8</option>
+            <option value="9">CR 9</option><option value="10">CR 10</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cost display -->
+    <div class="stance-costs">
+      <div class="stance-cost-item"><span class="stance-cost-label">Build Cost:</span><span class="stance-cost-value" id="stance-build-cost">0</span><span class="stance-cost-label">AP</span></div>
+      <div class="meta-divider"></div>
+      <div class="stance-cost-item"><span class="stance-cost-label">Activation:</span><span class="stance-cost-ap" id="stance-activate-cost">0</span><span class="stance-cost-label">AP</span></div>
+      <div class="meta-divider"></div>
+      <div class="stance-cost-item"><span class="stance-cost-label">Maintenance:</span><span class="stance-cost-ap" id="stance-maintain-cost">0</span><span class="stance-cost-label">AP / round</span></div>
+    </div>
+
+    <!-- Reflexive modifier -->
+    <div class="reflexive-row" id="reflexive-row" onclick="toggleReflexive()">
+      <span class="reflexive-icon">⚡</span>
+      <div class="reflexive-text">
+        <div class="reflexive-name">Reflexive <span class="gain-cost-tag" style="margin-left:4px;">+1 AP build</span></div>
+        <div class="reflexive-desc">Stance gains the Reactive quality. AP cost changes to RP when used as a reaction.</div>
+      </div>
+      <div class="reflexive-pip" id="reflexive-pip"></div>
+    </div>
+
+    <!-- Additive Gains -->
+    <div class="gain-section">
+      <div class="gain-section-header">
+        <span class="gain-section-title">Additive Gains</span>
+        <span class="gain-section-rule">1 AP each · stacks up to CR · 1 AP activate + 1 AP/round per unique type</span>
+      </div>
+      <div class="gain-grid" id="additive-gain-grid"></div>
+    </div>
+
+    <!-- Advantage Gains -->
+    <div class="gain-section">
+      <div class="gain-section-header">
+        <span class="gain-section-title">Advantage Gains</span>
+        <span class="gain-section-rule">5 AP each · no stacking · 2 AP activate + 2 AP/round each</span>
+      </div>
+      <div class="gain-grid" id="advantage-gain-grid"></div>
+    </div>
+
+    <!-- Summary / Export -->
+    <div class="stance-bar">
+      <div class="breakdown" id="stance-breakdown">No gains selected yet.</div>
+      <button class="btn-clear" onclick="clearStance()">Clear</button>
+      <button class="btn-export" onclick="exportStance()">Export</button>
+    </div>
+    <div class="stance-bottom-bar">
+      <button class="bb-btn" onclick="clearStance()">Clear</button>
+      <button class="bb-btn primary" onclick="exportStance()">Export</button>
+    </div>
+  </div>
+</div><!-- end #panel-stance -->
 
 <button class="fab" id="fab" aria-label="Add quality">＋</button>
 <div class="toast" id="toast"></div>
@@ -351,26 +494,30 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 //  Accumulation is a plain Modifier, one per ability (noStack:true).
 
 const QUALITIES = [
-  // Target
+  // Target (fixed order: single first, then alphabetical)
   { id:'single',         name:'Single',                    cat:'Target',       cost:1,  flaw:false },
-  { id:'multi-target',   name:'Multi-Target',              cat:'Target',       cost:3,  flaw:false },
   { id:'area',           name:'Area',                      cat:'Target',       cost:3,  flaw:false },
-  // Range
+  { id:'multi-target',   name:'Multi-Target',              cat:'Target',       cost:3,  flaw:false },
+  { id:'o-size',         name:'Obstacle Size',             cat:'Target',       cost:1,  flaw:false },
+  { id:'t-size',         name:'Terrain Size',              cat:'Target',       cost:2,  flaw:false },
+  // Range (short to long)
   { id:'melee',          name:'Melee',                     cat:'Range',        cost:1,  flaw:false },
   { id:'ranged',         name:'Ranged',                    cat:'Range',        cost:2,  flaw:false },
   { id:'long-ranged',    name:'Long Ranged',               cat:'Range',        cost:3,  flaw:false },
   // Potency
+  { id:'artifact-potency', name:'Artifact Potency',        cat:'Potency',      cost:0,  flaw:false, isArtifactPotency:true },
   { id:'damage',         name:'Damage',                    cat:'Potency',      cost:1,  flaw:false },
   { id:'healing',        name:'Healing',                   cat:'Potency',      cost:1,  flaw:false },
-  // Manipulation (formerly General Effects)
-  { id:'burden',         name:'Burden',                    cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
-  { id:'boost',          name:'Boost',                     cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
-  { id:'tether',         name:'Tether',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
-  { id:'repel',          name:'Repel',                     cat:'Manipulation', cost:3,  flaw:false, noStack:true },
-  { id:'hidden',         name:'Hidden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  // Manipulation
   { id:'abjured',        name:'Abjured',                   cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  { id:'boost',          name:'Boost',                     cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
+  { id:'burden',         name:'Burden',                    cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
+  { id:'hidden',         name:'Hidden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  { id:'repel',          name:'Repel',                     cat:'Manipulation', cost:3,  flaw:false, noStack:true },
+  { id:'tether',         name:'Tether',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   // Modifiers
   { id:'accumulation',   name:'Accumulation',              cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  { id:'enjoin-adapt',   name:'Adaptive Enjoin',           cat:'Modifier',     cost:3,  flaw:false, noStack:true },
   { id:'artifice',       name:'Artifice',                  cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave',         name:'Cleave',                    cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave-15',      name:'Cleave Range Near',         cat:'Modifier',     cost:1,  flaw:false },
@@ -380,14 +527,13 @@ const QUALITIES = [
   { id:'defensive',      name:'Defensive',                 cat:'Modifier',     cost:1,  flaw:false, noStack:true },
   { id:'disperse',       name:'Disperse',                  cat:'Modifier',     cost:3,  flaw:false },
   { id:'dur-conditions', name:'Duration - Conditions',     cat:'Modifier',     cost:3,  flaw:false },
-  { id:'dur-status',     name:'Duration - Status',         cat:'Modifier',     cost:3,  flaw:false },
   { id:'dur-manipulate', name:'Duration - Manipulations',  cat:'Modifier',     cost:3,  flaw:false },
-  { id:'dur-potency',    name:'Duration - Potency',        cat:'Modifier',     cost:3,  flaw:false },
   { id:'dur-objects',    name:'Duration - Objects',        cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-potency',    name:'Duration - Potency',        cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-status',     name:'Duration - Status',         cat:'Modifier',     cost:3,  flaw:false },
   { id:'dynamic',        name:'Dynamic',                   cat:'Modifier',     cost:1,  flaw:false, noStack:true },
   { id:'efficiency',     name:'Efficiency',                cat:'Modifier',     cost:3,  flaw:false },
   { id:'enjoin',         name:'Enjoin',                    cat:'Modifier',     cost:1,  flaw:false, noStack:true },
-  { id:'enjoin-adapt',   name:'Adaptive Enjoin',           cat:'Modifier',     cost:3,  flaw:false, noStack:true },
   { id:'enjoin-trig',    name:'Enjoin Trigger Charge',     cat:'Modifier',     cost:3,  flaw:false },
   { id:'escalating',     name:'Escalating',                cat:'Modifier',     cost:3,  flaw:false, noStack:true },
   { id:'gambit',         name:'Gambit',                    cat:'Modifier',     cost:1,  flaw:false, noStack:true },
@@ -401,108 +547,104 @@ const QUALITIES = [
   { id:'animated',       name:'Animated',                  cat:'Animation',    cost:1,  flaw:false },
   { id:'attach',         name:'Attach',                    cat:'Animation',    cost:2,  flaw:false },
   { id:'detonate',       name:'Detonate',                  cat:'Animation',    cost:3,  flaw:false },
-  // Status Effects — all noStack:true, cost:3, CR-limited
+  // Status Effects
+  { id:'amplification',  name:'Amplification',             cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'attrition',      name:'Attrition',                 cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'destabilize',    name:'Destabilize',               cat:'Status',       cost:3,  flaw:false, noStack:true },
   { id:'empower',        name:'Empower',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'expose',         name:'Expose',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'fortify',        name:'Fortify',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
   { id:'hearten',        name:'Hearten',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'infect',         name:'Infect',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'inoculate',      name:'Inoculate',                 cat:'Status',       cost:3,  flaw:false, noStack:true },
   { id:'magnify',        name:'Magnify',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
   { id:'protection',     name:'Protection',                cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'attrition',      name:'Attrition',                 cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'fortify',        name:'Fortify',                   cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'inoculate',      name:'Inoculate',                 cat:'Status',       cost:3,  flaw:false, noStack:true },
+  { id:'quell',          name:'Quell',                     cat:'Status',       cost:3,  flaw:false, noStack:true },
   { id:'weaken',         name:'Weaken',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
   { id:'wither',         name:'Wither',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'quell',          name:'Quell',                     cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'amplification',  name:'Amplification',             cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'expose',         name:'Expose',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'destabilize',    name:'Destabilize',               cat:'Status',       cost:3,  flaw:false, noStack:true },
-  { id:'infect',         name:'Infect',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
-  // Conditions — Glories (noStack:true, CR-limited)
-  { id:'invigorate',     name:'Invigorate',                cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'galvanize',      name:'Galvanize',                 cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'determined',     name:'Determined',                cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'courage',        name:'Courage',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'prepare',        name:'Prepare',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'temper',         name:'Temper',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'hasten',         name:'Hasten',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'quicken',        name:'Quicken',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'elude',          name:'Elude',                     cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'stimulate',      name:'Stimulate',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'freedom',        name:'Freedom',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'enkindle',       name:'Enkindle',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  // Conditions — Maladies (noStack:true, CR-limited)
-  { id:'fatigue',        name:'Fatigue',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'torpor',         name:'Torpor',                    cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'blind',          name:'Blind',                     cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'fear',           name:'Fear',                      cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'unbalance',      name:'Unbalance',                 cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'sunder',         name:'Sunder',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'root',           name:'Root',                      cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'exhaust',        name:'Exhaust',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  // Conditions
   { id:'ambush',         name:'Ambush',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'strain',         name:'Strain',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'restrain',       name:'Restrain',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'blind',          name:'Blind',                     cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'courage',        name:'Courage',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'determined',     name:'Determined',                cat:'Condition',    cost:2,  flaw:false, noStack:true },
   { id:'disparage',      name:'Disparage',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  // ── Shared Terrain & Obstacle ──────────────────────────────────────────────
-  { id:'to-tenacity',    name:'Tenacity',                  cat:'Terrain',      cost:3,  flaw:false },
+  { id:'elude',          name:'Elude',                     cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'enkindle',       name:'Enkindle',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'exhaust',        name:'Exhaust',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'fatigue',        name:'Fatigue',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'fear',           name:'Fear',                      cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'freedom',        name:'Freedom',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'galvanize',      name:'Galvanize',                 cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'hasten',         name:'Hasten',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'invigorate',     name:'Invigorate',                cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'prepare',        name:'Prepare',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'quicken',        name:'Quicken',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'restrain',       name:'Restrain',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'root',           name:'Root',                      cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'stimulate',      name:'Stimulate',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'strain',         name:'Strain',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'sunder',         name:'Sunder',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'temper',         name:'Temper',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'torpor',         name:'Torpor',                    cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'unbalance',      name:'Unbalance',                 cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  // Terrain
   { id:'to-disperse',    name:'Disperse',                  cat:'Terrain',      cost:3,  flaw:false, noStack:true },
-  // ── Terrain Size (head of terrain group) ──────────────────────────────────
-  { id:'t-size',         name:'Terrain Size',              cat:'Target',       cost:2,  flaw:false },
-  // ── Terrain Effects & Modifiers ────────────────────────────────────────────
+  { id:'to-tenacity',    name:'Tenacity',                  cat:'Terrain',      cost:3,  flaw:false },
+  // Terrain Effect
+  { id:'t-bless',        name:'Bless',                     cat:'Terrain Effect', cost:3, flaw:false },
+  { id:'t-consecrate',   name:'Consecrate',                cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-curse',        name:'Curse',                     cat:'Terrain Effect', cost:3, flaw:false },
   { id:'t-damage',       name:'Damage',                    cat:'Terrain Effect', cost:1, flaw:false },
+  { id:'t-energizing',   name:'Energizing',                cat:'Terrain Effect', cost:2, flaw:false, noStack:true },
   { id:'t-healing',      name:'Healing',                   cat:'Terrain Effect', cost:1, flaw:false },
+  { id:'t-heaving',      name:'Heaving',                   cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-inspiring',    name:'Inspiring',                 cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-profane',      name:'Profane',                   cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-rallying',     name:'Rallying',                  cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
+  { id:'t-rough',        name:'Rough',                     cat:'Terrain Effect', cost:1, flaw:false, noStack:true },
   { id:'t-slippery',     name:'Slippery',                  cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
   { id:'t-unstable',     name:'Unstable',                  cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
-  { id:'t-rough',        name:'Rough',                     cat:'Terrain Effect', cost:1, flaw:false, noStack:true },
-  { id:'t-rallying',     name:'Rallying',                  cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
-  { id:'t-inspiring',    name:'Inspiring',                 cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
-  { id:'t-heaving',      name:'Heaving',                   cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
-  { id:'t-energizing',   name:'Energizing',                cat:'Terrain Effect', cost:2, flaw:false, noStack:true },
-  { id:'t-bless',        name:'Bless',                     cat:'Terrain Effect', cost:3, flaw:false },
-  { id:'t-curse',        name:'Curse',                     cat:'Terrain Effect', cost:3, flaw:false },
-  { id:'t-consecrate',   name:'Consecrate',                cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
-  { id:'t-profane',      name:'Profane',                   cat:'Terrain Effect', cost:3, flaw:false, noStack:true },
-  // ── Obstacle Size (head of obstacle group) ────────────────────────────────
-  { id:'o-size',         name:'Obstacle Size',             cat:'Target',       cost:1,  flaw:false },
-  // ── Obstacle Effects & Modifiers ───────────────────────────────────────────
-  { id:'o-tenacity',     name:'Tenacity',                  cat:'Obstacle',     cost:3,  flaw:false },
+  // Obstacle
   { id:'o-disperse',     name:'Disperse',                  cat:'Obstacle',     cost:3,  flaw:false, noStack:true },
-  { id:'o-damage',       name:'Damage',                    cat:'Obstacle Effect', cost:1, flaw:false },
-  { id:'o-healing',      name:'Healing',                   cat:'Obstacle Effect', cost:1, flaw:false },
-  { id:'o-repelling',    name:'Repelling',                 cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
-  { id:'o-guiding',      name:'Guiding',                   cat:'Obstacle Effect', cost:1, flaw:false },
-  { id:'o-paling',       name:'Paling',                    cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
-  { id:'o-volleying',    name:'Volleying',                 cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-tenacity',     name:'Tenacity',                  cat:'Obstacle',     cost:3,  flaw:false },
+  // Obstacle Effect
   { id:'o-aura',         name:'Aura',                      cat:'Obstacle Effect', cost:3, flaw:false },
   { id:'o-bless',        name:'Bless',                     cat:'Obstacle Effect', cost:3, flaw:false },
-  { id:'o-curse',        name:'Curse',                     cat:'Obstacle Effect', cost:3, flaw:false },
   { id:'o-consecrate',   name:'Consecrate',                cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-curse',        name:'Curse',                     cat:'Obstacle Effect', cost:3, flaw:false },
+  { id:'o-damage',       name:'Damage',                    cat:'Obstacle Effect', cost:1, flaw:false },
+  { id:'o-guiding',      name:'Guiding',                   cat:'Obstacle Effect', cost:1, flaw:false },
+  { id:'o-healing',      name:'Healing',                   cat:'Obstacle Effect', cost:1, flaw:false },
+  { id:'o-paling',       name:'Paling',                    cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
   { id:'o-profane',      name:'Profane',                   cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-repelling',    name:'Repelling',                 cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
+  { id:'o-volleying',    name:'Volleying',                 cat:'Obstacle Effect', cost:3, flaw:false, noStack:true },
   // Design Actions
-  { id:'emp-limited',    name:'Employ Limited Design Action',      cat:'Design', cost:1, flaw:false },
-  { id:'emp-charge',     name:'Employ Charge Design Action',       cat:'Design', cost:2, flaw:false },
   { id:'add-employ',     name:'Additional Employ',                 cat:'Design', cost:3, flaw:false },
-  { id:'gain-limited',   name:'Gain Limited Design Action',        cat:'Design', cost:2, flaw:false },
-  { id:'gain-charge',    name:'Gain Charge Design Action',         cat:'Design', cost:3, flaw:false },
   { id:'gain-add-use',   name:'Design Action Additional Use',      cat:'Design', cost:3, flaw:false },
+  { id:'emp-charge',     name:'Employ Charge Design Action',       cat:'Design', cost:2, flaw:false },
+  { id:'emp-limited',    name:'Employ Limited Design Action',      cat:'Design', cost:1, flaw:false },
+  { id:'gain-charge',    name:'Gain Charge Design Action',         cat:'Design', cost:3, flaw:false },
+  { id:'gain-limited',   name:'Gain Limited Design Action',        cat:'Design', cost:2, flaw:false },
   // Flaws
-  { id:'flaw-suffer',    name:'Ends on Suffering Action',          cat:'Flaw',   cost:-3, flaw:true },
-  { id:'flaw-malady',    name:'Ends on Receiving Malady',          cat:'Flaw',   cost:-2, flaw:true },
-  { id:'flaw-glory',     name:'Ends on Receiving Glory',           cat:'Flaw',   cost:-3, flaw:true },
-  { id:'flaw-cd',        name:'Enforced Cooldown',                 cat:'Flaw',   cost:-1, flaw:true },
-  { id:'flaw-harrow',    name:'Harrowing',                         cat:'Flaw',   cost:-2, flaw:true },
-  { id:'flaw-remorse',   name:'Remorseful',                        cat:'Flaw',   cost:-3, flaw:true },
-  { id:'flaw-capric',    name:'Capricious',                        cat:'Flaw',   cost:-2, flaw:true },
-  { id:'flaw-taxing',    name:'Taxing',                            cat:'Flaw',   cost:-2, flaw:true },
-  { id:'flaw-demand',    name:'Demanding',                         cat:'Flaw',   cost:-2, flaw:true },
-  { id:'flaw-seq',       name:'Sequenced',                         cat:'Flaw',   cost:-1, flaw:true },
-  { id:'flaw-restr',     name:'Restricted Uses',                   cat:'Flaw',   cost:-3, flaw:true },
   { id:'flaw-bself',     name:'Burden Self',                       cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-capric',    name:'Capricious',                        cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-demand',    name:'Demanding',                         cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-cd',        name:'Enforced Cooldown',                 cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-glory',     name:'Ends on Receiving Glory',           cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-malady',    name:'Ends on Receiving Malady',          cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-suffer',    name:'Ends on Suffering Action',          cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-harrow',    name:'Harrowing',                         cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-limr',      name:'Limited Range',                     cat:'Flaw',   cost:-1, flaw:true },
   { id:'flaw-mself',     name:'Malady to Self',                    cat:'Flaw',   cost:-1, flaw:true },
   { id:'flaw-mdur',      name:'Malady to Self Duration',           cat:'Flaw',   cost:-3, flaw:true },
   { id:'flaw-minr',      name:'Minimum Range',                     cat:'Flaw',   cost:-1, flaw:true },
-  { id:'flaw-limr',      name:'Limited Range',                     cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-remorse',   name:'Remorseful',                        cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-restr',     name:'Restricted Uses',                   cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-seq',       name:'Sequenced',                         cat:'Flaw',   cost:-1, flaw:true },
+  { id:'flaw-taxing',    name:'Taxing',                            cat:'Flaw',   cost:-2, flaw:true },
   { id:'flaw-unique',    name:'Unique Requirement',                cat:'Flaw',   cost:-1, flaw:true },
-];
+]
 
 const Q = Object.fromEntries(QUALITIES.map(q=>[q.id,q]));
 const CAT_CSS = {
@@ -539,18 +681,22 @@ const STATUS_VALUES = {
 
 // ─── Totals ────────────────────────────────────────────────────────────────────
 function calcTotals() {
-  let dmgCount=0, healCount=0, resTotal=0;
+  let dmgCount=0, healCount=0, resTotal=0, artifactPotency=0;
   const statusPresent=new Set();
   for (const b of blocks) {
     for (const g of b.groups) {
       for (const it of g.items) {
         if(it.id==='damage'||it.id==='t-damage'||it.id==='o-damage') dmgCount += it.count;
         if(it.id==='healing'||it.id==='t-healing'||it.id==='o-healing') healCount += it.count;
+        if(Q[it.id]?.isArtifactPotency) artifactPotency += it.count;
         if(RESILIENCE_DMG[it.id]) resTotal += RESILIENCE_DMG[it.id];
         if(STATUS_VALUES[it.id])  statusPresent.add(it.id);
       }
     }
   }
+  // Artifact Potency adds to effective Damage and Healing counts
+  if(dmgCount>0)  dmgCount  += artifactPotency;
+  if(healCount>0) healCount += artifactPotency;
   return { dmgCount, healCount, resTotal, statusPresent };
 }
 
@@ -1173,12 +1319,333 @@ document.getElementById('cr-select').addEventListener('change',()=>{
 
 document.getElementById('dmg-grade-select').addEventListener('change',updateTotals);
 
+// ─── Tab switching ─────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// ─── Stance Builder ────────────────────────────────────────────────────────────
+const SKILLS = ['Acrobatics','Athletics','Deception','Endurance','History','Insight',
+  'Intimidation','Investigation','Medicine','Nature','Perception','Performance',
+  'Persuasion','Religion','Sleight of Hand','Stealth','Survival','Technology'];
+
+const ADDITIVE_GAINS = [
+  { id:'add-brazen',      name:'Brazen',      desc:'Add one target to Provoke and Surge.' },
+  { id:'add-corrective',  name:'Corrective',  desc:'Add one to effects Purify and Deprive remove.' },
+  { id:'add-cunning',     name:'Cunning',      desc:'Add 5 ft to Disengage and Accelerate range.' },
+  { id:'add-decisive',    name:'Decisive',     desc:'Add your CR as damage to outgoing ranged damage.' },
+  { id:'add-enduring',    name:'Enduring',     desc:'Add your CR to your Active Defense values.' },
+  { id:'add-instructive', name:'Instructive',  desc:'Add 5 ft to Adjust range.' },
+  { id:'add-intrusive',   name:'Intrusive',    desc:'Add 5 ft to Intervene and Takedown range.' },
+  { id:'add-nimble',      name:'Nimble',       desc:'Gain 10 ft of Movement.' },
+  { id:'add-patient',     name:'Patient',      desc:'Subtract one from your Initiative Score.' },
+  { id:'add-restless',    name:'Restless',     desc:'Add one to your Initiative Score.' },
+  { id:'add-spirited',    name:'Spirited',     desc:'Gain one additional charge per interval of Design Actions.' },
+  { id:'add-spiritual',   name:'Spiritual',    desc:'Add your CR as Healing to outgoing healing.' },
+  { id:'add-tough',       name:'Tough',        desc:'Add one to your Damage Reduction.' },
+  { id:'add-tranquil',    name:'Tranquil',     desc:'Add one to rounds Soothe reduces Duration-Damage.' },
+  { id:'add-vicious',     name:'Vicious',      desc:'Add your CR as damage to outgoing melee damage.' },
+];
+
+const ADVANTAGE_GAINS = [
+  { id:'adv-adamant',     name:'Adamant',      desc:'Energy Defense Training has advantage.' },
+  { id:'adv-diverting',   name:'Diverting',    desc:'Parry has advantage.' },
+  { id:'adv-enhanced',    name:'Enhanced',     desc:'Gain advantage to one Attribute.', requiresAttr:true },
+  { id:'adv-evasive',     name:'Evasive',      desc:'Dodge has advantage.' },
+  { id:'adv-focused',     name:'Focused',      desc:'Energy Melee Training has advantage.' },
+  { id:'adv-honed',       name:'Honed',        desc:'Physical Ranged Training has advantage.' },
+  { id:'adv-informed',    name:'Informed',     desc:'Gain advantage to one Skill.', requiresSkill:true },
+  { id:'adv-obstinate',   name:'Obstinate',    desc:'Physical Defense Training has advantage.' },
+  { id:'adv-obstructive', name:'Obstructive',  desc:'Block has advantage.' },
+  { id:'adv-sharpened',   name:'Sharpened',    desc:'Physical Melee Training has advantage.' },
+  { id:'adv-wizened',     name:'Wizened',      desc:'Energy Ranged Training has advantage.' },
+];
+
+// State
+let stanceReflexive = false;
+let additiveState = {}; // { id: count }
+let advantageState = {}; // { id: 0|1, attr?:string, skill?:string }
+
+function getStanceCR() { return parseInt(document.getElementById('stance-cr-select').value,10); }
+
+function toggleReflexive() {
+  stanceReflexive = !stanceReflexive;
+  document.getElementById('reflexive-row').classList.toggle('active', stanceReflexive);
+  document.getElementById('reflexive-pip').textContent = stanceReflexive ? '✓' : '';
+  renderStanceCosts();
+}
+
+function calcStanceCosts() {
+  const cr = getStanceCR();
+  let buildCost = 0, activateCost = 0;
+  if (stanceReflexive) buildCost += 1;
+  for (const g of ADDITIVE_GAINS) {
+    const count = additiveState[g.id] || 0;
+    buildCost += count;
+    if (count > 0) activateCost += 1;
+  }
+  for (const g of ADVANTAGE_GAINS) {
+    const isMulti = g.requiresAttr || g.requiresSkill;
+    if (isMulti) {
+      const count = Array.isArray(advantageState[g.id]) ? advantageState[g.id].length : 0;
+      buildCost += count * 5;
+      if (count > 0) activateCost += count * 2;
+    } else {
+      if (advantageState[g.id]?.on) { buildCost += 5; activateCost += 2; }
+    }
+  }
+  return { buildCost, activateCost };
+}
+
+function renderStanceCosts() {
+  const { buildCost, activateCost } = calcStanceCosts();
+  document.getElementById('stance-build-cost').textContent = buildCost;
+  document.getElementById('stance-activate-cost').textContent = activateCost;
+  document.getElementById('stance-maintain-cost').textContent = activateCost;
+  renderStanceBreakdown();
+}
+
+function renderStanceBreakdown() {
+  const parts = [];
+  if (stanceReflexive) parts.push('Reflexive');
+  for (const g of ADDITIVE_GAINS) {
+    const count = additiveState[g.id] || 0;
+    if (count > 0) parts.push(`${g.name} ×${count}`);
+  }
+  for (const g of ADVANTAGE_GAINS) {
+    const isMulti = g.requiresAttr || g.requiresSkill;
+    if (isMulti) {
+      for (const c of (Array.isArray(advantageState[g.id]) ? advantageState[g.id] : [])) {
+        parts.push(`${g.name} [${c.attr||c.skill||c.text||''}]`);
+      }
+    } else if (advantageState[g.id]?.on) {
+      parts.push(g.name);
+    }
+  }
+  document.getElementById('stance-breakdown').textContent = parts.length ? parts.join(' · ') : 'No gains selected yet.';
+}
+
+function renderAdditiveGains() {
+  const cr = getStanceCR();
+  const grid = document.getElementById('additive-gain-grid');
+  grid.innerHTML = '';
+  for (const g of ADDITIVE_GAINS) {
+    const count = additiveState[g.id] || 0;
+    const row = document.createElement('div');
+    row.className = 'gain-row' + (count > 0 ? ' has-count' : '');
+    row.innerHTML = `
+      <div class="gain-name-wrap">
+        <div class="gain-name">${g.name}</div>
+        <div class="gain-desc">${g.desc}</div>
+      </div>
+      <span class="gain-cost-tag">+1 AP</span>
+      <div class="gain-counter">
+        <button class="gain-btn" onclick="changeAdditive('${g.id}',-1)" ${count===0?'disabled':''}>−</button>
+        <span class="gain-count-display">${count}</span>
+        <button class="gain-btn" onclick="changeAdditive('${g.id}',1)" ${count>=cr?'disabled':''}>＋</button>
+      </div>`;
+    grid.appendChild(row);
+  }
+}
+
+function renderAdvantageGains() {
+  const grid = document.getElementById('advantage-gain-grid');
+  grid.innerHTML = '';
+  for (const g of ADVANTAGE_GAINS) {
+    const isMulti = g.requiresAttr || g.requiresSkill;
+    const row = document.createElement('div');
+
+    if (isMulti) {
+      const choices = Array.isArray(advantageState[g.id]) ? advantageState[g.id] : [];
+      const hasAny = choices.length > 0;
+      row.className = 'gain-row adv' + (hasAny ? ' has-count' : '');
+
+      // Name + tags
+      const nameWrap = document.createElement('div'); nameWrap.className = 'gain-name-wrap';
+      const nameLine = document.createElement('div'); nameLine.className = 'gain-name'; nameLine.textContent = g.name + ' ';
+      choices.forEach((c, i) => {
+        const tag = document.createElement('span'); tag.className = 'gain-attr-tag';
+        tag.style.cursor = 'pointer'; tag.title = 'Remove';
+        tag.textContent = (c.attr || c.skill || c.text || '') + ' ✕';
+        tag.addEventListener('click', () => { removeAdvantageChoice(g.id, i); });
+        nameLine.appendChild(tag);
+      });
+      const descLine = document.createElement('div'); descLine.className = 'gain-desc'; descLine.textContent = g.desc;
+      nameWrap.appendChild(nameLine); nameWrap.appendChild(descLine);
+
+      // Informed: text input inline; Enhanced: attribute picker dialog
+      const counter = document.createElement('div'); counter.className = 'gain-counter';
+      const costTag = document.createElement('span'); costTag.className = 'gain-cost-tag adv'; costTag.textContent = '+5 AP each';
+
+      if (g.requiresSkill) {
+        // Text input + Add button
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.placeholder = 'Skill name';
+        inp.style.cssText = 'font-size:12px;padding:4px 8px;border:1px solid #d0cec8;border-radius:6px;width:110px;outline:none;';
+        const addBtn = document.createElement('button'); addBtn.className = 'gain-btn';
+        addBtn.style.cssText = 'font-size:15px;width:30px;';
+        addBtn.textContent = '＋';
+        addBtn.addEventListener('click', () => {
+          const val = inp.value.trim(); if (!val) return;
+          if (!Array.isArray(advantageState[g.id])) advantageState[g.id] = [];
+          advantageState[g.id].push({ skill: val });
+          inp.value = '';
+          renderAdvantageGains(); renderStanceCosts();
+        });
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') addBtn.click(); });
+        counter.appendChild(inp); counter.appendChild(addBtn);
+      } else {
+        // Attribute picker dialog
+        const addBtn = document.createElement('button'); addBtn.className = 'gain-btn';
+        addBtn.style.cssText = 'font-size:18px;width:32px;';
+        addBtn.textContent = '＋';
+        addBtn.addEventListener('click', () => { pickAdvantageDetail(g.id); });
+        counter.appendChild(addBtn);
+      }
+
+      row.appendChild(nameWrap); row.appendChild(costTag); row.appendChild(counter);
+    } else {
+      // Single toggle gains
+      const on = !!(advantageState[g.id]?.on);
+      row.className = 'gain-row adv' + (on ? ' has-count' : '');
+      row.innerHTML = `
+        <div class="gain-name-wrap">
+          <div class="gain-name">${g.name}</div>
+          <div class="gain-desc">${g.desc}</div>
+        </div>
+        <span class="gain-cost-tag adv">+5 AP</span>
+        <div class="gain-counter">
+          <button class="adv-toggle${on?' on':''}" onclick="toggleAdvantage('${g.id}')" aria-label="${on?'Disable':'Enable'} ${g.name}"></button>
+        </div>`;
+    }
+    grid.appendChild(row);
+  }
+}
+
+function toggleAdvantage(id) {
+  const s = advantageState[id] || {};
+  advantageState[id] = s.on ? {} : { on: true };
+  renderAdvantageGains();
+  renderStanceCosts();
+}
+
+function pickAdvantageDetail(id) {
+  const g = ADVANTAGE_GAINS.find(x=>x.id===id);
+  const isA = g.requiresAttr;
+  const options = isA ? ATTRIBUTES : SKILLS;
+  const choices = Array.isArray(advantageState[id]) ? advantageState[id] : [];
+  const used = choices.map(c => c.attr || c.skill);
+  const available = options.filter(o => !used.includes(o));
+  if (!available.length) { showToast(`All ${isA?'attributes':'skills'} already added for ${g.name}.`, true); return; }
+  document.getElementById('stack-dialog-title').textContent = `Add ${isA?'Attribute':'Skill'} — ${g.name}`;
+  document.getElementById('stack-dialog-sub').textContent = `Each instance must be a different ${isA?'attribute':'skill'}.`;
+  const opts = document.getElementById('stack-dialog-opts'); opts.innerHTML = '';
+  for (const opt of available) {
+    const btn = document.createElement('button'); btn.className = 'stack-opt';
+    btn.innerHTML = `<span class="stack-opt-icon">◈</span><div class="stack-opt-text"><div class="stack-opt-label">${opt}</div></div>`;
+    btn.addEventListener('click', () => {
+      hideStackDialog();
+      if (!Array.isArray(advantageState[id])) advantageState[id] = [];
+      advantageState[id].push(isA ? {attr:opt} : {skill:opt});
+      renderAdvantageGains();
+      renderStanceCosts();
+    });
+    opts.appendChild(btn);
+  }
+  document.getElementById('stack-dialog-overlay').classList.add('visible');
+}
+
+function removeAdvantageChoice(id, idx) {
+  if (!advantageState[id]) return;
+  advantageState[id].splice(idx, 1);
+  renderAdvantageGains();
+  renderStanceCosts();
+}
+
+function changeAdditive(id, delta) {
+  const cr = getStanceCR();
+  const cur = additiveState[id] || 0;
+  const next = Math.max(0, Math.min(cr, cur + delta));
+  additiveState[id] = next;
+  renderAdditiveGains();
+  renderStanceCosts();
+}
+
+function toggleAdvantage(id) {
+  const s = advantageState[id] || {};
+  advantageState[id] = s.on ? {} : { on: true };
+  renderAdvantageGains();
+  renderStanceCosts();
+}
+
+function clearStance() {
+  stanceReflexive = false;
+  additiveState = {};
+  advantageState = {};
+  document.getElementById('reflexive-row').classList.remove('active');
+  document.getElementById('reflexive-pip').textContent = '';
+  document.getElementById('stance-name').value = '';
+  renderAdditiveGains();
+  renderAdvantageGains();
+  renderStanceCosts();
+}
+
+function exportStance() {
+  const name = document.getElementById('stance-name').value || 'Unnamed Stance';
+  const cr = getStanceCR();
+  const { buildCost, activateCost } = calcStanceCosts();
+  const lines = [`Stance: ${name}`, `Crown Rank: CR ${cr}`, `Build Cost: ${buildCost} AP  |  Activation: ${activateCost} AP  |  Maintenance: ${activateCost} AP/round`, ''];
+  if (stanceReflexive) lines.push('  [Modifier] Reflexive (1)');
+  const addLines = ADDITIVE_GAINS.filter(g=>(additiveState[g.id]||0)>0);
+  if (addLines.length) {
+    lines.push('Additive Gains:');
+    for (const g of addLines) lines.push(`  + ${g.name} (1×${additiveState[g.id]})`);
+  }
+  const advLines = ADVANTAGE_GAINS.filter(g => {
+    const isMulti = g.requiresAttr || g.requiresSkill;
+    return isMulti ? (Array.isArray(advantageState[g.id]) && advantageState[g.id].length > 0) : advantageState[g.id]?.on;
+  });
+  if (advLines.length) {
+    lines.push('Advantage Gains:');
+    for (const g of advLines) {
+      const isMulti = g.requiresAttr || g.requiresSkill;
+      if (isMulti) {
+        for (const c of (Array.isArray(advantageState[g.id]) ? advantageState[g.id] : [])) {
+          lines.push(`  + ${g.name} [${c.attr||c.skill||c.text||''}] (5×1)`);
+        }
+      } else {
+        lines.push(`  + ${g.name} (5×1)`);
+      }
+    }
+  }
+  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `${name.replace(/\s+/g,'_')}_stance.txt`; a.click();
+}
+
+document.getElementById('stance-cr-select').addEventListener('change', () => {
+  // Trim additive counts that now exceed new CR
+  const cr = getStanceCR();
+  for (const g of ADDITIVE_GAINS) {
+    if ((additiveState[g.id]||0) > cr) additiveState[g.id] = cr;
+  }
+  renderAdditiveGains();
+  renderStanceCosts();
+});
+
 // ─── Init ──────────────────────────────────────────────────────────────────────
 blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];
 activeBlockId=blocks[0].bid;
 renderBank();
 renderAll();
 renderSavedList();
+// Stance init
+renderAdditiveGains();
+renderAdvantageGains();
+renderStanceCosts();
 </script>
 </body>
 </html>
