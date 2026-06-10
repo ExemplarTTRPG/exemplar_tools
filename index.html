@@ -14,7 +14,8 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 @media (min-width: 700px) { .header-sub { display: block; } }
 
 /* ── Tabs ── */
-.tab-bar { background: #1e1b2e; padding: 0 16px; display: flex; gap: 4px; flex-shrink: 0; border-bottom: 2px solid #2d2850; }
+.tab-bar { background: #1e1b2e; padding: 0 16px; display: flex; gap: 4px; flex-shrink: 0; border-bottom: 2px solid #2d2850; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
 .tab-btn { font-size: 13px; font-weight: 600; padding: 8px 18px; cursor: pointer; color: #a89fc7; background: transparent; border: none; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: color 0.15s, border-color 0.15s; touch-action: manipulation; white-space: nowrap; }
 .tab-btn:hover { color: #fff; }
 .tab-btn.active { color: #fff; border-bottom-color: #7f77dd; }
@@ -270,6 +271,177 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 
 .no-results { padding: 24px 12px; text-align: center; color: #bbb; font-size: 13px; }
 ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+
+/* ── Character Creator ── */
+/* Tokens: primary #534ab7, body #1a1a1a, label #888 11px/600/uppercase,
+   helper #888 11px, border #d0cec8, surface #fafaf8, focus #7f77dd        */
+
+#panel-character { flex-direction: column; overflow: hidden; align-items: center; }
+.cc-outer { flex: 1; overflow-y: auto; padding: 12px 12px 24px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; width: 100%; max-width: 860px; }
+
+/* ── Points bar: two sections, collapses to 2-row on mobile ── */
+.cc-points-bar { position: sticky; top: 0; z-index: 50; background: #1e1b2e; color: #fff; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; border-radius: 10px; flex-shrink: 0; box-shadow: 0 2px 12px rgba(0,0,0,0.22); }
+.cc-pt-section { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; align-items: center; }
+.cc-pt-row-divider { height: 1px; background: rgba(255,255,255,0.10); margin: 0 2px; }
+.cc-pt-group { display: flex; flex-direction: column; align-items: center; padding: 3px 6px; }
+.cc-pt-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #a89fc7; white-space: nowrap; }
+.cc-pt-avail { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.1; }
+.cc-pt-avail.over { color: #e24b4a; }
+.cc-pt-total { font-size: 9px; color: #a89fc7; }
+.cc-pt-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.12); }
+@media (min-width: 600px) {
+  .cc-points-bar { flex-direction: row; align-items: center; padding: 6px 8px; gap: 0; }
+  .cc-pt-section { flex: 1; }
+  .cc-pt-row-divider { width: 1px; height: 32px; margin: 0; }
+}
+
+/* ── Cards ── */
+.cc-card { background: #fff; border-radius: 12px; border: 1px solid #e2e0da; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.cc-card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #888; }
+.cc-card-subtitle { font-size: 10px; font-weight: 400; color: #aaa; text-transform: none; letter-spacing: 0; margin-left: 4px; }
+/* Training card gets a warm tint to distinguish from Attributes */
+.cc-card-training { background: #fdf9f4; border-color: #e8dfd4; }
+
+/* ── Universal field ── */
+.cc-field { display: flex; flex-direction: column; gap: 4px; }
+.cc-field label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+.cc-field input, .cc-field select { font-size: 14px; font-weight: 500; border: 1px solid #d0cec8; border-radius: 7px; padding: 7px 10px; background: #fafaf8; outline: none; color: #1a1a1a; width: 100%; min-height: 44px; font-family: inherit; }
+.cc-field input:focus, .cc-field select:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+
+/* ── Identity ── */
+.cc-identity { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (min-width: 600px) { .cc-identity { grid-template-columns: 3fr 1fr 1fr; } }
+.cc-identity-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; grid-column: span 2; }
+@media (min-width: 600px) { .cc-identity-row2 { grid-template-columns: 1fr 1fr 2fr; grid-column: span 3; } }
+.cc-cr-badge { display: inline-flex; align-items: center; justify-content: center; background: #fafaf8; border: 1px solid #d0cec8; border-radius: 7px; padding: 7px 10px; font-size: 14px; font-weight: 700; color: #534ab7; min-height: 44px; width: 100%; }
+.cc-btn-secondary { font-size: 12px; font-weight: 600; font-family: inherit; padding: 5px 10px; border-radius: 7px; border: 1px solid #d0cec8; background: #fafaf8; color: #534ab7; cursor: pointer; white-space: nowrap; transition: all 0.12s; touch-action: manipulation; text-transform: none; letter-spacing: normal; line-height: 1.4; display: inline-flex; align-items: center; }
+.cc-btn-secondary:hover { border-color: #534ab7; background: color-mix(in srgb,#534ab7 6%,#fff); }
+
+/* ── Attributes ── */
+.cc-attr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 480px) { .cc-attr-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 700px) { .cc-attr-grid { grid-template-columns: repeat(5, 1fr); } }
+.cc-attr-item { display: flex; flex-direction: column; gap: 4px; background: #fafaf8; border: 1px solid #e2e0da; border-radius: 9px; padding: 10px 10px 8px; }
+.cc-attr-name { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+.cc-attr-select { font-size: 14px; font-weight: 500; border: 1px solid #d0cec8; border-radius: 6px; padding: 6px 8px; background: #fff; outline: none; color: #1a1a1a; width: 100%; min-height: 44px; cursor: pointer; font-family: inherit; }
+.cc-attr-select:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+.cc-attr-cost { font-size: 11px; color: #888; }
+
+/* ── Training: two rows of 3 ── */
+.cc-training-group { display: flex; flex-direction: column; gap: 6px; }
+.cc-training-group-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #b5a28a; }
+.cc-training-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 480px) { .cc-training-row { grid-template-columns: repeat(3, 1fr); } }
+
+/* ── Stat groups ── */
+.cc-stat-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #b0a8e0; padding: 2px 0 0; margin-bottom: -4px; }
+.cc-stats-grid { display: grid; gap: 8px; }
+.cc-stats-resources { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 480px) { .cc-stats-resources { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 700px) { .cc-stats-resources { grid-template-columns: repeat(5, 1fr); } }
+.cc-stats-attacks { grid-template-columns: repeat(2, 1fr); }
+.cc-stats-defenses { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 480px) { .cc-stats-defenses { grid-template-columns: repeat(3, 1fr); } }
+.cc-stat-box { background: #fafaf8; border: 1px solid #e2e0da; border-radius: 9px; padding: 10px 10px 8px; display: flex; flex-direction: column; gap: 2px; }
+.cc-stat-label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; }
+.cc-stat-value { font-size: 22px; font-weight: 700; color: #1a1a1a; line-height: 1.2; }
+.cc-stat-value-sm { font-size: 15px; padding-top: 3px; }
+.cc-stat-formula { font-size: 11px; color: #888; }
+.stat-dice { font-size: 13px; font-weight: 700; color: #534ab7; margin-left: 4px; }
+.cc-movement-sel { font-size: 14px; font-weight: 500; color: #1a1a1a; border: 1px solid #d0cec8; border-radius: 6px; padding: 6px 8px; background: #fafaf8; outline: none; cursor: pointer; width: 100%; min-height: 40px; font-family: inherit; margin: 1px 0; }
+.cc-movement-sel:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+
+/* ── Origins ── */
+.cc-origins-info { font-size: 11px; color: #888; }
+.cc-origins-count { font-size: 11px; color: #888; text-transform: none; letter-spacing: 0; margin-left: 4px; }
+.cc-origins-slots { display: flex; flex-direction: column; gap: 8px; }
+.cc-origin-row { display: flex; align-items: center; gap: 8px; }
+.cc-origin-label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.05em; width: 52px; flex-shrink: 0; }
+.cc-origin-select { flex: 1; font-size: 14px; font-weight: 500; border: 1px solid #d0cec8; border-radius: 7px; padding: 7px 10px; background: #fafaf8; outline: none; color: #1a1a1a; min-height: 44px; cursor: pointer; font-family: inherit; }
+.cc-origin-select:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+
+/* ── Skills ── */
+.cc-skills-list { display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; padding-right: 2px; }
+.cc-skill-row { display: flex; align-items: center; gap: 8px; background: #fafaf8; border: 1px solid #e2e0da; border-radius: 9px; padding: 8px 10px; min-height: 48px; }
+.cc-skill-row.cc-skill-origin { background: color-mix(in srgb,#534ab7 4%,#fafaf8); border-color: color-mix(in srgb,#534ab7 20%,#e2e0da); }
+.cc-skill-name { flex: 1; font-size: 14px; font-weight: 500; border: none; background: transparent; outline: none; color: #1a1a1a; font-family: inherit; min-width: 0; }
+.cc-skill-name::placeholder { color: #bbb; }
+.cc-skill-name:focus { border-bottom: 1px solid #7f77dd; }
+.cc-skill-name-wrap { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cc-skill-name-sel { flex: 1; font-size: 14px; font-weight: 500; border: 1px solid #d0cec8; border-radius: 6px; padding: 6px 8px; background: #fff; outline: none; color: #1a1a1a; min-height: 44px; cursor: pointer; font-family: inherit; width: 100%; }
+.cc-skill-name-sel:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+.cc-skill-type-input { font-size: 11px; border: none; border-bottom: 1px solid #d0cec8; background: transparent; outline: none; color: #534ab7; font-family: inherit; padding: 2px 4px; width: 100%; }
+.cc-skill-type-input::placeholder { color: #bbb; }
+.cc-skill-type-input:focus { border-bottom-color: #7f77dd; }
+.cc-skill-grade-sel { font-size: 14px; font-weight: 500; border: 1px solid #d0cec8; border-radius: 6px; padding: 6px 8px; background: #fff; outline: none; color: #1a1a1a; min-height: 44px; cursor: pointer; font-family: inherit; flex-shrink: 0; }
+.cc-skill-grade-sel:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+.cc-skill-origin-grade { font-size: 11px; font-weight: 700; color: #534ab7; flex-shrink: 0; padding: 0 6px; white-space: nowrap; }
+.cc-skill-del { cursor: pointer; color: #ccc; font-size: 18px; padding: 4px 8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; border-radius: 5px; flex-shrink: 0; }
+.cc-skill-del:hover { color: #e24b4a; background: #fef0f0; }
+.cc-skill-del-locked { color: #d0cec8; cursor: default; }
+.cc-placeholder { font-size: 11px; color: #888; font-style: italic; padding: 4px 0; }
+.cc-textarea { width: 100%; min-height: 110px; resize: vertical; border: 1px solid #d0cec8; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-weight: 500; color: #1a1a1a; background: #fafaf8; outline: none; font-family: inherit; line-height: 1.6; box-sizing: border-box; }
+.cc-textarea:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+
+/* ── Paradigms: streamlined rows ── */
+.cc-paradigm-list { display: flex; flex-direction: column; gap: 6px; }
+.cc-paradigm-row { display: flex; align-items: center; gap: 8px; background: #fafaf8; border: 1px solid #e2e0da; border-radius: 9px; padding: 8px 12px; min-height: 48px; }
+.cc-paradigm-row.is-first { border-color: color-mix(in srgb,#534ab7 30%,#e2e0da); background: color-mix(in srgb,#534ab7 4%,#fff); }
+.cc-paradigm-tag { font-size: 10px; font-weight: 700; color: #534ab7; background: #eeedfe; border-radius: 5px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.04em; }
+.cc-paradigm-tag.free { background: color-mix(in srgb,#27ae60 15%,#fff); color: #27ae60; }
+.cc-paradigm-name { flex: 1; font-size: 14px; font-weight: 600; color: #1a1a1a; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cc-paradigm-design { font-size: 11px; color: #888; flex-shrink: 0; display: none; }
+@media (min-width: 520px) { .cc-paradigm-design { display: inline; } }
+.cc-paradigm-grade-sel { font-size: 14px; font-weight: 500; border: 1px solid #d0cec8; border-radius: 6px; padding: 6px 8px; background: #fff; outline: none; color: #1a1a1a; min-height: 44px; cursor: pointer; font-family: inherit; flex-shrink: 0; }
+.cc-paradigm-grade-sel:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+/* Vitality removed from row — visible in Calculated Stats */
+.cc-paradigm-vitality { display: none; }
+.cc-paradigm-del { cursor: pointer; color: #ccc; font-size: 18px; padding: 4px 8px; min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; touch-action: manipulation; border-radius: 5px; flex-shrink: 0; }
+.cc-paradigm-del:hover { color: #e24b4a; background: #fef0f0; }
+.btn-open-paradigms { font-size: 13px; font-weight: 600; padding: 10px 16px; border-radius: 8px; border: 1px dashed #534ab7; background: transparent; cursor: pointer; color: #534ab7; transition: all 0.12s; touch-action: manipulation; align-self: flex-start; font-family: inherit; }
+.btn-open-paradigms:hover { background: color-mix(in srgb,#534ab7 8%,#fff); border-style: solid; }
+.cc-paradigm-limit { font-size: 11px; color: #888; }
+
+/* ── Growth spend ── */
+.cc-growth-rows { display: flex; flex-direction: column; gap: 6px; }
+.cc-growth-row { display: flex; align-items: center; gap: 8px; background: #fafaf8; border: 1px solid #e2e0da; border-radius: 9px; padding: 8px 12px; min-height: 44px; }
+.cc-growth-label { font-size: 13px; font-weight: 600; color: #1a1a1a; flex: 1; }
+.cc-growth-hint { font-size: 11px; color: #888; white-space: nowrap; flex-shrink: 0; }
+.cc-growth-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.cc-growth-btn { font-size: 18px; font-weight: 600; width: 36px; height: 36px; border-radius: 8px; border: 1px solid #d0cec8; background: #fff; color: #534ab7; cursor: pointer; display: flex; align-items: center; justify-content: center; touch-action: manipulation; font-family: inherit; line-height: 1; }
+.cc-growth-btn:hover { border-color: #534ab7; background: color-mix(in srgb,#534ab7 6%,#fff); }
+.cc-growth-val { font-size: 16px; font-weight: 700; color: #1a1a1a; min-width: 24px; text-align: center; }
+
+/* ── Paradigm modal ── */
+.paradigm-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 500; align-items: flex-end; justify-content: center; }
+.paradigm-modal-overlay.visible { display: flex; }
+@media (min-width: 700px) { .paradigm-modal-overlay.visible { align-items: center; } }
+.paradigm-modal { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-width: 600px; max-height: 88dvh; display: flex; flex-direction: column; box-shadow: 0 -4px 32px rgba(0,0,0,0.15); overflow: hidden; }
+@media (min-width: 700px) { .paradigm-modal { border-radius: 16px; max-height: 80dvh; } }
+.paradigm-modal-header { padding: 16px 16px 10px; border-bottom: 1px solid #e2e0da; flex-shrink: 0; }
+.paradigm-modal-title { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+.paradigm-modal-sub { font-size: 11px; color: #888; margin-bottom: 8px; }
+.paradigm-modal-search { width: 100%; padding: 10px 12px; border: 1px solid #d0cec8; border-radius: 8px; font-size: 16px; background: #fafaf8; outline: none; font-family: inherit; }
+.paradigm-modal-search:focus { border-color: #7f77dd; box-shadow: 0 0 0 3px rgba(127,119,221,0.13); }
+.paradigm-modal-body { flex: 1; overflow-y: auto; padding: 10px 14px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; }
+.paradigm-design-section { display: flex; flex-direction: column; gap: 4px; }
+.paradigm-design-header { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #888; padding: 2px 0 4px; }
+.paradigm-list-grid { display: flex; flex-direction: column; gap: 4px; }
+.paradigm-option { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 8px; border: 1px solid #e2e0da; background: #fafaf8; cursor: pointer; transition: all 0.12s; touch-action: manipulation; min-height: 48px; }
+.paradigm-option:hover { border-color: #b0a9e8; background: color-mix(in srgb,#534ab7 5%,#fff); }
+.paradigm-option.selected { border-color: #534ab7; background: color-mix(in srgb,#534ab7 7%,#fff); }
+.paradigm-option.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.paradigm-opt-name { flex: 1; font-size: 14px; font-weight: 600; color: #1a1a1a; }
+.paradigm-opt-design { font-size: 11px; color: #888; flex-shrink: 0; }
+.paradigm-opt-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #d0cec8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 12px; transition: all 0.12s; }
+.paradigm-option.selected .paradigm-opt-check { border-color: #534ab7; background: #534ab7; color: #fff; }
+.paradigm-modal-footer { padding: 12px 16px; border-top: 1px solid #e2e0da; display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.paradigm-modal-count { font-size: 11px; color: #888; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.btn-paradigm-confirm { font-size: 14px; font-weight: 600; padding: 11px 20px; border-radius: 8px; border: none; background: #534ab7; color: #fff; cursor: pointer; touch-action: manipulation; min-height: 48px; font-family: inherit; }
+.btn-paradigm-confirm:hover { background: #3c3489; }
+.btn-paradigm-cancel { font-size: 14px; font-weight: 500; padding: 11px 14px; border-radius: 8px; border: 1px solid #d0cec8; background: transparent; color: #555; cursor: pointer; touch-action: manipulation; min-height: 48px; font-family: inherit; }
+.btn-paradigm-cancel:hover { border-color: #e24b4a; color: #e24b4a; }
+.paradigm-no-results { font-size: 11px; color: #888; font-style: italic; text-align: center; padding: 20px 0; }
 </style>
 </head>
 <body>
@@ -280,11 +452,12 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 </header>
 
 <div class="tab-bar">
-  <button class="tab-btn active" id="tab-ability" onclick="switchTab('ability')">⚔ Ability Builder</button>
+  <button class="tab-btn active" id="tab-character" onclick="switchTab('character')">👤 Character Creator</button>
+  <button class="tab-btn" id="tab-ability" onclick="switchTab('ability')">⚔ Ability Builder</button>
   <button class="tab-btn" id="tab-stance" onclick="switchTab('stance')">🛡 Stance Builder</button>
 </div>
 
-<div class="tab-panel active" id="panel-ability">
+<div class="tab-panel" id="panel-ability">
 <div class="drawer-overlay" id="drawer-overlay"></div>
 
 <div class="app">
@@ -1627,7 +1800,6 @@ function exportStance() {
 }
 
 document.getElementById('stance-cr-select').addEventListener('change', () => {
-  // Trim additive counts that now exceed new CR
   const cr = getStanceCR();
   for (const g of ADDITIVE_GAINS) {
     if ((additiveState[g.id]||0) > cr) additiveState[g.id] = cr;
@@ -1636,13 +1808,1356 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
   renderStanceCosts();
 });
 
-// ─── Init ──────────────────────────────────────────────────────────────────────
+</script>
+
+<!-- ══ CHARACTER CREATOR TAB ══════════════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-character">
+  <div class="cc-outer" id="cc-outer">
+
+    <!-- Sticky points bar: two rows on mobile -->
+    <div class="cc-points-bar" id="cc-points-bar">
+      <div class="cc-pt-section">
+        <div class="cc-pt-group">
+          <span class="cc-pt-label">Core</span>
+          <span class="cc-pt-avail" id="pt-core-avail">0</span>
+          <span class="cc-pt-total" id="pt-core-total">of 0</span>
+        </div>
+        <div class="cc-pt-divider"></div>
+        <div class="cc-pt-group">
+          <span class="cc-pt-label">Training</span>
+          <span class="cc-pt-avail" id="pt-training-avail">0</span>
+          <span class="cc-pt-total" id="pt-training-total">of 0</span>
+        </div>
+        <div class="cc-pt-divider"></div>
+        <div class="cc-pt-group">
+          <span class="cc-pt-label">Ability</span>
+          <span class="cc-pt-avail" id="pt-ability-avail">0</span>
+          <span class="cc-pt-total" id="pt-ability-total">of 0</span>
+        </div>
+      </div>
+      <div class="cc-pt-row-divider"></div>
+      <div class="cc-pt-section">
+        <div class="cc-pt-group">
+          <span class="cc-pt-label">Growth</span>
+          <span class="cc-pt-avail" id="pt-growth-avail">0</span>
+          <span class="cc-pt-total" id="pt-growth-total">of 0</span>
+        </div>
+        <div class="cc-pt-divider"></div>
+        <div class="cc-pt-group">
+          <span class="cc-pt-label">Artifact</span>
+          <span class="cc-pt-avail" id="pt-artifact-avail">0</span>
+          <span class="cc-pt-total" id="pt-artifact-total">of 0</span>
+        </div>
+        <div class="cc-pt-divider"></div>
+        <div class="cc-pt-group">
+          <span class="cc-pt-label">Facet</span>
+          <span class="cc-pt-avail" id="pt-facet-avail">0</span>
+          <span class="cc-pt-total" id="pt-facet-total">of 0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Identity -->
+    <div class="cc-card">
+      <div class="cc-card-title" style="display:flex;align-items:center;justify-content:space-between;">
+        Identity
+        <div style="display:flex;gap:6px;">
+          <button class="cc-btn-secondary" onclick="ccExportCharacter()">⬇ Export</button>
+          <label class="cc-btn-secondary" style="cursor:pointer;">⬆ Import<input type="file" accept=".json,.txt" style="display:none;" onchange="ccImportCharacter(event)"></label>
+        </div>
+      </div>
+      <div class="cc-identity">
+        <div class="cc-field">
+          <label>Name</label>
+          <input type="text" id="cc-name" placeholder="Character name..." autocomplete="off">
+        </div>
+        <div class="cc-field">
+          <label>Level</label>
+          <select id="cc-level"></select>
+        </div>
+        <div class="cc-field">
+          <label>Crown Rank</label>
+          <div class="cc-cr-badge" id="cc-cr-display">CR 1</div>
+        </div>
+        <div class="cc-identity-row2">
+          <div class="cc-field">
+            <label>Design 1</label>
+            <select id="cc-design1" onchange="ccOnDesignChange()">
+              <option value="">— None —</option>
+              <option>Balancer</option><option>Brawler</option><option>Guardian</option>
+              <option>Marksman</option><option>Preceptor</option><option>Tactician</option>
+            </select>
+          </div>
+          <div class="cc-field">
+            <label>Design 2</label>
+            <select id="cc-design2" onchange="ccOnDesignChange()">
+              <option value="">— None —</option>
+              <option>Balancer</option><option>Brawler</option><option>Guardian</option>
+              <option>Marksman</option><option>Preceptor</option><option>Tactician</option>
+            </select>
+          </div>
+          <div class="cc-field">
+            <label>Artifact / Facet Ratio</label>
+            <select id="cc-af-ratio" onchange="ccOnAFSlider(this.value)">
+              <option value="5">5 Artifact / 1 Facet</option>
+              <option value="4">4 Artifact / 2 Facet</option>
+              <option value="3" selected>3 Artifact / 3 Facet</option>
+              <option value="2">2 Artifact / 4 Facet</option>
+              <option value="1">1 Artifact / 5 Facet</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Origins -->
+    <div class="cc-card">
+      <div class="cc-card-title">Origins <span class="cc-origins-count" id="cc-origins-count"></span></div>
+      <div class="cc-origins-info">Choose 3 Origins. The same Origin can be chosen multiple times.</div>
+      <div class="cc-origins-slots" id="cc-origins-slots"></div>
+    </div>
+
+    <!-- Attributes -->
+    <div class="cc-card">
+      <div class="cc-card-title">Attributes <span class="cc-card-subtitle">(Core points)</span></div>
+      <div class="cc-attr-grid" id="cc-attr-grid"></div>
+    </div>
+
+    <!-- Training — two physical/energy rows -->
+    <div class="cc-card cc-card-training">
+      <div class="cc-card-title">Training <span class="cc-card-subtitle">(Training points)</span></div>
+      <div class="cc-training-group">
+        <div class="cc-training-group-label">Physical</div>
+        <div class="cc-training-row" id="cc-training-physical"></div>
+      </div>
+      <div class="cc-training-group">
+        <div class="cc-training-group-label">Energy</div>
+        <div class="cc-training-row" id="cc-training-energy"></div>
+      </div>
+    </div>
+
+    <!-- Calculated Stats — grouped -->
+    <div class="cc-card">
+      <div class="cc-card-title">Calculated Stats</div>
+      <div class="cc-stat-section-label">Resources</div>
+      <div class="cc-stats-grid cc-stats-resources">
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Action Points</div>
+          <div class="cc-stat-value" id="stat-ap">3</div>
+          <div class="cc-stat-formula">3 + Intensity</div>
+        </div>
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Reaction Points</div>
+          <div class="cc-stat-value" id="stat-rp">3</div>
+          <div class="cc-stat-formula">3 + Awareness</div>
+        </div>
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Vitality</div>
+          <div class="cc-stat-value" id="stat-vitality">0</div>
+          <div class="cc-stat-formula">Resolve × Level + Paradigms</div>
+        </div>
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Initiative</div>
+          <div class="cc-stat-value cc-stat-value-sm" id="stat-initiative">—</div>
+          <div class="cc-stat-formula">Per design paradigm grade</div>
+        </div>
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Movement</div>
+          <select class="cc-movement-sel" id="stat-movement-sel">
+            <option>10 ft</option><option>20 ft</option>
+            <option selected>30 ft</option><option>40 ft</option><option>50 ft</option>
+            <option>60 ft</option><option>70 ft</option><option>80 ft</option>
+            <option>90 ft</option><option>100 ft</option>
+          </select>
+          <div class="cc-stat-formula">Set by GM / Origin</div>
+        </div>
+      </div>
+      <div class="cc-stat-section-label">Attacks</div>
+      <div class="cc-stats-grid cc-stats-attacks">
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Melee Attack</div>
+          <div class="cc-stat-value" id="stat-melee">0</div>
+          <div class="cc-stat-formula">Power × CR</div>
+        </div>
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Ranged Attack</div>
+          <div class="cc-stat-value" id="stat-ranged">0</div>
+          <div class="cc-stat-formula">Finesse × CR</div>
+        </div>
+      </div>
+      <div class="cc-stat-section-label">Defenses</div>
+      <div class="cc-stats-grid cc-stats-defenses">
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Block</div>
+          <div class="cc-stat-value" id="stat-block">0</div>
+          <div class="cc-stat-formula">Roll: Resolve dice · Value: Resolve × CR</div>
+        </div>
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Dodge</div>
+          <div class="cc-stat-value" id="stat-dodge">0</div>
+          <div class="cc-stat-formula">Roll: Awareness dice · Value: Intensity × CR</div>
+        </div>
+        <div class="cc-stat-box">
+          <div class="cc-stat-label">Parry</div>
+          <div class="cc-stat-value" id="stat-parry">0</div>
+          <div class="cc-stat-formula">Roll: Intensity dice · Value: Awareness × CR</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paradigms -->
+    <div class="cc-card">
+      <div class="cc-card-title">Paradigms</div>
+      <div class="cc-paradigm-list" id="cc-paradigm-list"></div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <button class="btn-open-paradigms" onclick="openParadigmModal()">＋ Add Paradigm</button>
+        <span class="cc-paradigm-limit" id="cc-paradigm-limit"></span>
+      </div>
+    </div>
+
+    <!-- Growth Points -->
+    <div class="cc-card">
+      <div class="cc-card-title">Spend Growth Points</div>
+      <div class="cc-origins-info">Each Growth point can raise one Attribute, Paradigm, or Training by one rank, or convert to 5 Ability points.</div>
+      <div class="cc-growth-rows">
+        <div class="cc-growth-row">
+          <span class="cc-growth-label">→ Core points</span>
+          <span class="cc-growth-hint">3 Core per Growth</span>
+          <div class="cc-growth-controls">
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('core',-1)">−</button>
+            <span class="cc-growth-val" id="growth-core-val">0</span>
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('core',1)">+</button>
+          </div>
+        </div>
+        <div class="cc-growth-row">
+          <span class="cc-growth-label">→ Training points</span>
+          <span class="cc-growth-hint">3 Training per Growth</span>
+          <div class="cc-growth-controls">
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('training',-1)">−</button>
+            <span class="cc-growth-val" id="growth-training-val">0</span>
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('training',1)">+</button>
+          </div>
+        </div>
+        <div class="cc-growth-row">
+          <span class="cc-growth-label">→ Ability points</span>
+          <span class="cc-growth-hint">5 Ability per Growth</span>
+          <div class="cc-growth-controls">
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('ability',-1)">−</button>
+            <span class="cc-growth-val" id="growth-ability-val">0</span>
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('ability',1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills -->
+    <div class="cc-card">
+      <div class="cc-card-title">Skills</div>
+      <div class="cc-skills-list" id="cc-skills-list"></div>
+      <button class="btn-open-paradigms" style="margin-top:6px;" onclick="ccAddSkill()">＋ Add Skill</button>
+    </div>
+
+    <!-- Passives -->
+    <div class="cc-card">
+      <div class="cc-card-title">Passives</div>
+      <textarea class="cc-textarea" id="cc-passives" placeholder="List passives here..."></textarea>
+    </div>
+
+    <!-- Artifacts and Exemplars -->
+    <div class="cc-card">
+      <div class="cc-card-title">Artifacts and Exemplars</div>
+      <textarea class="cc-textarea" id="cc-artifacts" placeholder="List artifacts and exemplars here..."></textarea>
+    </div>
+
+  </div>
+</div><!-- end #panel-character -->
+
+<!-- ══ PARADIGM SELECTION MODAL ══════════════════════════════════════════ -->
+<div class="paradigm-modal-overlay" id="paradigm-modal-overlay">
+  <div class="paradigm-modal">
+    <div class="paradigm-modal-header">
+      <div class="paradigm-modal-title">Select a Paradigm</div>
+      <div class="paradigm-modal-sub" id="paradigm-modal-sub">Choose from up to 2 Designs. Max Paradigms equals your CR.</div>
+      <input type="text" class="paradigm-modal-search" id="paradigm-search" placeholder="Search Paradigms..." autocomplete="off">
+    </div>
+    <div class="paradigm-modal-body" id="paradigm-modal-body"></div>
+    <div class="paradigm-modal-footer">
+      <span class="paradigm-modal-count" id="paradigm-modal-count"></span>
+      <button class="btn-paradigm-cancel" onclick="closeParadigmModal()">Cancel</button>
+      <button class="btn-paradigm-confirm" id="btn-paradigm-confirm" onclick="confirmParadigmSelection()">Add Selected</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// CHARACTER CREATOR DATA
+// ═══════════════════════════════════════════════════════════════════════════
+
+const CC_GRADES = [
+  { rank: 'F',  val: 2  }, { rank: 'D-', val: 3  }, { rank: 'D',  val: 3  },
+  { rank: 'D+', val: 3  }, { rank: 'C-', val: 4  }, { rank: 'C',  val: 4  },
+  { rank: 'C+', val: 4  }, { rank: 'B-', val: 5  }, { rank: 'B',  val: 5  },
+  { rank: 'B+', val: 5  }, { rank: 'A-', val: 6  }, { rank: 'A',  val: 6  },
+  { rank: 'A+', val: 6  }, { rank: 'E-', val: 7  }, { rank: 'E',  val: 7  },
+  { rank: 'E+', val: 7  }, { rank: 'S-', val: 8  }, { rank: 'S',  val: 8  },
+  { rank: 'S+', val: 8  }, { rank: 'M-', val: 9  }, { rank: 'M',  val: 10 },
+  { rank: 'M+', val: 12 },
+];
+
+// Whole-letter grade values (for vitality, AP, RP, stats)
+// Uses the value at the base letter step
+const CC_GRADE_VALUES = {
+  'F':2,'D-':2,'D':3,'D+':3,'C-':3,'C':4,'C+':4,'B-':4,'B':5,'B+':5,
+  'A-':5,'A':6,'A+':6,'E-':6,'E':7,'E+':7,'S-':7,'S':8,'S+':8,
+  'M-':9,'M':10,'M+':12
+};
+
+// Total Core points cost to reach a given rank from F (for attributes/training)
+const CC_ATTR_COST = {
+  'F':0,'D-':1,'D':2,'D+':3,'C-':4,'C':5,'C+':6,'B-':7,'B':8,'B+':9,
+  'A-':10,'A':11,'A+':12,'E-':13,'E':14,'E+':15,'S-':16,'S':18,'S+':20,
+  'M-':23,'M':26,'M+':29
+};
+
+// Total Core points for first paradigm
+const CC_PARA_FIRST_COST = {
+  'F':0,'D-':1,'D':2,'D+':3,'C-':4,'C':5,'C+':6,'B-':7,'B':8,'B+':9,
+  'A-':10,'A':11,'A+':12,'E-':13,'E':14,'E+':15,'S-':16,'S':18,'S+':20,
+  'M-':23,'M':26,'M+':29
+};
+
+// Total Core points for extra paradigms (purchase cost 2 included)
+const CC_PARA_EXTRA_COST = {
+  'F':2,'D-':3,'D':4,'D+':5,'C-':6,'C':7,'C+':8,'B-':9,'B':10,'B+':11,
+  'A-':12,'A':13,'A+':14,'E-':15,'E':16,'E+':17,'S-':18,'S':20,'S+':22,
+  'M-':25,'M':28,'M+':31
+};
+
+// Points per level
+const CC_POINTS_PER_LEVEL = {
+  core: 3, training: 2, ability: 10, growth: 1
+};
+// Crown Growth points: 3 at level 1 and at each new CR
+function ccCrownGrowthTotal(level) {
+  const cr = ccCalcCR(level);
+  return cr * 3; // 3 at CR1 + 3 per each new CR gained
+}
+
+const CC_DESIGN_PARADIGMS = {
+  'Balancer': ['Adept','Aegis','Channeler','Chemist','Chosen','Empath','Entrencher','Invoker','Martyr','Temporalist','Transcendent','Triumvirate'],
+  'Brawler':  ['Assassin','Battledancer','Duelist','Immaculate','Inexorable','Reaver','Reverberant','Scoundrel','Slayer','Trueblade','Vexer','Warlord'],
+  'Guardian': ['Bastion','Bodyguard','Devourer','Everlasting','Exalted','Juggernaut','Liberator','Sentinel','Stalker','Subjugator','Templar','Warden'],
+  'Marksmen': ['Alterant','Apostate','Biomancer','Empyreal','Ethereal','Grenadier','Maverick','Metrician','Savant','Sniper','Sovereign','Virtuoso'],
+  'Preceptor':['Centurion','Cipher','Dominus','Eclipse','Marshal','Mirage','Muse','Paragon','Pinnacle','Sapper','Sin Eater','Witch'],
+  'Tactician':['Awakener','Cavalier','Engineer','Gemini','Obelisk','Omen','Overseer','Quartermaster','Tyrant','Unbound'],
+};
+
+// Placeholder vitality per grade (will add real values when Paradigm data added)
+const CC_PARADIGM_VITALITY = {
+  'Adept':12,'Aegis':12,'Channeler':12,'Chemist':11,'Chosen':12,'Empath':11,
+  'Entrencher':13,'Invoker':11,'Martyr':12,'Temporalist':11,'Transcendent':12,'Triumvirate':11,
+  'Assassin':12,'Battledancer':13,'Duelist':12,'Immaculate':12,'Inexorable':14,'Reaver':13,
+  'Reverberant':12,'Scoundrel':11,'Slayer':13,'Trueblade':13,'Vexer':11,'Warlord':13,
+  'Bastion':15,'Bodyguard':14,'Devourer':14,'Everlasting':16,'Exalted':13,'Juggernaut':15,
+  'Liberator':13,'Sentinel':14,'Stalker':12,'Subjugator':14,'Templar':13,'Warden':14,
+  'Alterant':11,'Apostate':11,'Biomancer':11,'Empyreal':12,'Ethereal':10,'Grenadier':12,
+  'Maverick':11,'Metrician':10,'Savant':10,'Sniper':11,'Sovereign':11,'Virtuoso':11,
+  'Centurion':12,'Cipher':11,'Dominus':12,'Eclipse':11,'Marshal':12,'Mirage':10,
+  'Muse':11,'Paragon':12,'Pinnacle':11,'Sapper':11,'Sin Eater':12,'Witch':10,
+  'Awakener':11,'Cavalier':12,'Engineer':12,'Gemini':12,'Obelisk':13,'Omen':11,
+  'Overseer':12,'Quartermaster':12,'Tyrant':13,'Unbound':11,
+};
+
+function ccParadigmDesign(name) {
+  for (const [design, list] of Object.entries(CC_DESIGN_PARADIGMS)) {
+    if (list.includes(name)) return design;
+  }
+  return '';
+}
+
+// ─── Origins data ─────────────────────────────────────────────────────────────
+const CC_ORIGINS = [
+  { id: 'conditioned',  label: 'Conditioned',          bonus: '+3 Core points' },
+  { id: 'disciplined',  label: 'Disciplined',           bonus: '+2 Training points' },
+  { id: 'talented',     label: 'Talented',              bonus: '+5 Ability points' },
+  { id: 'heir',         label: 'Heir',                  bonus: '+5 Artifact points' },
+  { id: 'chosen',       label: 'Chosen',                bonus: '+5 Facet points' },
+  { id: 'skilled',      label: 'Skilled',               bonus: '3 Origin Skills (CR grade)' },
+  { id: 'mysterious',   label: 'Mysterious Background', bonus: 'Storyteller-defined' },
+];
+
+const CC_ORIGIN_SKILLS = {
+  Mental:   ['Academics','Analysis','Crafts','Politics','Science (choose type)','Investigation','Medicine','Esoteric Knowledge'],
+  Physical: ['Athletics','Vehicles (choose type)','Stealth','Larceny','Survival'],
+  Social:   ['Empathy','Intimidation','Persuasion','Street Knowledge','Subterfuge','Expression (choose type)','Animals'],
+  Other:    ['Custom (discuss with Storyteller)'],
+};
+
+const CC_ALL_ORIGIN_SKILLS = Object.entries(CC_ORIGIN_SKILLS).flatMap(([cat, skills]) =>
+  skills.map(s => ({ cat, name: s }))
+);
+
+// ─── Initiative lookup per design ────────────────────────────────────────────
+// Returns initiative value for a given grade in a given design
+const CC_INITIATIVE = {
+  Balancer:  (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=12?1:i<=14?2:i<=17?3:4; },
+  Brawler:   (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=9?1:i<=12?2:i<=14?3:i<=17?4:5; },
+  Guardian:  (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=3?1:i<=12?2:i<=14?3:4; },
+  Marksmen:  (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=3?1:i<=9?2:i<=12?3:i<=14?4:i<=17?5:6; },
+  Preceptor: (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=6?1:i<=12?2:i<=14?3:i<=17?4:5; },
+  Tactician: (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=6?1:i<=12?2:i<=14?3:i<=17?4:5; },
+};
+
+// Grade letter lookup for initiative table (grade ranges per design)
+// CC_GRADES index: F=0,D-=1,D=2,D+=3,C-=4,C=5,C+=6,B-=7,B=8,B+=9,A-=10,A=11,A+=12,E-=13,E=14,E+=15,S-=16,S=17,S+=18,M-=19,M=20,M+=21
+
+// ─── State ────────────────────────────────────────────────────────────────────
+const CC_TRAINING_FIELDS = [
+  'Physical Melee','Physical Ranged','Physical Defense',
+  'Energy Melee','Energy Ranged','Energy Defense',
+];
+
+let ccState = {
+  name: '', level: 1,
+  attrs:    { Power:'F', Finesse:'F', Resolve:'F', Intensity:'F', Awareness:'F' },
+  training: { 'Physical Melee':'F','Physical Ranged':'F','Physical Defense':'F','Energy Melee':'F','Energy Ranged':'F','Energy Defense':'F' },
+  paradigms: [], // [{name, grade}]
+  skills: [],    // [{name, grade}]
+  origins: ['', '', ''],
+  originSkills: [['','',''], ['','',''], ['','','']],
+  afRatio: 3,
+  growthSpend: { core:0, training:0, ability:0 }, // growth points converted
+};
+
+let paradigmModalSelected = null; // name of paradigm being selected
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function ccCalcCR(level) {
+  if (level <= 4) return 1;
+  return 2 + Math.floor((level - 5) / 5);
+}
+
+function ccGradeVal(rank) {
+  return CC_GRADE_VALUES[rank] ?? 2;
+}
+
+function ccOriginBonuses() {
+  const bonuses = { core: 0, training: 0, ability: 0, artifact: 0, facet: 0 };
+  for (const id of ccState.origins) {
+    if (id === 'conditioned') bonuses.core     += 3;
+    if (id === 'disciplined') bonuses.training += 2;
+    if (id === 'talented')    bonuses.ability  += 5;
+    if (id === 'heir')        bonuses.artifact += 5;
+    if (id === 'chosen')      bonuses.facet    += 5;
+  }
+  return bonuses;
+}
+
+function ccPointsTotal(level) {
+  const ob       = ccOriginBonuses();
+  const gs       = ccState.growthSpend;
+  const core     = level * CC_POINTS_PER_LEVEL.core     + ob.core     + (gs.core     || 0) * 3;
+  const training = level * CC_POINTS_PER_LEVEL.training + ob.training + (gs.training || 0) * 3;
+  const ability  = level * CC_POINTS_PER_LEVEL.ability  + ob.ability  + (gs.ability  || 0) * 5;
+  const growth   = level * CC_POINTS_PER_LEVEL.growth   + ccCrownGrowthTotal(level);
+  const artPerLevel = ccState.afRatio;
+  const facPerLevel = 6 - ccState.afRatio;
+  const artifact = level * artPerLevel + ob.artifact;
+  const facet    = level * facPerLevel + ob.facet;
+  return { core, training, ability, growth, artifact, facet };
+}
+
+function ccPointsSpent() {
+  let core = 0, training = 0;
+  for (const rank of Object.values(ccState.attrs)) {
+    core += CC_ATTR_COST[rank] ?? 0;
+  }
+  for (const rank of Object.values(ccState.training)) {
+    training += CC_ATTR_COST[rank] ?? 0;
+  }
+  ccState.paradigms.forEach((p, i) => {
+    const costTable = i === 0 ? CC_PARA_FIRST_COST : CC_PARA_EXTRA_COST;
+    core += costTable[p.grade] ?? 0;
+  });
+  // Growth conversions cost growth points
+  const gs = ccState.growthSpend;
+  const growthSpent = (gs.core||0) + (gs.training||0) + (gs.ability||0);
+  return { core, training, ability: 0, growth: growthSpent, artifact: 0, facet: 0 };
+}
+
+// Only full letter grades count for vitality steps
+const CC_VIT_GRADES = new Set(['F','D-','C-','B-','A-','E-','S-','M-','M+']);
+
+function ccGradeVitSteps(rank) {
+  // Count how many letter grades have been reached up to and including this rank
+  const idx = CC_GRADES.findIndex(g => g.rank === rank);
+  let steps = 0;
+  for (let i = 0; i <= idx; i++) {
+    if (CC_VIT_GRADES.has(CC_GRADES[i].rank)) steps++;
+  }
+  return steps;
+}
+
+function ccGetVitality() {
+  const level = ccState.level;
+  const resolveVal = ccGradeVal(ccState.attrs.Resolve);
+  let vit = resolveVal * level;
+  for (const p of ccState.paradigms) {
+    const steps = ccGradeVitSteps(p.grade);
+    const vitPerGrade = CC_PARADIGM_VITALITY[p.name] ?? 10;
+    vit += steps * vitPerGrade;
+  }
+  return Math.floor(vit);
+}
+
+function ccGetInitiative() {
+  if (ccState.paradigms.length === 0) return '—';
+
+  // Group paradigms by design, find highest grade index in each
+  const byDesign = {};
+  for (const p of ccState.paradigms) {
+    const design = ccParadigmDesign(p.name);
+    if (!design) continue;
+    const idx = CC_GRADES.findIndex(g => g.rank === p.grade);
+    if (!byDesign[design] || idx > byDesign[design].idx) {
+      byDesign[design] = { grade: p.grade, idx };
+    }
+  }
+
+  const designs = Object.keys(byDesign);
+  if (designs.length === 0) return '—';
+
+  let total = 0;
+  const parts = [];
+
+  if (designs.length === 1) {
+    // One design: take the two highest paradigms in that design
+    const design = designs[0];
+    const fn = CC_INITIATIVE[design];
+    if (!fn) return '—';
+    const inDesign = ccState.paradigms
+      .filter(p => ccParadigmDesign(p.name) === design)
+      .map(p => ({ ...p, idx: CC_GRADES.findIndex(g => g.rank === p.grade) }))
+      .sort((a, b) => b.idx - a.idx)
+      .slice(0, 2);
+    for (const p of inDesign) {
+      const val = fn(p.grade);
+      total += val;
+      parts.push(`${p.name} ${p.grade}→${val}`);
+    }
+  } else {
+    // Two designs: one value each from the highest paradigm per design
+    for (const design of designs.slice(0, 2)) {
+      const fn = CC_INITIATIVE[design];
+      if (!fn) continue;
+      const val = fn(byDesign[design].grade);
+      total += val;
+      parts.push(`${design} ${byDesign[design].grade}→${val}`);
+    }
+  }
+
+  return `${total} (${parts.join(', ')})`;
+}
+
+function ccAllParadigmNames() {
+  return ccState.paradigms.map(p => p.name);
+}
+
+function ccDesignsUsed() {
+  const designs = new Set();
+  for (const p of ccState.paradigms) {
+    designs.add(ccParadigmDesign(p.name));
+  }
+  return designs;
+}
+
+// ─── Grade select HTML ────────────────────────────────────────────────────────
+function ccGradeSelectHTML(id, value, onchange, includeHigher = true) {
+  const grades = includeHigher ? CC_GRADES : CC_GRADES.filter(g => CC_ATTR_COST[g.rank] !== undefined);
+  let html = `<select class="cc-paradigm-grade-sel" id="${id}" onchange="${onchange}">`;
+  for (const g of CC_GRADES) {
+    html += `<option value="${g.rank}" ${g.rank === value ? 'selected' : ''}>${g.rank} (${g.val})</option>`;
+  }
+  html += '</select>';
+  return html;
+}
+
+function ccAttrGradeSelectHTML(id, value, onchange) {
+  let html = `<select class="cc-attr-select" id="${id}" onchange="${onchange}">`;
+  for (const g of CC_GRADES) {
+    html += `<option value="${g.rank}" ${g.rank === value ? 'selected' : ''}>${g.rank} (${g.val})</option>`;
+  }
+  html += '</select>';
+  return html;
+}
+
+// Grade dice lookup (for defenses)
+const CC_GRADE_DICE = {
+  'F':'1d4','D-':'1d4','D':'1d6','D+':'1d6','C-':'1d6','C':'1d8','C+':'1d8',
+  'B-':'1d8','B':'1d10','B+':'1d10','A-':'1d10','A':'1d12','A+':'1d12',
+  'E-':'1d12','E':'2d6','E+':'2d6','S-':'2d8','S':'2d8','S+':'2d10',
+  'M-':'2d10','M':'2d12','M+':'2d12'
+};
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+function ccRenderTraining() {
+  const physical = ['Physical Melee','Physical Ranged','Physical Defense'];
+  const energy   = ['Energy Melee','Energy Ranged','Energy Defense'];
+  function rowHTML(fields) {
+    return fields.map(name => {
+      const rank = ccState.training[name] || 'F';
+      const cost = CC_ATTR_COST[rank] ?? 0;
+      const shortName = name.replace('Physical ','').replace('Energy ','');
+      return `<div class="cc-attr-item">
+        <div class="cc-attr-name">${shortName}</div>
+        ${ccAttrGradeSelectHTML(`training-${name.replace(/\s+/g,'-')}`, rank, `ccOnTrainingChange('${name}',this.value)`)}
+        <div class="cc-attr-cost">${cost} pts</div>
+      </div>`;
+    }).join('');
+  }
+  const pg = document.getElementById('cc-training-physical');
+  const eg = document.getElementById('cc-training-energy');
+  if (pg) pg.innerHTML = rowHTML(physical);
+  if (eg) eg.innerHTML = rowHTML(energy);
+}
+
+function ccOnTrainingChange(name, val) {
+  ccState.training[name] = val;
+  ccRenderPointsBar();
+  ccRenderTraining();
+}
+
+function ccRenderGrowth() {
+  const gs = ccState.growthSpend;
+  ['core','training','ability'].forEach(t => {
+    const el = document.getElementById(`growth-${t}-val`);
+    if (el) el.textContent = gs[t] || 0;
+  });
+}
+
+function ccGrowthAdj(type, delta) {
+  const gs = ccState.growthSpend;
+  const current = gs[type] || 0;
+  const next = current + delta;
+  if (next < 0) return;
+  // Check available growth before adding
+  const totals = ccPointsTotal(ccState.level);
+  const spent  = ccPointsSpent();
+  const availGrowth = totals.growth - spent.growth;
+  if (delta > 0 && availGrowth <= 0) return;
+  gs[type] = next;
+  ccRenderGrowth();
+  ccRenderPointsBar();
+}
+
+function ccRenderAll() {
+  ccRenderPointsBar();
+  ccRenderCRDisplay();
+  ccRenderAFSlider();
+  ccRenderAttrs();
+  ccRenderTraining();
+  ccRenderGrowth();
+  ccRenderStats();
+  ccRenderOrigins();
+  ccRenderParadigms();
+  ccRenderParadigmLimit();
+  ccRenderSkills();
+}
+
+function ccRenderPointsBar() {
+  const level = ccState.level;
+  const totals = ccPointsTotal(level);
+  const spent  = ccPointsSpent();
+  const types = ['core','training','ability','growth','artifact','facet'];
+  for (const t of types) {
+    const avail = totals[t] - spent[t];
+    const el  = document.getElementById(`pt-${t}-avail`);
+    const tel = document.getElementById(`pt-${t}-total`);
+    if (el) { el.textContent = avail; el.classList.toggle('over', avail < 0); }
+    if (tel) tel.textContent = `of ${totals[t]}`;
+  }
+}
+
+function ccRenderCRDisplay() {
+  const cr = ccCalcCR(ccState.level);
+  const el = document.getElementById('cc-cr-display');
+  if (el) el.textContent = `CR ${cr}`;
+}
+
+function ccRenderAttrs() {
+  const grid = document.getElementById('cc-attr-grid');
+  if (!grid) return;
+  const attrNames = ['Power','Finesse','Resolve','Intensity','Awareness'];
+  grid.innerHTML = attrNames.map(name => {
+    const rank = ccState.attrs[name];
+    const cost = CC_ATTR_COST[rank] ?? 0;
+    return `<div class="cc-attr-item">
+      <div class="cc-attr-name">${name}</div>
+      ${ccAttrGradeSelectHTML(`attr-${name}`, rank, `ccOnAttrChange('${name}',this.value)`)}
+      <div class="cc-attr-cost">${cost} Core pts spent</div>
+    </div>`;
+  }).join('');
+}
+
+function ccRenderStats() {
+  const attrs = ccState.attrs;
+  const cr  = ccCalcCR(ccState.level);
+  const ap  = 3 + ccGradeVal(attrs.Intensity);
+  const rp  = 3 + ccGradeVal(attrs.Awareness);
+  const vit = ccGetVitality();
+  const melee  = ccGradeVal(attrs.Power)   * cr;
+  const ranged = ccGradeVal(attrs.Finesse) * cr;
+
+  // Block: dice=Resolve dice, value=Resolve×CR
+  const blockVal  = ccGradeVal(attrs.Resolve)   * cr;
+  const blockDice = CC_GRADE_DICE[attrs.Resolve] ?? '1d4';
+  // Dodge: dice=Awareness dice, value=Intensity×CR
+  const dodgeVal  = ccGradeVal(attrs.Intensity) * cr;
+  const dodgeDice = CC_GRADE_DICE[attrs.Awareness] ?? '1d4';
+  // Parry: dice=Intensity dice, value=Awareness×CR
+  const parryVal  = ccGradeVal(attrs.Awareness) * cr;
+  const parryDice = CC_GRADE_DICE[attrs.Intensity] ?? '1d4';
+
+  function set(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+  function setHTML(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = val;
+  }
+  set('stat-ap', ap);
+  set('stat-rp', rp);
+  set('stat-vitality', vit);
+  set('stat-melee', melee);
+  set('stat-ranged', ranged);
+  setHTML('stat-block', `${blockVal} <span class="stat-dice">${blockDice}</span>`);
+  setHTML('stat-dodge', `${dodgeVal} <span class="stat-dice">${dodgeDice}</span>`);
+  setHTML('stat-parry', `${parryVal} <span class="stat-dice">${parryDice}</span>`);
+  set('stat-initiative', ccGetInitiative());
+}
+
+function ccRenderParadigms() {
+  const list = document.getElementById('cc-paradigm-list');
+  if (!list) return;
+  if (ccState.paradigms.length === 0) {
+    list.innerHTML = '<div class="cc-placeholder">No Paradigms selected. Add one below.</div>';
+    return;
+  }
+  list.innerHTML = ccState.paradigms.map((p, i) => {
+    const design = ccParadigmDesign(p.name);
+    const isFirst = i === 0;
+    const costTable = isFirst ? CC_PARA_FIRST_COST : CC_PARA_EXTRA_COST;
+    const cost = costTable[p.grade] ?? 0;
+    const vitPerGrade = CC_PARADIGM_VITALITY[p.name] ?? 10;
+    const vitContrib = ccGradeVitSteps(p.grade) * vitPerGrade;
+    return `<div class="cc-paradigm-row ${isFirst ? 'is-first' : ''}">
+      <span class="cc-paradigm-tag ${isFirst ? 'free' : ''}">${isFirst ? 'Free' : `${CC_PARA_EXTRA_COST['F']} pts`}</span>
+      <span class="cc-paradigm-name">${p.name}</span>
+      <span class="cc-paradigm-design">${design}</span>
+      ${ccGradeSelectHTML(`paradigm-grade-${i}`, p.grade, `ccOnParadigmGradeChange(${i},this.value)`)}
+      <span class="cc-paradigm-vitality">${cost} Core | +${vitContrib} Vit</span>
+      ${isFirst ? '' : `<div class="cc-paradigm-del" onclick="ccRemoveParadigm(${i})" title="Remove">✕</div>`}
+    </div>`;
+  }).join('');
+}
+
+function ccRenderParadigmLimit() {
+  const el = document.getElementById('cc-paradigm-limit');
+  if (!el) return;
+  const cr = ccCalcCR(ccState.level);
+  const count = ccState.paradigms.length;
+  el.textContent = `${count} / ${cr} Paradigms (CR ${cr} max)`;
+}
+
+// ─── Event handlers ───────────────────────────────────────────────────────────
+// ─── Export / Import ──────────────────────────────────────────────────────────
+function ccGatherState() {
+  return {
+    name:        document.getElementById('cc-name')?.value || '',
+    level:       ccState.level,
+    design1:     document.getElementById('cc-design1')?.value || '',
+    design2:     document.getElementById('cc-design2')?.value || '',
+    attrs:       { ...ccState.attrs },
+    training:    { ...ccState.training },
+    growthSpend: { ...ccState.growthSpend },
+    paradigms:   ccState.paradigms.map(p => ({ ...p })),
+    skills:      ccState.skills.map(s => ({ ...s })),
+    origins:     [...ccState.origins],
+    originSkills: ccState.originSkills.map(s => [...s]),
+    afRatio:     ccState.afRatio,
+    passives:    document.getElementById('cc-passives')?.value || '',
+    artifacts:   document.getElementById('cc-artifacts')?.value || '',
+    movement:    document.getElementById('stat-movement-sel')?.value || '30 ft',
+  };
+}
+
+function ccBuildReadableText(s) {
+  const cr   = ccCalcCR(s.level);
+  const tot  = ccPointsTotal(s.level);
+  const spent = ccPointsSpentFromState(s);
+  const attrs = s.attrs;
+
+  const resolveVal = ccGradeVal(attrs.Resolve);
+  let vit = resolveVal * s.level;
+  for (const p of s.paradigms) {
+    vit += ccGradeVitSteps(p.grade) * (CC_PARADIGM_VITALITY[p.name] ?? 10);
+  }
+  vit = Math.floor(vit);
+
+  const ap     = 3 + ccGradeVal(attrs.Intensity);
+  const rp     = 3 + ccGradeVal(attrs.Awareness);
+  const melee  = ccGradeVal(attrs.Power)     * cr;
+  const ranged = ccGradeVal(attrs.Finesse)   * cr;
+  const block  = ccGradeVal(attrs.Resolve)   * cr;
+  const dodge  = ccGradeVal(attrs.Intensity) * cr;
+  const parry  = ccGradeVal(attrs.Awareness) * cr;
+  const blockDice = CC_GRADE_DICE[attrs.Resolve]   ?? '1d4';
+  const dodgeDice = CC_GRADE_DICE[attrs.Awareness] ?? '1d4';
+  const parryDice = CC_GRADE_DICE[attrs.Intensity] ?? '1d4';
+
+  const pad = (str, len) => str.padEnd(len, ' ');
+  const hr  = '─'.repeat(48);
+
+  let lines = [];
+  lines.push('╔' + '═'.repeat(46) + '╗');
+  lines.push('║' + ' EXEMPLAR CHARACTER SHEET'.padEnd(46) + '║');
+  lines.push('╚' + '═'.repeat(46) + '╝');
+  lines.push('');
+  lines.push(`Name    : ${s.name || '(unnamed)'}`);
+  lines.push(`Level   : ${s.level}   Crown Rank: CR ${cr}`);
+  lines.push(`Designs : ${[s.design1, s.design2].filter(Boolean).join(' / ') || '—'}`);
+  lines.push(`Artifact/Facet Ratio: ${s.afRatio ?? 3} / ${6 - (s.afRatio ?? 3)} per level`);
+  lines.push(`Origins : ${s.origins || '—'}`);
+  lines.push('');
+  lines.push(hr);
+  lines.push('POINTS');
+  lines.push(hr);
+  lines.push(`Core     : ${tot.core - spent.core} remaining of ${tot.core} (${spent.core} spent)`);
+  lines.push(`Training : ${tot.training - spent.training} remaining of ${tot.training} (${spent.training} spent)`);
+  lines.push(`Ability  : ${tot.ability} of ${tot.ability} (0 spent)`);
+  lines.push(`Growth   : ${tot.growth - spent.growth} remaining of ${tot.growth} (${spent.growth} spent)`);
+  if (s.growthSpend && (s.growthSpend.core||s.growthSpend.training||s.growthSpend.ability)) {
+    const gs = s.growthSpend;
+    if (gs.core)     lines.push(`  Converted ${gs.core} Growth → +${gs.core*3} Core`);
+    if (gs.training) lines.push(`  Converted ${gs.training} Growth → +${gs.training*3} Training`);
+    if (gs.ability)  lines.push(`  Converted ${gs.ability} Growth → +${gs.ability*5} Ability`);
+  }
+  lines.push('');
+  lines.push(hr);
+  lines.push(`ATTRIBUTES | ${spent.core} Core Points Spent`);
+  lines.push(hr);
+  for (const [name, rank] of Object.entries(attrs)) {
+    lines.push(`${pad(name, 12)}: ${rank} (${ccGradeVal(rank)})   ${CC_ATTR_COST[rank]||0} pts`);
+  }
+  lines.push('');
+  lines.push(hr);
+  lines.push(`TRAINING | ${spent.training} Training Points Spent`);
+  lines.push(hr);
+  for (const t of CC_TRAINING_FIELDS) {
+    const rank = s.training?.[t] || 'F';
+    lines.push(`${pad(t, 20)}: ${rank}   ${CC_ATTR_COST[rank]||0} pts`);
+  }
+  lines.push('');
+  lines.push(hr);
+  lines.push('STATS');
+  lines.push(hr);
+  // Vitality breakdown
+  const resolveVit = Math.floor(ccGradeVal(attrs.Resolve) * s.level);
+  const paraVit    = s.paradigms.length > 0 ? s.paradigms.reduce((sum,p) => sum + ccGradeVitSteps(p.grade)*(CC_PARADIGM_VITALITY[p.name]??10), 0) : 0;
+  lines.push(`Action Points   : ${ap}`);
+  lines.push(`Reaction Points : ${rp}`);
+  lines.push(`Vitality        : ${vit}  (Resolve ${ccGradeVal(attrs.Resolve)} × Level ${s.level} = ${resolveVit}${paraVit ? ` + Paradigms ${paraVit}` : ''})`);
+  lines.push(`Melee Attack    : ${melee}`);
+  lines.push(`Ranged Attack   : ${ranged}`);
+  lines.push(`Block           : ${block} (${blockDice})`);
+  lines.push(`Dodge           : ${dodge} (${dodgeDice})`);
+  lines.push(`Parry           : ${parry} (${parryDice})`);
+  lines.push(`Movement        : ${s.movement}`);
+  lines.push('');
+  lines.push(hr);
+  lines.push('PARADIGMS');
+  lines.push(hr);
+  if (s.paradigms.length === 0) {
+    lines.push('None');
+  } else {
+    s.paradigms.forEach((p, i) => {
+      const design = ccParadigmDesign(p.name);
+      const vStep  = ccGradeVitSteps(p.grade) * (CC_PARADIGM_VITALITY[p.name] ?? 10);
+      lines.push(`${i === 0 ? '[Free] ' : '       '}${p.name} (${design}) — Grade: ${p.grade} — +${vStep} Vit`);
+    });
+  }
+  if (s.origins && s.origins.some(Boolean)) {
+    lines.push('');
+    lines.push(hr);
+    lines.push('ORIGINS');
+    lines.push(hr);
+    const crSkillGrades = ['F','D','C','B','A','E','S','M-','M+'];
+    const skillGrade = crSkillGrades[Math.min(cr - 1, crSkillGrades.length - 1)];
+    s.origins.forEach((id, i) => {
+      const origin = CC_ORIGINS.find(o => o.id === id);
+      if (!origin) { lines.push(`Origin ${i+1}: —`); return; }
+      let line = `Origin ${i+1}: ${origin.label} (${origin.bonus}`;
+      if (id === 'skilled') line += ` at ${skillGrade}`;
+      line += ')';
+      lines.push(line);
+      if (id === 'skilled' && s.originSkills?.[i]) {
+        s.originSkills[i].filter(Boolean).forEach(sk => lines.push(`  - ${sk}`));
+      }
+    });
+  }
+  if (s.skills && s.skills.length > 0) {
+    lines.push('');
+    lines.push(hr);
+    lines.push('SKILLS');
+    lines.push(hr);
+    const cr = ccCalcCR(s.level);
+    s.skills.forEach(sk => {
+      const gradeDisplay = sk.grade === 'CR' ? `CR ${cr}` : sk.grade;
+      let displayName = sk.name || '(unnamed)';
+      if (sk.skillType) displayName = displayName.replace('(choose type)', `(${sk.skillType})`);
+      const origin = sk.fromOrigin ? ' [Origin]' : '';
+      lines.push(`${displayName.padEnd(28)}: ${gradeDisplay}${origin}`);
+    });
+  }
+  if (s.passives) {
+    lines.push('');
+    lines.push(hr);
+    lines.push('PASSIVES');
+    lines.push(hr);
+    lines.push(s.passives);
+  }
+  if (s.artifacts) {
+    lines.push('');
+    lines.push(hr);
+    lines.push('ARTIFACTS AND EXEMPLARS');
+    lines.push(hr);
+    lines.push(s.artifacts);
+  }
+  lines.push('');
+  lines.push(hr);
+  lines.push('IMPORT CODE — DO NOT EDIT');
+  lines.push(hr);
+  lines.push('The block below is used to import this character. Do not modify it.');
+  lines.push('');
+  lines.push('>>EXEMPLAR_CHAR_START<<');
+  lines.push(btoa(JSON.stringify(s)));
+  lines.push('>>EXEMPLAR_CHAR_END<<');
+  lines.push('');
+  return lines.join('\n');
+}
+
+function ccPointsSpentFromState(s) {
+  let core = 0, training = 0;
+  for (const rank of Object.values(s.attrs)) core += CC_ATTR_COST[rank] ?? 0;
+  for (const rank of Object.values(s.training || {})) training += CC_ATTR_COST[rank] ?? 0;
+  s.paradigms.forEach((p, i) => {
+    const costTable = i === 0 ? CC_PARA_FIRST_COST : CC_PARA_EXTRA_COST;
+    core += costTable[p.grade] ?? 0;
+  });
+  const gs = s.growthSpend || {};
+  const growthSpent = (gs.core||0) + (gs.training||0) + (gs.ability||0);
+  return { core, training, ability: 0, growth: growthSpent, artifact: 0, facet: 0 };
+}
+
+function ccExportCharacter() {
+  const s    = ccGatherState();
+  const text = ccBuildReadableText(s);
+  const name = (s.name || 'character').replace(/\s+/g, '_');
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `${name}_L${s.level}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function ccImportCharacter(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result;
+    let s = null;
+
+    // Try to extract import code block first
+    const match = text.match(/>>EXEMPLAR_CHAR_START<<\s*([\s\S]+?)\s*>>EXEMPLAR_CHAR_END<</);
+    if (match) {
+      try { s = JSON.parse(atob(match[1].trim())); } catch {}
+    }
+    // Fall back: try raw JSON
+    if (!s) {
+      try { s = JSON.parse(text); } catch {}
+    }
+
+    if (!s || typeof s !== 'object') {
+      alert('Could not read character data. Make sure you are importing a valid Exemplar export file.');
+      event.target.value = '';
+      return;
+    }
+
+    ccApplyImport(s);
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function ccApplyImport(s) {
+  ccState.level = parseInt(s.level, 10) || 1;
+  const levelSel = document.getElementById('cc-level');
+  if (levelSel) levelSel.value = ccState.level;
+
+  const nameEl = document.getElementById('cc-name');
+  if (nameEl) nameEl.value = s.name || '';
+  const d1 = document.getElementById('cc-design1');
+  if (d1) d1.value = s.design1 || '';
+  const d2 = document.getElementById('cc-design2');
+  if (d2) d2.value = s.design2 || '';
+
+  // Origins
+  ccState.origins = Array.isArray(s.origins) ? [...s.origins] : ['','',''];
+  ccState.originSkills = Array.isArray(s.originSkills)
+    ? s.originSkills.map(sl => Array.isArray(sl) ? [...sl] : ['','',''])
+    : [['','',''],['','',''],['','','']];
+  ccState.afRatio = (s.afRatio >= 1 && s.afRatio <= 5) ? s.afRatio : 3;
+  const afSel = document.getElementById('cc-af-ratio');
+  if (afSel) afSel.value = ccState.afRatio;
+  // Attributes
+  const validAttrs = ['Power','Finesse','Resolve','Intensity','Awareness'];
+  for (const a of validAttrs) ccState.attrs[a] = s.attrs?.[a] || 'F';
+
+  // Training
+  for (const t of CC_TRAINING_FIELDS) ccState.training[t] = s.training?.[t] || 'F';
+
+  // Growth spend
+  ccState.growthSpend = { core: s.growthSpend?.core||0, training: s.growthSpend?.training||0, ability: s.growthSpend?.ability||0 };
+
+  // Paradigms
+  ccState.paradigms = (s.paradigms || []).map(p => ({ name: p.name, grade: p.grade || 'F' }));
+
+  // Skills
+  ccState.skills = (s.skills || []).map(sk => ({ ...sk, name: sk.name || '', grade: sk.grade || 'CR' }));
+
+  // Text fields
+  const passEl = document.getElementById('cc-passives');
+  if (passEl) passEl.value = s.passives || '';
+  const artEl = document.getElementById('cc-artifacts');
+  if (artEl) artEl.value = s.artifacts || '';
+
+  // Movement
+  const movSel = document.getElementById('stat-movement-sel');
+  if (movSel && s.movement) movSel.value = s.movement;
+
+  ccRenderAll();
+}
+
+function ccSkillGradeSelectHTML(id, value, onchange) {
+  const cr = ccCalcCR(ccState.level);
+  let html = `<select class="cc-skill-grade-sel" id="${id}" onchange="${onchange}">`;
+  html += `<option value="CR" ${value === 'CR' ? 'selected' : ''}>CR ${cr}</option>`;
+  for (const g of CC_GRADES) {
+    html += `<option value="${g.rank}" ${g.rank === value ? 'selected' : ''}>${g.rank} (${g.val})</option>`;
+  }
+  html += '</select>';
+  return html;
+}
+
+const CC_CHOOSE_TYPE_SKILLS = new Set(['Science (choose type)','Vehicles (choose type)','Expression (choose type)']);
+
+function ccSkillNameDropdownHTML(idx, value, typeValue) {
+  const baseName = value ? value.replace(/ \(.*$/, '') : '';
+  const needsType = value && CC_CHOOSE_TYPE_SKILLS.has(value);
+  const skillOptHTML = Object.entries(CC_ORIGIN_SKILLS).map(([cat, skills]) =>
+    `<optgroup label="${cat}">${skills.map(s =>
+      `<option value="${s}" ${s === value ? 'selected' : ''}>${s}</option>`
+    ).join('')}</optgroup>`
+  ).join('');
+  const typeInput = needsType
+    ? `<input class="cc-skill-type-input" type="text" placeholder="Type..." value="${(typeValue||'').replace(/"/g,'&quot;')}"
+         oninput="ccOnOriginSkillTypeChange(${idx},this.value)" autocomplete="off">`
+    : '';
+  return `<select class="cc-skill-name cc-skill-name-sel" onchange="ccOnOriginSkillSelectChange(${idx},this.value)">
+    <option value="">— Choose skill —</option>
+    ${skillOptHTML}
+  </select>${typeInput}`;
+}
+
+function ccRenderSkills() {
+  const list = document.getElementById('cc-skills-list');
+  if (!list) return;
+  if (ccState.skills.length === 0) {
+    list.innerHTML = '<div class="cc-placeholder">No skills added yet.</div>';
+    return;
+  }
+  const cr = ccCalcCR(ccState.level);
+  list.innerHTML = ccState.skills.map((s, i) => {
+    const isOrigin = !!s.fromOrigin;
+    const nameEl = isOrigin
+      ? ccSkillNameDropdownHTML(i, s.name, s.skillType)
+      : `<input class="cc-skill-name" type="text" placeholder="Skill name..." value="${s.name.replace(/"/g,'&quot;')}"
+           onchange="ccOnSkillNameChange(${i},this.value)" oninput="ccOnSkillNameChange(${i},this.value)">`;
+    const gradeEl = isOrigin
+      ? `<span class="cc-skill-origin-grade">CR ${cr}</span>`
+      : ccSkillGradeSelectHTML(`skill-grade-${i}`, s.grade, `ccOnSkillGradeChange(${i},this.value)`);
+    const delEl = isOrigin
+      ? `<div class="cc-skill-del cc-skill-del-locked" title="Set by Origin">⬡</div>`
+      : `<div class="cc-skill-del" onclick="ccRemoveSkill(${i})" title="Remove">✕</div>`;
+    return `<div class="cc-skill-row ${isOrigin ? 'cc-skill-origin' : ''}">
+      <div class="cc-skill-name-wrap">${nameEl}</div>${gradeEl}${delEl}
+    </div>`;
+  }).join('');
+}
+
+function ccOnOriginSkillSelectChange(skillIdx, val) {
+  const sk = ccState.skills[skillIdx];
+  if (!sk || !sk.fromOrigin) return;
+  sk.name = val;
+  sk.skillType = '';
+  ccState.originSkills[sk.originSlot][sk.originSkillIdx] = val;
+  ccRenderSkills();
+}
+
+function ccOnOriginSkillTypeChange(skillIdx, val) {
+  const sk = ccState.skills[skillIdx];
+  if (!sk || !sk.fromOrigin) return;
+  sk.skillType = val;
+}
+
+function ccAddSkill() {
+  ccState.skills.push({ name: '', grade: 'CR' });
+  ccRenderSkills();
+  // Focus the new name input
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.cc-skill-name');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  }, 50);
+}
+
+function ccRemoveSkill(idx) {
+  ccState.skills.splice(idx, 1);
+  ccRenderSkills();
+}
+
+function ccOnSkillNameChange(idx, val) {
+  if (ccState.skills[idx]) ccState.skills[idx].name = val;
+}
+
+function ccOnSkillGradeChange(idx, val) {
+  if (ccState.skills[idx]) {
+    ccState.skills[idx].grade = val;
+    ccRenderSkills();
+  }
+}
+
+function ccRenderOrigins() {
+  const container = document.getElementById('cc-origins-slots');
+  const countEl   = document.getElementById('cc-origins-count');
+  if (!container) return;
+
+  const filled = ccState.origins.filter(Boolean).length;
+  if (countEl) countEl.textContent = `(${filled}/3)`;
+
+  container.innerHTML = [0,1,2].map(i => {
+    const val = ccState.origins[i] || '';
+    return `<div class="cc-origin-row">
+      <span class="cc-origin-label">Origin ${i+1}</span>
+      <select class="cc-origin-select" onchange="ccOnOriginChange(${i},this.value)">
+        <option value="">— Choose —</option>
+        ${CC_ORIGINS.map(o =>
+          `<option value="${o.id}" ${o.id === val ? 'selected' : ''}>${o.label} — ${o.bonus}</option>`
+        ).join('')}
+      </select>
+    </div>`;
+  }).join('');
+}
+
+function ccOnOriginChange(idx, val) {
+  const prev = ccState.origins[idx];
+  ccState.origins[idx] = val;
+
+  // Remove any skills that were added for this origin slot
+  ccState.skills = ccState.skills.filter(s => !(s.fromOrigin && s.originSlot === idx));
+
+  // If Skilled, add 3 blank origin skill entries
+  if (val === 'skilled') {
+    ccState.originSkills[idx] = ['','',''];
+    for (let j = 0; j < 3; j++) {
+      ccState.skills.push({ name: '', grade: 'CR', fromOrigin: true, originSlot: idx, originSkillIdx: j });
+    }
+  } else {
+    ccState.originSkills[idx] = ['','',''];
+  }
+
+  ccRenderOrigins();
+  ccRenderPointsBar();
+  ccRenderSkills();
+}
+
+function ccOnOriginSkillChange(slotIdx, skillIdx, val) {
+  if (!ccState.originSkills[slotIdx]) ccState.originSkills[slotIdx] = ['','',''];
+  ccState.originSkills[slotIdx][skillIdx] = val;
+  // Update the matching skill entry
+  const sk = ccState.skills.find(s => s.fromOrigin && s.originSlot === slotIdx && s.originSkillIdx === skillIdx);
+  if (sk) sk.name = val;
+}
+
+function ccRenderAFSlider() {
+  const sel = document.getElementById('cc-af-ratio');
+  if (sel) sel.value = ccState.afRatio;
+}
+
+function ccOnAFSlider(val) {
+  ccState.afRatio = parseInt(val, 10);
+  ccRenderPointsBar();
+}
+
+function ccOnLevelChange(val) {
+  ccState.level = parseInt(val, 10);
+  ccRenderAll();
+}
+
+function ccOnDesignChange() {
+  const d1 = document.getElementById('cc-design1')?.value || '';
+  const d2 = document.getElementById('cc-design2')?.value || '';
+  // Prevent same design selected twice
+  const d1Sel = document.getElementById('cc-design1');
+  const d2Sel = document.getElementById('cc-design2');
+  if (d1 && d2 && d1 === d2) {
+    d2Sel.value = '';
+  }
+}
+
+function ccOnAttrChange(name, val) {
+  ccState.attrs[name] = val;
+  ccRenderPointsBar();
+  ccRenderStats();
+  // Rebuild attr card to show updated costs
+  ccRenderAttrs();
+}
+
+function ccOnParadigmGradeChange(idx, val) {
+  if (ccState.paradigms[idx]) {
+    ccState.paradigms[idx].grade = val;
+    ccRenderPointsBar();
+    ccRenderStats();
+    ccRenderParadigms();
+  }
+}
+
+function ccRemoveParadigm(idx) {
+  ccState.paradigms.splice(idx, 1);
+  ccRenderAll();
+}
+
+// ─── Paradigm Modal ───────────────────────────────────────────────────────────
+function openParadigmModal() {
+  paradigmModalSelected = null;
+  renderParadigmModal();
+  document.getElementById('paradigm-modal-overlay').classList.add('visible');
+  document.getElementById('paradigm-search').value = '';
+  document.getElementById('paradigm-search').focus();
+}
+
+function closeParadigmModal() {
+  document.getElementById('paradigm-modal-overlay').classList.remove('visible');
+  paradigmModalSelected = null;
+}
+
+function renderParadigmModal(filter = '') {
+  const cr        = ccCalcCR(ccState.level);
+  const chosen    = ccAllParadigmNames();
+  const atLimit   = chosen.length >= cr;
+  const designs   = ccDesignsUsed();
+  const designArr = [...designs];
+  const body      = document.getElementById('paradigm-modal-body');
+  const sub       = document.getElementById('paradigm-modal-sub');
+  const countEl   = document.getElementById('paradigm-modal-count');
+  const lc        = filter.toLowerCase();
+
+  // Design restriction: after 2 designs, lock to those 2
+  const lockedDesigns = designArr.length >= 2 ? new Set(designArr) : null;
+
+  let anyResult = false;
+  let html = '';
+
+  for (const [design, paradigms] of Object.entries(CC_DESIGN_PARADIGMS)) {
+    const filtered = paradigms.filter(name => {
+      if (lc && !name.toLowerCase().includes(lc) && !design.toLowerCase().includes(lc)) return false;
+      return true;
+    });
+    if (filtered.length === 0) continue;
+    anyResult = true;
+    html += `<div class="paradigm-design-section">
+      <div class="paradigm-design-header">${design}</div>
+      <div class="paradigm-list-grid">`;
+    for (const name of filtered) {
+      const alreadyHas = chosen.includes(name);
+      const isSelected = paradigmModalSelected === name;
+      const designLocked = lockedDesigns && !lockedDesigns.has(design);
+      const isDisabled   = alreadyHas || (atLimit && !isSelected) || designLocked;
+      html += `<div class="paradigm-option ${isSelected ? 'selected' : ''} ${isDisabled ? 'disabled' : ''}"
+        onclick="ccToggleParadigmOption('${name.replace(/'/g,"\\'")}')">
+        <span class="paradigm-opt-name">${name}</span>
+        <span class="paradigm-opt-design">${design}</span>
+        <div class="paradigm-opt-check">${isSelected ? '✓' : ''}</div>
+      </div>`;
+    }
+    html += '</div></div>';
+  }
+
+  if (!anyResult) {
+    html = '<div class="paradigm-no-results">No Paradigms match your search.</div>';
+  }
+
+  body.innerHTML = html;
+  sub.textContent = `Max ${cr} Paradigms (CR ${cr}). Up to 2 Designs.${designArr.length ? ' Designs: ' + designArr.join(', ') + '.' : ''}`;
+  countEl.textContent = paradigmModalSelected ? `Selected: ${paradigmModalSelected}` : 'No Paradigm selected.';
+  document.getElementById('btn-paradigm-confirm').disabled = !paradigmModalSelected;
+}
+
+function ccToggleParadigmOption(name) {
+  paradigmModalSelected = paradigmModalSelected === name ? null : name;
+  const search = document.getElementById('paradigm-search').value;
+  renderParadigmModal(search);
+}
+
+function confirmParadigmSelection() {
+  if (!paradigmModalSelected) return;
+  ccState.paradigms.push({ name: paradigmModalSelected, grade: 'F' });
+  closeParadigmModal();
+  ccRenderAll();
+}
+
+// ─── Init Character Creator ───────────────────────────────────────────────────
+function ccInit() {
+  const levelSel = document.getElementById('cc-level');
+  if (!levelSel) return;
+  for (let i = 1; i <= 40; i++) {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `Level ${i}`;
+    if (i === 1) opt.selected = true;
+    levelSel.appendChild(opt);
+  }
+  levelSel.addEventListener('change', e => ccOnLevelChange(e.target.value));
+  document.getElementById('paradigm-search').addEventListener('input', e => {
+    renderParadigmModal(e.target.value);
+  });
+  document.getElementById('paradigm-modal-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('paradigm-modal-overlay')) closeParadigmModal();
+  });
+  ccRenderAll();
+}
+
+ccInit();
+
+// ─── Original Ability/Stance Init ─────────────────────────────────────────────
 blocks=[{bid:nextBid++,isCompound:false,targetId:null,targetCount:0,rangeId:null,groups:[]}];
 activeBlockId=blocks[0].bid;
 renderBank();
 renderAll();
 renderSavedList();
-// Stance init
 renderAdditiveGains();
 renderAdvantageGains();
 renderStanceCosts();
