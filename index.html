@@ -2140,8 +2140,11 @@ const CC_POINTS_PER_LEVEL = {
 };
 // Crown Growth points: 3 at level 1 and at each new CR
 function ccCrownGrowthTotal(level) {
+  // 4 at level 1, +1 each subsequent level, +3 bonus each time CR increases
   const cr = ccCalcCR(level);
-  return cr * 3; // 3 at CR1 + 3 per each new CR gained
+  const base = 4 + (level - 1);       // 4 at L1, then +1/level
+  const crBonus = (cr - 1) * 3;       // +3 at CR2, CR3, etc.
+  return base + crBonus;
 }
 
 const CC_DESIGN_PARADIGMS = {
@@ -2260,7 +2263,7 @@ function ccPointsTotal(level) {
   const core     = level * CC_POINTS_PER_LEVEL.core     + ob.core     + (gs.core     || 0) * 3;
   const training = level * CC_POINTS_PER_LEVEL.training + ob.training + (gs.training || 0) * 3;
   const ability  = level * CC_POINTS_PER_LEVEL.ability  + ob.ability  + (gs.ability  || 0) * 5;
-  const growth   = level * CC_POINTS_PER_LEVEL.growth   + ccCrownGrowthTotal(level);
+  const growth   = ccCrownGrowthTotal(level);
   const artPerLevel = ccState.afRatio;
   const facPerLevel = 6 - ccState.afRatio;
   const artifact = level * artPerLevel + ob.artifact;
