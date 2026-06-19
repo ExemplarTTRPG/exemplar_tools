@@ -2018,11 +2018,11 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
     <!-- Growth Points -->
     <div class="cc-card">
       <div class="cc-card-title">Spend Growth Points</div>
-      <div class="cc-origins-info">Each Growth point can raise one Attribute, Paradigm, or Training by one rank, or convert to 5 Ability points.</div>
+      <div class="cc-origins-info">Each Growth point can raise one Attribute, Paradigm, or Training by one rank. Alternatively, spend a Growth point to gain 1 Core point, 1 Training point, or 5 Ability points.</div>
       <div class="cc-growth-rows">
         <div class="cc-growth-row">
           <span class="cc-growth-label">→ Core points</span>
-          <span class="cc-growth-hint">3 Core per Growth</span>
+          <span class="cc-growth-hint">1 Core per Growth</span>
           <div class="cc-growth-controls">
             <button class="cc-growth-btn" onclick="ccGrowthAdj('core',-1)">−</button>
             <span class="cc-growth-val" id="growth-core-val">0</span>
@@ -2031,7 +2031,7 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
         </div>
         <div class="cc-growth-row">
           <span class="cc-growth-label">→ Training points</span>
-          <span class="cc-growth-hint">3 Training per Growth</span>
+          <span class="cc-growth-hint">1 Training per Growth</span>
           <div class="cc-growth-controls">
             <button class="cc-growth-btn" onclick="ccGrowthAdj('training',-1)">−</button>
             <span class="cc-growth-val" id="growth-training-val">0</span>
@@ -2260,8 +2260,8 @@ function ccOriginBonuses() {
 function ccPointsTotal(level) {
   const ob       = ccOriginBonuses();
   const gs       = ccState.growthSpend;
-  const core     = level * CC_POINTS_PER_LEVEL.core     + ob.core     + (gs.core     || 0) * 3;
-  const training = level * CC_POINTS_PER_LEVEL.training + ob.training + (gs.training || 0) * 3;
+  const core     = level * CC_POINTS_PER_LEVEL.core     + ob.core     + (gs.core     || 0);
+  const training = level * CC_POINTS_PER_LEVEL.training + ob.training + (gs.training || 0);
   const ability  = level * CC_POINTS_PER_LEVEL.ability  + ob.ability  + (gs.ability  || 0) * 5;
   const growth   = ccCrownGrowthTotal(level);
   const artPerLevel = ccState.afRatio;
@@ -2643,8 +2643,8 @@ function ccBuildReadableText(s) {
   lines.push(`Growth   : ${tot.growth - spent.growth} remaining of ${tot.growth} (${spent.growth} spent)`);
   if (s.growthSpend && (s.growthSpend.core||s.growthSpend.training||s.growthSpend.ability)) {
     const gs = s.growthSpend;
-    if (gs.core)     lines.push(`  Converted ${gs.core} Growth → +${gs.core*3} Core`);
-    if (gs.training) lines.push(`  Converted ${gs.training} Growth → +${gs.training*3} Training`);
+    if (gs.core)     lines.push(`  Converted ${gs.core} Growth → +${gs.core} Core`);
+    if (gs.training) lines.push(`  Converted ${gs.training} Growth → +${gs.training} Training`);
     if (gs.ability)  lines.push(`  Converted ${gs.ability} Growth → +${gs.ability*5} Ability`);
   }
   lines.push('');
