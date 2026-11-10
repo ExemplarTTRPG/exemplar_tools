@@ -37,16 +37,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .stance-cost-value { font-size: 20px; font-weight: 700; color: #534ab7; min-width: 24px; }
 .stance-cost-ap { font-size: 20px; font-weight: 700; color: #c0392b; min-width: 24px; }
 
-/* Reflexive toggle */
-.reflexive-row { display: flex; align-items: center; gap: 10px; background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 16px; flex-shrink: 0; cursor: pointer; user-select: none; touch-action: manipulation; }
-.reflexive-row.active { border-color: #7f77dd; background: color-mix(in srgb,#7f77dd 5%,#fff); }
-.reflexive-icon { font-size: 18px; }
-.reflexive-text { flex: 1; }
-.reflexive-name { font-size: 14px; font-weight: 600; color: #1a1a1a; }
-.reflexive-desc { font-size: 12px; color: #888; margin-top: 1px; }
-.reflexive-cost { font-size: 12px; font-weight: 700; color: #534ab7; white-space: nowrap; }
-.reflexive-pip { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #d0cec8; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; }
-.reflexive-row.active .reflexive-pip { border-color: #534ab7; background: #534ab7; color: #fff; font-size: 13px; }
+
 
 /* Gain sections */
 .gain-section { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
@@ -68,10 +59,7 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 .gain-btn:hover, .gain-btn:active { border-color: #534ab7; color: #534ab7; background: #eeedfe; }
 .gain-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 .gain-attr-tag { font-size: 11px; font-weight: 700; background: color-mix(in srgb,#534ab7 12%,#fff); color: #534ab7; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
-.adv-toggle { width: 44px; height: 24px; border-radius: 12px; background: #d0cec8; position: relative; cursor: pointer; transition: background 0.2s; flex-shrink: 0; border: none; }
-.adv-toggle.on { background: #c0392b; }
-.adv-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-.adv-toggle.on::after { transform: translateX(20px); }
+
 
 /* Stance summary bar */
 .stance-bar { background: #fff; border-radius: 10px; border: 1px solid #e2e0da; padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
@@ -279,21 +267,17 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 #panel-character { flex-direction: column; overflow: hidden; align-items: center; }
 .cc-outer { flex: 1; overflow-y: auto; padding: 12px 12px 24px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; width: 100%; max-width: 860px; }
 
-/* ── Points bar: two sections, collapses to 2-row on mobile ── */
-.cc-points-bar { position: sticky; top: 0; z-index: 50; background: #1e1b2e; color: #fff; padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; border-radius: 10px; flex-shrink: 0; box-shadow: 0 2px 12px rgba(0,0,0,0.22); }
-.cc-pt-section { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; align-items: center; }
-.cc-pt-row-divider { height: 1px; background: rgba(255,255,255,0.10); margin: 0 2px; }
-.cc-pt-group { display: flex; flex-direction: column; align-items: center; padding: 3px 6px; }
+/* ── Points bar: single uniform row ── */
+.cc-points-bar { position: sticky; top: 0; z-index: 50; background: #1e1b2e; color: #fff; padding: 6px 8px; display: grid; grid-template-columns: repeat(7, 1fr); align-items: center; border-radius: 10px; flex-shrink: 0; box-shadow: 0 2px 12px rgba(0,0,0,0.22); }
+.cc-pt-section { display: contents; }
+.cc-pt-row-divider { display: none; }
+.cc-pt-group { display: flex; flex-direction: column; align-items: center; padding: 4px 2px; border-right: 1px solid rgba(255,255,255,0.10); }
+.cc-pt-group:last-child { border-right: none; }
 .cc-pt-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #a89fc7; white-space: nowrap; }
-.cc-pt-avail { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.1; }
+.cc-pt-avail { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.1; }
 .cc-pt-avail.over { color: #e24b4a; }
 .cc-pt-total { font-size: 9px; color: #a89fc7; }
-.cc-pt-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.12); }
-@media (min-width: 600px) {
-  .cc-points-bar { flex-direction: row; align-items: center; padding: 6px 8px; gap: 0; }
-  .cc-pt-section { flex: 1; }
-  .cc-pt-row-divider { width: 1px; height: 32px; margin: 0; }
-}
+.cc-pt-divider { display: none; }
 
 /* ── Cards ── */
 .cc-card { background: #fff; border-radius: 12px; border: 1px solid #e2e0da; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
@@ -493,20 +477,30 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
       <div class="total-item" id="total-dmg-wrap">
         <span class="total-label">Damage Attribute:</span>
         <select class="grade-select" id="dmg-grade-select">
-          <option value="2" selected>F (2)</option>
-          <option value="3">D (3)</option>
-          <option value="4">C (4)</option>
-          <option value="5">B (5)</option>
-          <option value="6">A (6)</option>
-          <option value="7">E (7)</option>
-          <option value="8">S (8)</option>
-          <option value="10">M (10)</option>
-          <option value="12">M+ (12)</option>
+          <option value="3" selected>F (3)</option>
+          <option value="4">D (4)</option>
+          <option value="5">C (5)</option>
+          <option value="6">B (6)</option>
+          <option value="7">A (7)</option>
+          <option value="8">E (8)</option>
+          <option value="10">S (10)</option>
+          <option value="12">M (12)</option>
         </select>
         <span class="total-label">Damage:</span>
         <span class="total-value dmg" id="total-dmg">—</span>
       </div>
       <div class="total-item" id="total-heal-wrap">
+        <span class="total-label">Resolve:</span>
+        <select class="grade-select" id="heal-grade-select">
+          <option value="3" selected>F (3)</option>
+          <option value="4">D (4)</option>
+          <option value="5">C (5)</option>
+          <option value="6">B (6)</option>
+          <option value="7">A (7)</option>
+          <option value="8">E (8)</option>
+          <option value="10">S (10)</option>
+          <option value="12">M (12)</option>
+        </select>
         <span class="total-label">Healing:</span>
         <span class="total-value heal" id="total-heal">—</span>
       </div>
@@ -572,39 +566,16 @@ header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; }
 
     <!-- Cost display -->
     <div class="stance-costs">
-      <div class="stance-cost-item"><span class="stance-cost-label">Build Cost:</span><span class="stance-cost-value" id="stance-build-cost">0</span><span class="stance-cost-label">AP</span></div>
-      <div class="meta-divider"></div>
-      <div class="stance-cost-item"><span class="stance-cost-label">Activation:</span><span class="stance-cost-ap" id="stance-activate-cost">0</span><span class="stance-cost-label">AP</span></div>
-      <div class="meta-divider"></div>
-      <div class="stance-cost-item"><span class="stance-cost-label">Maintenance:</span><span class="stance-cost-ap" id="stance-maintain-cost">0</span><span class="stance-cost-label">AP / round</span></div>
+      <div class="stance-cost-item"><span class="stance-cost-label">Ability Point Cost:</span><span class="stance-cost-value" id="stance-build-cost">0</span><span class="stance-cost-label">AP</span></div>
     </div>
 
-    <!-- Reflexive modifier -->
-    <div class="reflexive-row" id="reflexive-row" onclick="toggleReflexive()">
-      <span class="reflexive-icon">⚡</span>
-      <div class="reflexive-text">
-        <div class="reflexive-name">Reflexive <span class="gain-cost-tag" style="margin-left:4px;">+1 AP build</span></div>
-        <div class="reflexive-desc">Stance gains the Reactive quality. AP cost changes to RP when used as a reaction.</div>
-      </div>
-      <div class="reflexive-pip" id="reflexive-pip"></div>
-    </div>
-
-    <!-- Additive Gains -->
+    <!-- Stance Qualities -->
     <div class="gain-section">
       <div class="gain-section-header">
-        <span class="gain-section-title">Additive Gains</span>
-        <span class="gain-section-rule">1 AP each · stacks up to CR · 1 AP activate + 1 AP/round per unique type</span>
+        <span class="gain-section-title">Stance Qualities</span>
+        <span class="gain-section-rule">1 AP each · stacks up to CR · unique qualities per CR</span>
       </div>
       <div class="gain-grid" id="additive-gain-grid"></div>
-    </div>
-
-    <!-- Advantage Gains -->
-    <div class="gain-section">
-      <div class="gain-section-header">
-        <span class="gain-section-title">Advantage Gains</span>
-        <span class="gain-section-rule">5 AP each · no stacking · 2 AP activate + 2 AP/round each</span>
-      </div>
-      <div class="gain-grid" id="advantage-gain-grid"></div>
     </div>
 
     <!-- Summary / Export -->
@@ -683,27 +654,24 @@ const QUALITIES = [
   { id:'healing',        name:'Healing',                   cat:'Potency',      cost:1,  flaw:false },
   // Manipulation
   { id:'abjured',        name:'Abjured',                   cat:'Manipulation', cost:3,  flaw:false, noStack:true },
-  { id:'boost',          name:'Boost',                     cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
-  { id:'burden',         name:'Burden',                    cat:'Manipulation', cost:3,  flaw:false, requiresAttr:true },
+
   { id:'hidden',         name:'Hidden',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   { id:'repel',          name:'Repel',                     cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   { id:'tether',         name:'Tether',                    cat:'Manipulation', cost:3,  flaw:false, noStack:true },
   // Modifiers
   { id:'accumulation',   name:'Accumulation',              cat:'Modifier',     cost:3,  flaw:false, noStack:true },
   { id:'enjoin-adapt',   name:'Adaptive Enjoin',           cat:'Modifier',     cost:3,  flaw:false, noStack:true },
-  { id:'artifice',       name:'Artifice',                  cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave',         name:'Cleave',                    cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave-15',      name:'Cleave Range Near',         cat:'Modifier',     cost:1,  flaw:false },
   { id:'cleave-30',      name:'Cleave Range Short',        cat:'Modifier',     cost:2,  flaw:false },
   { id:'concentrate',    name:'Concentrate',               cat:'Modifier',     cost:1,  flaw:false },
-  { id:'contagious',     name:'Contagious',                cat:'Modifier',     cost:1,  flaw:false, requiresCondition:true },
   { id:'defensive',      name:'Defensive',                 cat:'Modifier',     cost:1,  flaw:false, noStack:true },
   { id:'disperse',       name:'Disperse',                  cat:'Modifier',     cost:3,  flaw:false },
-  { id:'dur-conditions', name:'Duration - Conditions',     cat:'Modifier',     cost:3,  flaw:false },
-  { id:'dur-manipulate', name:'Duration - Manipulations',  cat:'Modifier',     cost:3,  flaw:false },
-  { id:'dur-objects',    name:'Duration - Objects',        cat:'Modifier',     cost:3,  flaw:false },
-  { id:'dur-potency',    name:'Duration - Potency',        cat:'Modifier',     cost:3,  flaw:false },
-  { id:'dur-status',     name:'Duration - Status',         cat:'Modifier',     cost:3,  flaw:false },
+  { id:'dur-conditions', name:'Duration - Conditions',     cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  { id:'dur-manipulate', name:'Duration - Manipulations',  cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  { id:'dur-objects',    name:'Duration - Objects',        cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  { id:'dur-potency',    name:'Duration - Potency',        cat:'Modifier',     cost:3,  flaw:false, noStack:true },
+  { id:'dur-status',     name:'Duration - Status',         cat:'Modifier',     cost:3,  flaw:false, noStack:true },
   { id:'dynamic',        name:'Dynamic',                   cat:'Modifier',     cost:1,  flaw:false, noStack:true },
   { id:'efficiency',     name:'Efficiency',                cat:'Modifier',     cost:3,  flaw:false },
   { id:'enjoin',         name:'Enjoin',                    cat:'Modifier',     cost:1,  flaw:false, noStack:true },
@@ -736,30 +704,34 @@ const QUALITIES = [
   { id:'weaken',         name:'Weaken',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
   { id:'wither',         name:'Wither',                    cat:'Status',       cost:3,  flaw:false, noStack:true },
   // Conditions
+  // Conditions — Glories
+  { id:'boost',          name:'Boost',                     cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'courage',        name:'Courage',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'determined',     name:'Determined',                cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'elude',          name:'Elude',                     cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'enkindle',       name:'Enkindle',                  cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'freedom',        name:'Freedom',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'galvanize',      name:'Galvanize',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'hasten',         name:'Hasten',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'invigorate',     name:'Invigorate',                cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'prepare',        name:'Prepare',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'quicken',        name:'Quicken',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'stimulate',      name:'Stimulate',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'temper',         name:'Temper',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  // Conditions — Maladies
   { id:'ambush',         name:'Ambush',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
   { id:'blind',          name:'Blind',                     cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'courage',        name:'Courage',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'determined',     name:'Determined',                cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'disparage',      name:'Disparage',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'elude',          name:'Elude',                     cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'enkindle',       name:'Enkindle',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'exhaust',        name:'Exhaust',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'fatigue',        name:'Fatigue',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'fear',           name:'Fear',                      cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'freedom',        name:'Freedom',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'galvanize',      name:'Galvanize',                 cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'hasten',         name:'Hasten',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'invigorate',     name:'Invigorate',                cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'prepare',        name:'Prepare',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'quicken',        name:'Quicken',                   cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'restrain',       name:'Restrain',                  cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'burden',         name:'Burden',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'disparage',      name:'Disparage',                 cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'exhaust',        name:'Exhaust',                   cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'fatigue',        name:'Fatigue',                   cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'fear',           name:'Fear',                      cat:'Condition',    cost:1,  flaw:false, noStack:true },
+  { id:'restrain',       name:'Restrain',                  cat:'Condition',    cost:2,  flaw:false, noStack:true },
   { id:'root',           name:'Root',                      cat:'Condition',    cost:2,  flaw:false, noStack:true },
-  { id:'stimulate',      name:'Stimulate',                 cat:'Condition',    cost:3,  flaw:false, noStack:true },
   { id:'strain',         name:'Strain',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'sunder',         name:'Sunder',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'temper',         name:'Temper',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
-  { id:'torpor',         name:'Torpor',                    cat:'Condition',    cost:1,  flaw:false, noStack:true },
-  { id:'unbalance',      name:'Unbalance',                 cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'sunder',         name:'Sunder',                    cat:'Condition',    cost:2,  flaw:false, noStack:true },
+  { id:'torpor',         name:'Torpor',                    cat:'Condition',    cost:3,  flaw:false, noStack:true },
+  { id:'unbalance',      name:'Unbalance',                 cat:'Condition',    cost:1,  flaw:false, noStack:true },
   // Terrain
   { id:'to-disperse',    name:'Disperse',                  cat:'Terrain',      cost:3,  flaw:false, noStack:true },
   { id:'to-tenacity',    name:'Tenacity',                  cat:'Terrain',      cost:3,  flaw:false },
@@ -800,8 +772,9 @@ const QUALITIES = [
   { id:'gain-charge',    name:'Gain Charge Design Action',         cat:'Design', cost:3, flaw:false },
   { id:'gain-limited',   name:'Gain Limited Design Action',        cat:'Design', cost:2, flaw:false },
   // Flaws
-  { id:'flaw-bself',     name:'Burden Self',                       cat:'Flaw',   cost:-3, flaw:true },
+  { id:'flaw-backlash',  name:'Backlash',                          cat:'Flaw',   cost:-2, flaw:true },
   { id:'flaw-capric',    name:'Capricious',                        cat:'Flaw',   cost:-2, flaw:true },
+  { id:'flaw-fragile',   name:'Fragile',                           cat:'Flaw',   cost:-3, flaw:true },
   { id:'flaw-demand',    name:'Demanding',                         cat:'Flaw',   cost:-2, flaw:true },
   { id:'flaw-cd',        name:'Enforced Cooldown',                 cat:'Flaw',   cost:-1, flaw:true },
   { id:'flaw-glory',     name:'Ends on Receiving Glory',           cat:'Flaw',   cost:-3, flaw:true },
@@ -894,7 +867,7 @@ function updateTotals() {
     el.insertAdjacentElement('afterend',div);
   }
   if(hasDmg){ const g=parseInt(document.getElementById('dmg-grade-select').value,10); document.getElementById('total-dmg').textContent=dmgCount*g; }
-  if(hasHeal) document.getElementById('total-heal').textContent=healCount*cr;
+  if(hasHeal){ const resolveGrade=parseInt(document.getElementById('heal-grade-select').value,10); document.getElementById('total-heal').textContent=healCount*resolveGrade; }
   if(hasRes)  document.getElementById('total-res').textContent=resTotal;
   if(hasStatus){
     const wrap=document.getElementById('total-status-wrap'); wrap.innerHTML='';
@@ -1399,7 +1372,8 @@ function exportAbility() {
   const dmgGrade=parseInt(document.getElementById('dmg-grade-select').value,10);
   const totalLines=[];
   if(dmgCount>0)totalLines.push(`Damage: ${dmgCount*dmgGrade} (${dmgCount} × grade ${dmgGrade})`);
-  if(healCount>0)totalLines.push(`Healing: ${healCount*cr} (${healCount} × CR ${cr})`);
+  const healGrade=parseInt(document.getElementById('heal-grade-select').value,10);
+  if(healCount>0)totalLines.push(`Healing: ${healCount*healGrade} (${healCount} × Resolve ${healGrade})`);
   if(resTotal>0)totalLines.push(`Resilience Damage: ${resTotal}`);
   const blob=new Blob([
     `Ability: ${name}\nCrown Rank: CR ${cr}${designs.length?' ['+designs.join(', ')+']':''}\n`
@@ -1418,10 +1392,11 @@ function saveAbility(){
   const name=document.getElementById('ability-name').value.trim()||'Unnamed Ability';
   const{total}=calcCosts();const{dmgCount,healCount,resTotal}=calcTotals();const cr=getCR();
   const dmgGrade=parseInt(document.getElementById('dmg-grade-select').value,10);
+  const healGrade=parseInt(document.getElementById('heal-grade-select').value,10);
   const dmgTotal=dmgCount>0?dmgCount*dmgGrade:null;
-  const healTotal=healCount>0?healCount*cr:null;
+  const healTotal=healCount>0?healCount*healGrade:null;
   const saved=getSaved();const idx=saved.findIndex(s=>s.name===name);
-  const entry={name,total,dmgTotal,healTotal,resTotal:resTotal||null,dmgGrade,blocks:JSON.parse(JSON.stringify(blocks)),nextBid,nextGid,cr,ts:Date.now()};
+  const entry={name,total,dmgTotal,healTotal,resTotal:resTotal||null,dmgGrade,healGrade,blocks:JSON.parse(JSON.stringify(blocks)),nextBid,nextGid,cr,ts:Date.now()};
   if(idx>=0)saved[idx]=entry;else saved.unshift(entry);
   localStorage.setItem(SAVE_KEY,JSON.stringify(saved));
   showToast(`Saved "${name}".`);renderSavedList();
@@ -1434,6 +1409,7 @@ function loadAbility(entry){
   document.getElementById('ability-name').value=entry.name;
   document.getElementById('cr-select').value=String(entry.cr||1);
   if(entry.dmgGrade)document.getElementById('dmg-grade-select').value=String(entry.dmgGrade);
+  if(entry.healGrade)document.getElementById('heal-grade-select').value=String(entry.healGrade);
   activeBlockId=blocks[0]?.bid||null;
   renderAll();showToast(`Loaded "${entry.name}".`);
 }
@@ -1491,6 +1467,7 @@ document.getElementById('cr-select').addEventListener('change',()=>{
 });
 
 document.getElementById('dmg-grade-select').addEventListener('change',updateTotals);
+document.getElementById('heal-grade-select').addEventListener('change',updateTotals);
 
 // ─── Tab switching ─────────────────────────────────────────────────────────────
 function switchTab(name) {
@@ -1501,104 +1478,51 @@ function switchTab(name) {
 }
 
 // ─── Stance Builder ────────────────────────────────────────────────────────────
-const SKILLS = ['Acrobatics','Athletics','Deception','Endurance','History','Insight',
-  'Intimidation','Investigation','Medicine','Nature','Perception','Performance',
-  'Persuasion','Religion','Sleight of Hand','Stealth','Survival','Technology'];
 
 const ADDITIVE_GAINS = [
   { id:'add-brazen',      name:'Brazen',      desc:'Add one target to Provoke and Surge.' },
-  { id:'add-corrective',  name:'Corrective',  desc:'Add one to effects Purify and Deprive remove.' },
-  { id:'add-cunning',     name:'Cunning',      desc:'Add 5 ft to Disengage and Accelerate range.' },
+  { id:'add-corrective',  name:'Corrective',  desc:'If you did not move last round, gain +1 to your ranged accuracy rolls.' },
+  { id:'add-cunning',     name:'Cunning',      desc:'Add 5 feet to Disengage and Adjust range.' },
   { id:'add-decisive',    name:'Decisive',     desc:'Add your CR as damage to outgoing ranged damage.' },
   { id:'add-enduring',    name:'Enduring',     desc:'Add your CR to your Active Defense values.' },
-  { id:'add-instructive', name:'Instructive',  desc:'Add 5 ft to Adjust range.' },
-  { id:'add-intrusive',   name:'Intrusive',    desc:'Add 5 ft to Intervene and Takedown range.' },
-  { id:'add-nimble',      name:'Nimble',       desc:'Gain 10 ft of Movement.' },
+  { id:'add-instructive', name:'Instructive',  desc:'Once per round, sacrifice your movement to grant the same amount to an ally within 30 feet.' },
+  { id:'add-intrusive',   name:'Intrusive',    desc:'Add 5 feet to Intervene and Takedown range.' },
+  { id:'add-nimble',      name:'Nimble',       desc:'Gain 5 feet of movement.' },
   { id:'add-patient',     name:'Patient',      desc:'Subtract one from your Initiative Score.' },
   { id:'add-restless',    name:'Restless',     desc:'Add one to your Initiative Score.' },
-  { id:'add-spirited',    name:'Spirited',     desc:'Gain one additional charge per interval of Design Actions.' },
-  { id:'add-spiritual',   name:'Spiritual',    desc:'Add your CR as Healing to outgoing healing.' },
-  { id:'add-tough',       name:'Tough',        desc:'Add one to your Damage Reduction.' },
-  { id:'add-tranquil',    name:'Tranquil',     desc:'Add one to rounds Soothe reduces Duration-Damage.' },
+  { id:'add-spirited',    name:'Spirited',     desc:'Once per round, recover Vitality equal to CR when you spend RP.' },
+  { id:'add-spiritual',   name:'Spiritual',    desc:'Add your CR to outgoing healing from actions and abilities.' },
+  { id:'add-tough',       name:'Tough',        desc:'Add one to your damage reduction.' },
+  { id:'add-tranquil',    name:'Tranquil',     desc:'If you did not move last round, gain +1 to your melee accuracy rolls.' },
   { id:'add-vicious',     name:'Vicious',      desc:'Add your CR as damage to outgoing melee damage.' },
 ];
 
-const ADVANTAGE_GAINS = [
-  { id:'adv-adamant',     name:'Adamant',      desc:'Energy Defense Training has advantage.' },
-  { id:'adv-diverting',   name:'Diverting',    desc:'Parry has advantage.' },
-  { id:'adv-enhanced',    name:'Enhanced',     desc:'Gain advantage to one Attribute.', requiresAttr:true },
-  { id:'adv-evasive',     name:'Evasive',      desc:'Dodge has advantage.' },
-  { id:'adv-focused',     name:'Focused',      desc:'Energy Melee Training has advantage.' },
-  { id:'adv-honed',       name:'Honed',        desc:'Physical Ranged Training has advantage.' },
-  { id:'adv-informed',    name:'Informed',     desc:'Gain advantage to one Skill.', requiresSkill:true },
-  { id:'adv-obstinate',   name:'Obstinate',    desc:'Physical Defense Training has advantage.' },
-  { id:'adv-obstructive', name:'Obstructive',  desc:'Block has advantage.' },
-  { id:'adv-sharpened',   name:'Sharpened',    desc:'Physical Melee Training has advantage.' },
-  { id:'adv-wizened',     name:'Wizened',      desc:'Energy Ranged Training has advantage.' },
-];
-
 // State
-let stanceReflexive = false;
 let additiveState = {}; // { id: count }
-let advantageState = {}; // { id: 0|1, attr?:string, skill?:string }
 
 function getStanceCR() { return parseInt(document.getElementById('stance-cr-select').value,10); }
 
-function toggleReflexive() {
-  stanceReflexive = !stanceReflexive;
-  document.getElementById('reflexive-row').classList.toggle('active', stanceReflexive);
-  document.getElementById('reflexive-pip').textContent = stanceReflexive ? '✓' : '';
-  renderStanceCosts();
-}
-
 function calcStanceCosts() {
-  const cr = getStanceCR();
-  let buildCost = 0, activateCost = 0;
-  if (stanceReflexive) buildCost += 1;
+  let buildCost = 0;
   for (const g of ADDITIVE_GAINS) {
-    const count = additiveState[g.id] || 0;
-    buildCost += count;
-    if (count > 0) activateCost += 1;
+    buildCost += additiveState[g.id] || 0;
   }
-  for (const g of ADVANTAGE_GAINS) {
-    const isMulti = g.requiresAttr || g.requiresSkill;
-    if (isMulti) {
-      const count = Array.isArray(advantageState[g.id]) ? advantageState[g.id].length : 0;
-      buildCost += count * 5;
-      if (count > 0) activateCost += count * 2;
-    } else {
-      if (advantageState[g.id]?.on) { buildCost += 5; activateCost += 2; }
-    }
-  }
-  return { buildCost, activateCost };
+  return { buildCost };
 }
 
 function renderStanceCosts() {
-  const { buildCost, activateCost } = calcStanceCosts();
+  const { buildCost } = calcStanceCosts();
   document.getElementById('stance-build-cost').textContent = buildCost;
-  document.getElementById('stance-activate-cost').textContent = activateCost;
-  document.getElementById('stance-maintain-cost').textContent = activateCost;
   renderStanceBreakdown();
 }
 
 function renderStanceBreakdown() {
   const parts = [];
-  if (stanceReflexive) parts.push('Reflexive');
   for (const g of ADDITIVE_GAINS) {
     const count = additiveState[g.id] || 0;
     if (count > 0) parts.push(`${g.name} ×${count}`);
   }
-  for (const g of ADVANTAGE_GAINS) {
-    const isMulti = g.requiresAttr || g.requiresSkill;
-    if (isMulti) {
-      for (const c of (Array.isArray(advantageState[g.id]) ? advantageState[g.id] : [])) {
-        parts.push(`${g.name} [${c.attr||c.skill||c.text||''}]`);
-      }
-    } else if (advantageState[g.id]?.on) {
-      parts.push(g.name);
-    }
-  }
-  document.getElementById('stance-breakdown').textContent = parts.length ? parts.join(' · ') : 'No gains selected yet.';
+  document.getElementById('stance-breakdown').textContent = parts.length ? parts.join(' · ') : 'No qualities selected yet.';
 }
 
 function renderAdditiveGains() {
@@ -1624,119 +1548,6 @@ function renderAdditiveGains() {
   }
 }
 
-function renderAdvantageGains() {
-  const grid = document.getElementById('advantage-gain-grid');
-  grid.innerHTML = '';
-  for (const g of ADVANTAGE_GAINS) {
-    const isMulti = g.requiresAttr || g.requiresSkill;
-    const row = document.createElement('div');
-
-    if (isMulti) {
-      const choices = Array.isArray(advantageState[g.id]) ? advantageState[g.id] : [];
-      const hasAny = choices.length > 0;
-      row.className = 'gain-row adv' + (hasAny ? ' has-count' : '');
-
-      // Name + tags
-      const nameWrap = document.createElement('div'); nameWrap.className = 'gain-name-wrap';
-      const nameLine = document.createElement('div'); nameLine.className = 'gain-name'; nameLine.textContent = g.name + ' ';
-      choices.forEach((c, i) => {
-        const tag = document.createElement('span'); tag.className = 'gain-attr-tag';
-        tag.style.cursor = 'pointer'; tag.title = 'Remove';
-        tag.textContent = (c.attr || c.skill || c.text || '') + ' ✕';
-        tag.addEventListener('click', () => { removeAdvantageChoice(g.id, i); });
-        nameLine.appendChild(tag);
-      });
-      const descLine = document.createElement('div'); descLine.className = 'gain-desc'; descLine.textContent = g.desc;
-      nameWrap.appendChild(nameLine); nameWrap.appendChild(descLine);
-
-      // Informed: text input inline; Enhanced: attribute picker dialog
-      const counter = document.createElement('div'); counter.className = 'gain-counter';
-      const costTag = document.createElement('span'); costTag.className = 'gain-cost-tag adv'; costTag.textContent = '+5 AP each';
-
-      if (g.requiresSkill) {
-        // Text input + Add button
-        const inp = document.createElement('input');
-        inp.type = 'text'; inp.placeholder = 'Skill name';
-        inp.style.cssText = 'font-size:12px;padding:4px 8px;border:1px solid #d0cec8;border-radius:6px;width:110px;outline:none;';
-        const addBtn = document.createElement('button'); addBtn.className = 'gain-btn';
-        addBtn.style.cssText = 'font-size:15px;width:30px;';
-        addBtn.textContent = '＋';
-        addBtn.addEventListener('click', () => {
-          const val = inp.value.trim(); if (!val) return;
-          if (!Array.isArray(advantageState[g.id])) advantageState[g.id] = [];
-          advantageState[g.id].push({ skill: val });
-          inp.value = '';
-          renderAdvantageGains(); renderStanceCosts();
-        });
-        inp.addEventListener('keydown', e => { if (e.key === 'Enter') addBtn.click(); });
-        counter.appendChild(inp); counter.appendChild(addBtn);
-      } else {
-        // Attribute picker dialog
-        const addBtn = document.createElement('button'); addBtn.className = 'gain-btn';
-        addBtn.style.cssText = 'font-size:18px;width:32px;';
-        addBtn.textContent = '＋';
-        addBtn.addEventListener('click', () => { pickAdvantageDetail(g.id); });
-        counter.appendChild(addBtn);
-      }
-
-      row.appendChild(nameWrap); row.appendChild(costTag); row.appendChild(counter);
-    } else {
-      // Single toggle gains
-      const on = !!(advantageState[g.id]?.on);
-      row.className = 'gain-row adv' + (on ? ' has-count' : '');
-      row.innerHTML = `
-        <div class="gain-name-wrap">
-          <div class="gain-name">${g.name}</div>
-          <div class="gain-desc">${g.desc}</div>
-        </div>
-        <span class="gain-cost-tag adv">+5 AP</span>
-        <div class="gain-counter">
-          <button class="adv-toggle${on?' on':''}" onclick="toggleAdvantage('${g.id}')" aria-label="${on?'Disable':'Enable'} ${g.name}"></button>
-        </div>`;
-    }
-    grid.appendChild(row);
-  }
-}
-
-function toggleAdvantage(id) {
-  const s = advantageState[id] || {};
-  advantageState[id] = s.on ? {} : { on: true };
-  renderAdvantageGains();
-  renderStanceCosts();
-}
-
-function pickAdvantageDetail(id) {
-  const g = ADVANTAGE_GAINS.find(x=>x.id===id);
-  const isA = g.requiresAttr;
-  const options = isA ? ATTRIBUTES : SKILLS;
-  const choices = Array.isArray(advantageState[id]) ? advantageState[id] : [];
-  const used = choices.map(c => c.attr || c.skill);
-  const available = options.filter(o => !used.includes(o));
-  if (!available.length) { showToast(`All ${isA?'attributes':'skills'} already added for ${g.name}.`, true); return; }
-  document.getElementById('stack-dialog-title').textContent = `Add ${isA?'Attribute':'Skill'} — ${g.name}`;
-  document.getElementById('stack-dialog-sub').textContent = `Each instance must be a different ${isA?'attribute':'skill'}.`;
-  const opts = document.getElementById('stack-dialog-opts'); opts.innerHTML = '';
-  for (const opt of available) {
-    const btn = document.createElement('button'); btn.className = 'stack-opt';
-    btn.innerHTML = `<span class="stack-opt-icon">◈</span><div class="stack-opt-text"><div class="stack-opt-label">${opt}</div></div>`;
-    btn.addEventListener('click', () => {
-      hideStackDialog();
-      if (!Array.isArray(advantageState[id])) advantageState[id] = [];
-      advantageState[id].push(isA ? {attr:opt} : {skill:opt});
-      renderAdvantageGains();
-      renderStanceCosts();
-    });
-    opts.appendChild(btn);
-  }
-  document.getElementById('stack-dialog-overlay').classList.add('visible');
-}
-
-function removeAdvantageChoice(id, idx) {
-  if (!advantageState[id]) return;
-  advantageState[id].splice(idx, 1);
-  renderAdvantageGains();
-  renderStanceCosts();
-}
 
 function changeAdditive(id, delta) {
   const cr = getStanceCR();
@@ -1747,52 +1558,22 @@ function changeAdditive(id, delta) {
   renderStanceCosts();
 }
 
-function toggleAdvantage(id) {
-  const s = advantageState[id] || {};
-  advantageState[id] = s.on ? {} : { on: true };
-  renderAdvantageGains();
-  renderStanceCosts();
-}
-
 function clearStance() {
-  stanceReflexive = false;
   additiveState = {};
-  advantageState = {};
-  document.getElementById('reflexive-row').classList.remove('active');
-  document.getElementById('reflexive-pip').textContent = '';
   document.getElementById('stance-name').value = '';
   renderAdditiveGains();
-  renderAdvantageGains();
   renderStanceCosts();
 }
 
 function exportStance() {
   const name = document.getElementById('stance-name').value || 'Unnamed Stance';
   const cr = getStanceCR();
-  const { buildCost, activateCost } = calcStanceCosts();
-  const lines = [`Stance: ${name}`, `Crown Rank: CR ${cr}`, `Build Cost: ${buildCost} AP  |  Activation: ${activateCost} AP  |  Maintenance: ${activateCost} AP/round`, ''];
-  if (stanceReflexive) lines.push('  [Modifier] Reflexive (1)');
-  const addLines = ADDITIVE_GAINS.filter(g=>(additiveState[g.id]||0)>0);
-  if (addLines.length) {
-    lines.push('Additive Gains:');
-    for (const g of addLines) lines.push(`  + ${g.name} (1×${additiveState[g.id]})`);
-  }
-  const advLines = ADVANTAGE_GAINS.filter(g => {
-    const isMulti = g.requiresAttr || g.requiresSkill;
-    return isMulti ? (Array.isArray(advantageState[g.id]) && advantageState[g.id].length > 0) : advantageState[g.id]?.on;
-  });
-  if (advLines.length) {
-    lines.push('Advantage Gains:');
-    for (const g of advLines) {
-      const isMulti = g.requiresAttr || g.requiresSkill;
-      if (isMulti) {
-        for (const c of (Array.isArray(advantageState[g.id]) ? advantageState[g.id] : [])) {
-          lines.push(`  + ${g.name} [${c.attr||c.skill||c.text||''}] (5×1)`);
-        }
-      } else {
-        lines.push(`  + ${g.name} (5×1)`);
-      }
-    }
+  const { buildCost } = calcStanceCosts();
+  const lines = [`Stance: ${name}`, `Crown Rank: CR ${cr}`, `Ability Point Cost: ${buildCost}`, ''];
+  const active = ADDITIVE_GAINS.filter(g=>(additiveState[g.id]||0)>0);
+  if (active.length) {
+    lines.push('Stance Qualities:');
+    for (const g of active) lines.push(`  ${g.name} ×${additiveState[g.id]} (${additiveState[g.id]} AP)`);
   }
   const blob = new Blob([lines.join('\n')], {type:'text/plain'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -1814,46 +1595,42 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
 <div class="tab-panel active" id="panel-character">
   <div class="cc-outer" id="cc-outer">
 
-    <!-- Sticky points bar: two rows on mobile -->
+    <!-- Sticky points bar -->
     <div class="cc-points-bar" id="cc-points-bar">
-      <div class="cc-pt-section">
-        <div class="cc-pt-group">
-          <span class="cc-pt-label">Core</span>
-          <span class="cc-pt-avail" id="pt-core-avail">0</span>
-          <span class="cc-pt-total" id="pt-core-total">of 0</span>
-        </div>
-        <div class="cc-pt-divider"></div>
-        <div class="cc-pt-group">
-          <span class="cc-pt-label">Training</span>
-          <span class="cc-pt-avail" id="pt-training-avail">0</span>
-          <span class="cc-pt-total" id="pt-training-total">of 0</span>
-        </div>
-        <div class="cc-pt-divider"></div>
-        <div class="cc-pt-group">
-          <span class="cc-pt-label">Ability</span>
-          <span class="cc-pt-avail" id="pt-ability-avail">0</span>
-          <span class="cc-pt-total" id="pt-ability-total">of 0</span>
-        </div>
+      <div class="cc-pt-group">
+        <span class="cc-pt-label">Attribute</span>
+        <span class="cc-pt-avail" id="pt-attr-avail">0</span>
+        <span class="cc-pt-total" id="pt-attr-total">of 0</span>
       </div>
-      <div class="cc-pt-row-divider"></div>
-      <div class="cc-pt-section">
-        <div class="cc-pt-group">
-          <span class="cc-pt-label">Growth</span>
-          <span class="cc-pt-avail" id="pt-growth-avail">0</span>
-          <span class="cc-pt-total" id="pt-growth-total">of 0</span>
-        </div>
-        <div class="cc-pt-divider"></div>
-        <div class="cc-pt-group">
-          <span class="cc-pt-label">Artifact</span>
-          <span class="cc-pt-avail" id="pt-artifact-avail">0</span>
-          <span class="cc-pt-total" id="pt-artifact-total">of 0</span>
-        </div>
-        <div class="cc-pt-divider"></div>
-        <div class="cc-pt-group">
-          <span class="cc-pt-label">Facet</span>
-          <span class="cc-pt-avail" id="pt-facet-avail">0</span>
-          <span class="cc-pt-total" id="pt-facet-total">of 0</span>
-        </div>
+      <div class="cc-pt-group">
+        <span class="cc-pt-label">Paradigm</span>
+        <span class="cc-pt-avail" id="pt-paradigm-avail">0</span>
+        <span class="cc-pt-total" id="pt-paradigm-total">of 0</span>
+      </div>
+      <div class="cc-pt-group">
+        <span class="cc-pt-label">Training</span>
+        <span class="cc-pt-avail" id="pt-training-avail">0</span>
+        <span class="cc-pt-total" id="pt-training-total">of 0</span>
+      </div>
+      <div class="cc-pt-group">
+        <span class="cc-pt-label">Ability</span>
+        <span class="cc-pt-avail" id="pt-ability-avail">0</span>
+        <span class="cc-pt-total" id="pt-ability-total">of 0</span>
+      </div>
+      <div class="cc-pt-group">
+        <span class="cc-pt-label">Growth</span>
+        <span class="cc-pt-avail" id="pt-growth-avail">0</span>
+        <span class="cc-pt-total" id="pt-growth-total">of 0</span>
+      </div>
+      <div class="cc-pt-group">
+        <span class="cc-pt-label">Artifact</span>
+        <span class="cc-pt-avail" id="pt-artifact-avail">0</span>
+        <span class="cc-pt-total" id="pt-artifact-total">of 0</span>
+      </div>
+      <div class="cc-pt-group">
+        <span class="cc-pt-label">Facet</span>
+        <span class="cc-pt-avail" id="pt-facet-avail">0</span>
+        <span class="cc-pt-total" id="pt-facet-total">of 0</span>
       </div>
     </div>
 
@@ -1912,8 +1689,18 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
 
     <!-- Origins -->
     <div class="cc-card">
-      <div class="cc-card-title">Origins <span class="cc-origins-count" id="cc-origins-count"></span></div>
-      <div class="cc-origins-info">Choose 3 Origins. The same Origin can be chosen multiple times.</div>
+      <div class="cc-card-title" style="display:flex;align-items:center;justify-content:space-between;">
+        Origins <span class="cc-origins-count" id="cc-origins-count"></span>
+        <div class="cc-field" style="flex-direction:row;align-items:center;gap:6px;margin:0;">
+          <label style="text-transform:none;font-size:11px;color:#888;white-space:nowrap;">Campaign Power</label>
+          <select style="min-height:32px;font-size:12px;padding:4px 8px;width:auto;" onchange="ccOnOriginBudget(this.value)">
+            <option value="8">Low (8 pts)</option>
+            <option value="10" selected>Medium (10 pts)</option>
+            <option value="12">High (12 pts)</option>
+          </select>
+        </div>
+      </div>
+      <div class="cc-origins-info">Each origin costs 1 point. The same origin can be chosen multiple times. Max grade C at level 1.</div>
       <div class="cc-origins-slots" id="cc-origins-slots"></div>
     </div>
 
@@ -1944,22 +1731,22 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
         <div class="cc-stat-box">
           <div class="cc-stat-label">Action Points</div>
           <div class="cc-stat-value" id="stat-ap">3</div>
-          <div class="cc-stat-formula">3 + Intensity</div>
+          <div class="cc-stat-formula">1 base; +1 at Intensity B, +1 at E</div>
         </div>
         <div class="cc-stat-box">
           <div class="cc-stat-label">Reaction Points</div>
-          <div class="cc-stat-value" id="stat-rp">3</div>
-          <div class="cc-stat-formula">3 + Awareness</div>
+          <div class="cc-stat-value" id="stat-rp">1</div>
+          <div class="cc-stat-formula">1 base; +1 at Awareness B, +1 at E</div>
         </div>
         <div class="cc-stat-box">
           <div class="cc-stat-label">Vitality</div>
           <div class="cc-stat-value" id="stat-vitality">0</div>
-          <div class="cc-stat-formula">Resolve × Level + Paradigms</div>
+          <div class="cc-stat-formula">(Endurance + Design Score) × Level</div>
         </div>
         <div class="cc-stat-box">
           <div class="cc-stat-label">Initiative</div>
           <div class="cc-stat-value cc-stat-value-sm" id="stat-initiative">—</div>
-          <div class="cc-stat-formula">Per design paradigm grade</div>
+          <div class="cc-stat-formula">Flat value from first Design</div>
         </div>
         <div class="cc-stat-box">
           <div class="cc-stat-label">Movement</div>
@@ -1990,7 +1777,7 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
         <div class="cc-stat-box">
           <div class="cc-stat-label">Block</div>
           <div class="cc-stat-value" id="stat-block">0</div>
-          <div class="cc-stat-formula">Roll: Resolve dice · Value: Resolve × CR</div>
+          <div class="cc-stat-formula">Roll: Endurance dice · Value: Endurance × CR</div>
         </div>
         <div class="cc-stat-box">
           <div class="cc-stat-label">Dodge</div>
@@ -2018,20 +1805,29 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
     <!-- Growth Points -->
     <div class="cc-card">
       <div class="cc-card-title">Spend Growth Points</div>
-      <div class="cc-origins-info">Each Growth point can raise one Attribute, Paradigm, or Training by one rank. Alternatively, spend a Growth point to gain 1 Core point, 1 Training point, or 5 Ability points.</div>
+      <div class="cc-origins-info">Each Growth point raises one Attribute, Paradigm, or Training by one grade. Or convert to 5 Ability points.</div>
       <div class="cc-growth-rows">
         <div class="cc-growth-row">
-          <span class="cc-growth-label">→ Core points</span>
-          <span class="cc-growth-hint">1 Core per Growth</span>
+          <span class="cc-growth-label">→ Attribute points</span>
+          <span class="cc-growth-hint">1 per Growth</span>
           <div class="cc-growth-controls">
-            <button class="cc-growth-btn" onclick="ccGrowthAdj('core',-1)">−</button>
-            <span class="cc-growth-val" id="growth-core-val">0</span>
-            <button class="cc-growth-btn" onclick="ccGrowthAdj('core',1)">+</button>
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('attr',-1)">−</button>
+            <span class="cc-growth-val" id="growth-attr-val">0</span>
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('attr',1)">+</button>
+          </div>
+        </div>
+        <div class="cc-growth-row">
+          <span class="cc-growth-label">→ Paradigm points</span>
+          <span class="cc-growth-hint">1 per Growth</span>
+          <div class="cc-growth-controls">
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('paradigm',-1)">−</button>
+            <span class="cc-growth-val" id="growth-paradigm-val">0</span>
+            <button class="cc-growth-btn" onclick="ccGrowthAdj('paradigm',1)">+</button>
           </div>
         </div>
         <div class="cc-growth-row">
           <span class="cc-growth-label">→ Training points</span>
-          <span class="cc-growth-hint">1 Training per Growth</span>
+          <span class="cc-growth-hint">1 per Growth</span>
           <div class="cc-growth-controls">
             <button class="cc-growth-btn" onclick="ccGrowthAdj('training',-1)">−</button>
             <span class="cc-growth-val" id="growth-training-val">0</span>
@@ -2040,7 +1836,7 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
         </div>
         <div class="cc-growth-row">
           <span class="cc-growth-label">→ Ability points</span>
-          <span class="cc-growth-hint">5 Ability per Growth</span>
+          <span class="cc-growth-hint">5 per Growth</span>
           <div class="cc-growth-controls">
             <button class="cc-growth-btn" onclick="ccGrowthAdj('ability',-1)">−</button>
             <span class="cc-growth-val" id="growth-ability-val">0</span>
@@ -2094,58 +1890,71 @@ document.getElementById('stance-cr-select').addEventListener('change', () => {
 // CHARACTER CREATOR DATA
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Sub-ranks removed in Nov 2026 overhaul. 8 grades only.
 const CC_GRADES = [
-  { rank: 'F',  val: 2  }, { rank: 'D-', val: 3  }, { rank: 'D',  val: 3  },
-  { rank: 'D+', val: 3  }, { rank: 'C-', val: 4  }, { rank: 'C',  val: 4  },
-  { rank: 'C+', val: 4  }, { rank: 'B-', val: 5  }, { rank: 'B',  val: 5  },
-  { rank: 'B+', val: 5  }, { rank: 'A-', val: 6  }, { rank: 'A',  val: 6  },
-  { rank: 'A+', val: 6  }, { rank: 'E-', val: 7  }, { rank: 'E',  val: 7  },
-  { rank: 'E+', val: 7  }, { rank: 'S-', val: 8  }, { rank: 'S',  val: 8  },
-  { rank: 'S+', val: 8  }, { rank: 'M-', val: 9  }, { rank: 'M',  val: 10 },
-  { rank: 'M+', val: 12 },
+  { rank: 'F', val: 3  },
+  { rank: 'D', val: 4  },
+  { rank: 'C', val: 5  },
+  { rank: 'B', val: 6  },
+  { rank: 'A', val: 7  },
+  { rank: 'E', val: 8  },
+  { rank: 'S', val: 10 },
+  { rank: 'M', val: 12 },
 ];
 
-// Whole-letter grade values (for vitality, AP, RP, stats)
-// Uses the value at the base letter step
 const CC_GRADE_VALUES = {
-  'F':2,'D-':2,'D':3,'D+':3,'C-':3,'C':4,'C+':4,'B-':4,'B':5,'B+':5,
-  'A-':5,'A':6,'A+':6,'E-':6,'E':7,'E+':7,'S-':7,'S':8,'S+':8,
-  'M-':9,'M':10,'M+':12
+  'F':3,'D':4,'C':5,'B':6,'A':7,'E':8,'S':10,'M':12
 };
 
-// Total Core points cost to reach a given rank from F (for attributes/training)
+// 1 point per grade step from F
 const CC_ATTR_COST = {
-  'F':0,'D-':1,'D':2,'D+':3,'C-':4,'C':5,'C+':6,'B-':7,'B':8,'B+':9,
-  'A-':10,'A':11,'A+':12,'E-':13,'E':14,'E+':15,'S-':16,'S':18,'S+':20,
-  'M-':23,'M':26,'M+':29
+  'F':0,'D':1,'C':2,'B':3,'A':4,'E':5,'S':6,'M':7
 };
 
-// Total Core points for first paradigm
+// First paradigm: 0 at F, 1 per grade after
 const CC_PARA_FIRST_COST = {
-  'F':0,'D-':1,'D':2,'D+':3,'C-':4,'C':5,'C+':6,'B-':7,'B':8,'B+':9,
-  'A-':10,'A':11,'A+':12,'E-':13,'E':14,'E+':15,'S-':16,'S':18,'S+':20,
-  'M-':23,'M':26,'M+':29
+  'F':0,'D':1,'C':2,'B':3,'A':4,'E':5,'S':6,'M':7
 };
 
-// Total Core points for extra paradigms (purchase cost 2 included)
+// Extra paradigms: 1 purchase point + grade cost
 const CC_PARA_EXTRA_COST = {
-  'F':2,'D-':3,'D':4,'D+':5,'C-':6,'C':7,'C+':8,'B-':9,'B':10,'B+':11,
-  'A-':12,'A':13,'A+':14,'E-':15,'E':16,'E+':17,'S-':18,'S':20,'S+':22,
-  'M-':25,'M':28,'M+':31
+  'F':1,'D':2,'C':3,'B':4,'A':5,'E':6,'S':7,'M':8
 };
 
-// Points per level
-const CC_POINTS_PER_LEVEL = {
-  core: 3, training: 2, ability: 10, growth: 1
-};
-// Crown Growth points: 3 at level 1 and at each new CR
-function ccCrownGrowthTotal(level) {
-  // 4 at level 1, +1 each subsequent level, +3 bonus each time CR increases
-  const cr = ccCalcCR(level);
-  const base = 4 + (level - 1);       // 4 at L1, then +1/level
-  const crBonus = (cr - 1) * 3;       // +3 at CR2, CR3, etc.
-  return base + crBonus;
+// Per-level gains encoded directly from the wiki table.
+// Crown Rank levels (5,10,15,20...): give 1 each of Paradigm/Training/Attribute,
+// 1 or 2 Growth (L5 gives 2, all others give 1), 10 Ability, 5 Crown.
+// L1 gives only 10 Ability (Origin points handled separately).
+function ccLevelGains(l) {
+  const isCR = l > 1 && l % 5 === 0;
+  // Base per-level cycle (non-CR): L2=Paradigm, L3=Training, L4=Attr, repeat
+  // Pattern offset from L2: (l-2)%3 → 0=Paradigm,1=Training,2=Attr
+  const cycle = l === 1 ? null : (l % 5 === 0) ? null : (l - 2) % 3;
+  const gains = { attr:0, paradigm:0, training:0, growth:0, ability:10, crown:0 };
+  if (l === 1) return gains; // only ability
+  gains.growth = isCR && l === 5 ? 2 : 1;
+  if (isCR) {
+    gains.attr++; gains.paradigm++; gains.training++;
+    gains.crown = 5;
+  } else {
+    if (cycle === 0) gains.paradigm++;
+    if (cycle === 1) gains.training++;
+    if (cycle === 2) gains.attr++;
+  }
+  return gains;
 }
+
+function ccPointsAtLevel(level) {
+  let attr=0, paradigm=0, training=0, growth=0, ability=0, crown=0;
+  for (let l = 1; l <= level; l++) {
+    const g = ccLevelGains(l);
+    attr+=g.attr; paradigm+=g.paradigm; training+=g.training;
+    growth+=g.growth; ability+=g.ability; crown+=g.crown;
+  }
+  return { attr, paradigm, training, growth, ability, crown };
+}
+
+function ccCrownGrowthTotal(level) { return ccPointsAtLevel(level).growth; }
 
 const CC_DESIGN_PARADIGMS = {
   'Balancer': ['Adept','Aegis','Channeler','Chemist','Chosen','Empath','Entrencher','Invoker','Martyr','Temporalist','Transcendent','Triumvirate'],
@@ -2181,18 +1990,24 @@ function ccParadigmDesign(name) {
 
 // ─── Origins data ─────────────────────────────────────────────────────────────
 const CC_ORIGINS = [
-  { id: 'conditioned',  label: 'Conditioned',          bonus: '+3 Core points' },
-  { id: 'disciplined',  label: 'Disciplined',           bonus: '+2 Training points' },
-  { id: 'talented',     label: 'Talented',              bonus: '+5 Ability points' },
-  { id: 'heir',         label: 'Heir',                  bonus: '+5 Artifact points' },
-  { id: 'chosen',       label: 'Chosen',                bonus: '+5 Facet points' },
-  { id: 'skilled',      label: 'Skilled',               bonus: '3 Origin Skills (CR grade)' },
-  { id: 'mysterious',   label: 'Mysterious Background', bonus: 'Storyteller-defined' },
+  { id: 'conditioned', label: 'Conditioned',          bonus: '+1 Attribute point' },
+  { id: 'practiced',   label: 'Practiced',             bonus: '+1 Paradigm point' },
+  { id: 'disciplined', label: 'Disciplined',           bonus: '+1 Training point' },
+  { id: 'talented',    label: 'Talented',              bonus: '+5 Ability points' },
+  { id: 'skilled',     label: 'Skilled',               bonus: '3 Skills (grade scales with CR)' },
+  { id: 'heir',        label: 'Heir',                  bonus: '+5 Artifact points' },
+  { id: 'mysterious',  label: 'Mysterious Background', bonus: 'Storyteller-defined quest' },
 ];
+
+// Origin skill grade scales with CR: CR1=F, CR2=D, CR3=C, CR4=B, CR5=A, CR6=E, CR7=S, CR8=M
+const CC_ORIGIN_SKILL_GRADES = ['F','D','C','B','A','E','S','M'];
+function ccOriginSkillGrade(cr) {
+  return CC_ORIGIN_SKILL_GRADES[Math.min(cr - 1, CC_ORIGIN_SKILL_GRADES.length - 1)];
+}
 
 const CC_ORIGIN_SKILLS = {
   Mental:   ['Academics','Analysis','Crafts','Politics','Science (choose type)','Investigation','Medicine','Esoteric Knowledge'],
-  Physical: ['Athletics','Vehicles (choose type)','Stealth','Larceny','Survival'],
+  Physical: ['Athletics','Vehicles (choose type)','Stealth','Larceny','Survival','Perception'],
   Social:   ['Empathy','Intimidation','Persuasion','Street Knowledge','Subterfuge','Expression (choose type)','Animals'],
   Other:    ['Custom (discuss with Storyteller)'],
 };
@@ -2203,17 +2018,11 @@ const CC_ALL_ORIGIN_SKILLS = Object.entries(CC_ORIGIN_SKILLS).flatMap(([cat, ski
 
 // ─── Initiative lookup per design ────────────────────────────────────────────
 // Returns initiative value for a given grade in a given design
+// Initiative is a flat value per first Design (Nov 2026 overhaul)
 const CC_INITIATIVE = {
-  Balancer:  (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=12?1:i<=14?2:i<=17?3:4; },
-  Brawler:   (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=9?1:i<=12?2:i<=14?3:i<=17?4:5; },
-  Guardian:  (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=3?1:i<=12?2:i<=14?3:4; },
-  Marksmen:  (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=3?1:i<=9?2:i<=12?3:i<=14?4:i<=17?5:6; },
-  Preceptor: (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=6?1:i<=12?2:i<=14?3:i<=17?4:5; },
-  Tactician: (g) => { const i = CC_GRADES.findIndex(x=>x.rank===g); return i<=6?1:i<=12?2:i<=14?3:i<=17?4:5; },
+  Balancer: 2, Brawler: 6, Guardian: 4,
+  Marksmen: 6, Preceptor: 4, Tactician: 2,
 };
-
-// Grade letter lookup for initiative table (grade ranges per design)
-// CC_GRADES index: F=0,D-=1,D=2,D+=3,C-=4,C=5,C+=6,B-=7,B=8,B+=9,A-=10,A=11,A+=12,E-=13,E=14,E+=15,S-=16,S=17,S+=18,M-=19,M=20,M+=21
 
 // ─── State ────────────────────────────────────────────────────────────────────
 const CC_TRAINING_FIELDS = [
@@ -2223,14 +2032,16 @@ const CC_TRAINING_FIELDS = [
 
 let ccState = {
   name: '', level: 1,
-  attrs:    { Power:'F', Finesse:'F', Resolve:'F', Intensity:'F', Awareness:'F' },
+  attrs:    { Power:'F', Finesse:'F', Endurance:'F', Resolve:'F', Intensity:'F', Awareness:'F' },
   training: { 'Physical Melee':'F','Physical Ranged':'F','Physical Defense':'F','Energy Melee':'F','Energy Ranged':'F','Energy Defense':'F' },
   paradigms: [], // [{name, grade}]
   skills: [],    // [{name, grade}]
-  origins: ['', '', ''],
-  originSkills: [['','',''], ['','',''], ['','','']],
+  originBudget: 10,          // 8=Low, 10=Medium, 12=High
+  origins: [],               // [{id, skillChoices:[]}] — one per point spent
+
   afRatio: 3,
-  growthSpend: { core:0, training:0, ability:0 }, // growth points converted
+  growthSpend: { attr:0, training:0, paradigm:0, ability:0 }, // growth → other points
+  designVitality: '', // chosen design for vitality score
 };
 
 let paradigmModalSelected = null; // name of paradigm being selected
@@ -2246,121 +2057,87 @@ function ccGradeVal(rank) {
 }
 
 function ccOriginBonuses() {
-  const bonuses = { core: 0, training: 0, ability: 0, artifact: 0, facet: 0 };
-  for (const id of ccState.origins) {
-    if (id === 'conditioned') bonuses.core     += 3;
-    if (id === 'disciplined') bonuses.training += 2;
-    if (id === 'talented')    bonuses.ability  += 5;
-    if (id === 'heir')        bonuses.artifact += 5;
-    if (id === 'chosen')      bonuses.facet    += 5;
+  const bonuses = { attr: 0, paradigm: 0, training: 0, ability: 0, artifact: 0, facet: 0 };
+  for (const o of ccState.origins) {
+    if (o.id === 'conditioned') bonuses.attr     += 1;
+    if (o.id === 'practiced')   bonuses.paradigm += 1;
+    if (o.id === 'disciplined') bonuses.training += 1;
+    if (o.id === 'talented')    bonuses.ability  += 5;
+    if (o.id === 'heir')        bonuses.artifact += 5;
   }
   return bonuses;
 }
 
 function ccPointsTotal(level) {
-  const ob       = ccOriginBonuses();
-  const gs       = ccState.growthSpend;
-  const core     = level * CC_POINTS_PER_LEVEL.core     + ob.core     + (gs.core     || 0);
-  const training = level * CC_POINTS_PER_LEVEL.training + ob.training + (gs.training || 0);
-  const ability  = level * CC_POINTS_PER_LEVEL.ability  + ob.ability  + (gs.ability  || 0) * 5;
-  const growth   = ccCrownGrowthTotal(level);
+  const ob  = ccOriginBonuses();
+  const gs  = ccState.growthSpend;
+  const pts = ccPointsAtLevel(level);
+  const attr     = pts.attr     + ob.attr     + (gs.attr     || 0);
+  const paradigm = pts.paradigm + ob.paradigm + (gs.paradigm || 0);
+  const training = pts.training + ob.training + (gs.training || 0);
+  const ability  = pts.ability  + ob.ability  + (gs.ability  || 0) * 5;
+  const growth   = pts.growth;
   const artPerLevel = ccState.afRatio;
   const facPerLevel = 6 - ccState.afRatio;
   const artifact = level * artPerLevel + ob.artifact;
   const facet    = level * facPerLevel + ob.facet;
-  return { core, training, ability, growth, artifact, facet };
+  return { attr, paradigm, training, ability, growth, artifact, facet };
 }
 
 function ccPointsSpent() {
-  let core = 0, training = 0;
+  let attr = 0, training = 0, paradigm = 0;
   for (const rank of Object.values(ccState.attrs)) {
-    core += CC_ATTR_COST[rank] ?? 0;
+    attr += CC_ATTR_COST[rank] ?? 0;
   }
   for (const rank of Object.values(ccState.training)) {
     training += CC_ATTR_COST[rank] ?? 0;
   }
   ccState.paradigms.forEach((p, i) => {
     const costTable = i === 0 ? CC_PARA_FIRST_COST : CC_PARA_EXTRA_COST;
-    core += costTable[p.grade] ?? 0;
+    paradigm += costTable[p.grade] ?? 0;
   });
-  // Growth conversions cost growth points
   const gs = ccState.growthSpend;
-  const growthSpent = (gs.core||0) + (gs.training||0) + (gs.ability||0);
-  return { core, training, ability: 0, growth: growthSpent, artifact: 0, facet: 0 };
+  const growthSpent = (gs.attr||0) + (gs.training||0) + (gs.paradigm||0) + (gs.ability||0);
+  return { attr, paradigm, training, ability: 0, growth: growthSpent, artifact: 0, facet: 0 };
 }
 
-// Only full letter grades count for vitality steps
-const CC_VIT_GRADES = new Set(['F','D-','C-','B-','A-','E-','S-','M-','M+']);
-
+// All 8 grades count — each step adds vitality
 function ccGradeVitSteps(rank) {
-  // Count how many letter grades have been reached up to and including this rank
-  const idx = CC_GRADES.findIndex(g => g.rank === rank);
-  let steps = 0;
-  for (let i = 0; i <= idx; i++) {
-    if (CC_VIT_GRADES.has(CC_GRADES[i].rank)) steps++;
+  return CC_GRADES.findIndex(g => g.rank === rank) + 1; // F=1, D=2, ... M=8
+}
+
+// Design Vitality Scores from wiki (Nov 2026)
+const CC_DESIGN_VIT_SCORES = {
+  'Balancer': 16, 'Brawler': 18, 'Guardian': 20,
+  'Marksmen': 17, 'Preceptor': 15, 'Tactician': 19,
+};
+
+function ccGetDesignVitScore() {
+  // Use chosen design vitality, or derive from first paradigm's design
+  if (ccState.designVitality && CC_DESIGN_VIT_SCORES[ccState.designVitality]) {
+    return CC_DESIGN_VIT_SCORES[ccState.designVitality];
   }
-  return steps;
+  if (ccState.paradigms.length > 0) {
+    const design = ccParadigmDesign(ccState.paradigms[0].name);
+    return CC_DESIGN_VIT_SCORES[design] ?? 16;
+  }
+  return 16;
 }
 
 function ccGetVitality() {
-  const level = ccState.level;
-  const resolveVal = ccGradeVal(ccState.attrs.Resolve);
-  let vit = resolveVal * level;
-  for (const p of ccState.paradigms) {
-    const steps = ccGradeVitSteps(p.grade);
-    const vitPerGrade = CC_PARADIGM_VITALITY[p.name] ?? 10;
-    vit += steps * vitPerGrade;
-  }
-  return Math.floor(vit);
+  const level       = ccState.level;
+  const enduranceVal = ccGradeVal(ccState.attrs.Endurance);
+  const designScore  = ccGetDesignVitScore();
+  return (enduranceVal + designScore) * level;
 }
 
 function ccGetInitiative() {
   if (ccState.paradigms.length === 0) return '—';
-
-  // Group paradigms by design, find highest grade index in each
-  const byDesign = {};
-  for (const p of ccState.paradigms) {
-    const design = ccParadigmDesign(p.name);
-    if (!design) continue;
-    const idx = CC_GRADES.findIndex(g => g.rank === p.grade);
-    if (!byDesign[design] || idx > byDesign[design].idx) {
-      byDesign[design] = { grade: p.grade, idx };
-    }
-  }
-
-  const designs = Object.keys(byDesign);
-  if (designs.length === 0) return '—';
-
-  let total = 0;
-  const parts = [];
-
-  if (designs.length === 1) {
-    // One design: take the two highest paradigms in that design
-    const design = designs[0];
-    const fn = CC_INITIATIVE[design];
-    if (!fn) return '—';
-    const inDesign = ccState.paradigms
-      .filter(p => ccParadigmDesign(p.name) === design)
-      .map(p => ({ ...p, idx: CC_GRADES.findIndex(g => g.rank === p.grade) }))
-      .sort((a, b) => b.idx - a.idx)
-      .slice(0, 2);
-    for (const p of inDesign) {
-      const val = fn(p.grade);
-      total += val;
-      parts.push(`${p.name} ${p.grade}→${val}`);
-    }
-  } else {
-    // Two designs: one value each from the highest paradigm per design
-    for (const design of designs.slice(0, 2)) {
-      const fn = CC_INITIATIVE[design];
-      if (!fn) continue;
-      const val = fn(byDesign[design].grade);
-      total += val;
-      parts.push(`${design} ${byDesign[design].grade}→${val}`);
-    }
-  }
-
-  return `${total} (${parts.join(', ')})`;
+  // Initiative comes from the first paradigm's design (flat value)
+  const firstDesign = ccParadigmDesign(ccState.paradigms[0].name);
+  if (!firstDesign || !(firstDesign in CC_INITIATIVE)) return '—';
+  const val = CC_INITIATIVE[firstDesign];
+  return `${val} (${firstDesign})`;
 }
 
 function ccAllParadigmNames() {
@@ -2395,12 +2172,9 @@ function ccAttrGradeSelectHTML(id, value, onchange) {
   return html;
 }
 
-// Grade dice lookup (for defenses)
+// Grade dice lookup (for defenses) — Nov 2026 simplified grades
 const CC_GRADE_DICE = {
-  'F':'1d4','D-':'1d4','D':'1d6','D+':'1d6','C-':'1d6','C':'1d8','C+':'1d8',
-  'B-':'1d8','B':'1d10','B+':'1d10','A-':'1d10','A':'1d12','A+':'1d12',
-  'E-':'1d12','E':'2d6','E+':'2d6','S-':'2d8','S':'2d8','S+':'2d10',
-  'M-':'2d10','M':'2d12','M+':'2d12'
+  'F':'1d6','D':'1d8','C':'1d10','B':'1d12','A':'2d6','E':'2d8','S':'2d10','M':'2d12'
 };
 
 // ─── Render ───────────────────────────────────────────────────────────────────
@@ -2433,7 +2207,7 @@ function ccOnTrainingChange(name, val) {
 
 function ccRenderGrowth() {
   const gs = ccState.growthSpend;
-  ['core','training','ability'].forEach(t => {
+  ['attr','paradigm','training','ability'].forEach(t => {
     const el = document.getElementById(`growth-${t}-val`);
     if (el) el.textContent = gs[t] || 0;
   });
@@ -2444,7 +2218,6 @@ function ccGrowthAdj(type, delta) {
   const current = gs[type] || 0;
   const next = current + delta;
   if (next < 0) return;
-  // Check available growth before adding
   const totals = ccPointsTotal(ccState.level);
   const spent  = ccPointsSpent();
   const availGrowth = totals.growth - spent.growth;
@@ -2472,7 +2245,7 @@ function ccRenderPointsBar() {
   const level = ccState.level;
   const totals = ccPointsTotal(level);
   const spent  = ccPointsSpent();
-  const types = ['core','training','ability','growth','artifact','facet'];
+  const types = ['attr','paradigm','training','ability','growth','artifact','facet'];
   for (const t of types) {
     const avail = totals[t] - spent[t];
     const el  = document.getElementById(`pt-${t}-avail`);
@@ -2491,45 +2264,51 @@ function ccRenderCRDisplay() {
 function ccRenderAttrs() {
   const grid = document.getElementById('cc-attr-grid');
   if (!grid) return;
-  const attrNames = ['Power','Finesse','Resolve','Intensity','Awareness'];
+  const attrNames = ['Power','Finesse','Endurance','Resolve','Intensity','Awareness'];
   grid.innerHTML = attrNames.map(name => {
     const rank = ccState.attrs[name];
     const cost = CC_ATTR_COST[rank] ?? 0;
     return `<div class="cc-attr-item">
       <div class="cc-attr-name">${name}</div>
       ${ccAttrGradeSelectHTML(`attr-${name}`, rank, `ccOnAttrChange('${name}',this.value)`)}
-      <div class="cc-attr-cost">${cost} Core pts spent</div>
+      <div class="cc-attr-cost">${cost} Attribute pts spent</div>
     </div>`;
   }).join('');
 }
 
+function ccGradeIndex(rank) {
+  return CC_GRADES.findIndex(g => g.rank === rank);
+}
+
 function ccRenderStats() {
   const attrs = ccState.attrs;
-  const cr  = ccCalcCR(ccState.level);
-  const ap  = 3 + ccGradeVal(attrs.Intensity);
-  const rp  = 3 + ccGradeVal(attrs.Awareness);
-  const vit = ccGetVitality();
-  const melee  = ccGradeVal(attrs.Power)   * cr;
-  const ranged = ccGradeVal(attrs.Finesse) * cr;
+  const cr    = ccCalcCR(ccState.level);
 
-  // Block: dice=Resolve dice, value=Resolve×CR
-  const blockVal  = ccGradeVal(attrs.Resolve)   * cr;
-  const blockDice = CC_GRADE_DICE[attrs.Resolve] ?? '1d4';
-  // Dodge: dice=Awareness dice, value=Intensity×CR
-  const dodgeVal  = ccGradeVal(attrs.Intensity) * cr;
-  const dodgeDice = CC_GRADE_DICE[attrs.Awareness] ?? '1d4';
-  // Parry: dice=Intensity dice, value=Awareness×CR
-  const parryVal  = ccGradeVal(attrs.Awareness) * cr;
-  const parryDice = CC_GRADE_DICE[attrs.Intensity] ?? '1d4';
+  // AP: 1 base, +1 at Intensity B (idx 3), +1 at Intensity E (idx 5)
+  const intIdx = ccGradeIndex(attrs.Intensity);
+  const ap = 1 + (intIdx >= 3 ? 1 : 0) + (intIdx >= 5 ? 1 : 0);
 
-  function set(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val;
-  }
-  function setHTML(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = val;
-  }
+  // RP: 1 base, +1 at Awareness B (idx 3), +1 at Awareness E (idx 5)
+  const awareIdx = ccGradeIndex(attrs.Awareness);
+  const rp = 1 + (awareIdx >= 3 ? 1 : 0) + (awareIdx >= 5 ? 1 : 0);
+
+  const vit    = ccGetVitality();
+  const melee  = ccGradeVal(attrs.Power)     * cr;
+  const ranged = ccGradeVal(attrs.Finesse)   * cr;
+
+  // Block: Endurance dice, value = Endurance × CR
+  const blockVal  = ccGradeVal(attrs.Endurance)   * cr;
+  const blockDice = CC_GRADE_DICE[attrs.Endurance] ?? '1d6';
+  // Dodge: Awareness dice, value = Intensity × CR
+  const dodgeVal  = ccGradeVal(attrs.Intensity)   * cr;
+  const dodgeDice = CC_GRADE_DICE[attrs.Awareness] ?? '1d6';
+  // Parry: Intensity dice, value = Awareness × CR
+  const parryVal  = ccGradeVal(attrs.Awareness)   * cr;
+  const parryDice = CC_GRADE_DICE[attrs.Intensity] ?? '1d6';
+
+  function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+  function setHTML(id, val) { const el = document.getElementById(id); if (el) el.innerHTML = val; }
+
   set('stat-ap', ap);
   set('stat-rp', rp);
   set('stat-vitality', vit);
@@ -2556,11 +2335,11 @@ function ccRenderParadigms() {
     const vitPerGrade = CC_PARADIGM_VITALITY[p.name] ?? 10;
     const vitContrib = ccGradeVitSteps(p.grade) * vitPerGrade;
     return `<div class="cc-paradigm-row ${isFirst ? 'is-first' : ''}">
-      <span class="cc-paradigm-tag ${isFirst ? 'free' : ''}">${isFirst ? 'Free' : `${CC_PARA_EXTRA_COST['F']} pts`}</span>
+      <span class="cc-paradigm-tag ${isFirst ? 'free' : ''}">${isFirst ? 'Free' : `${CC_PARA_EXTRA_COST['F']} Paradigm pt`}</span>
       <span class="cc-paradigm-name">${p.name}</span>
       <span class="cc-paradigm-design">${design}</span>
       ${ccGradeSelectHTML(`paradigm-grade-${i}`, p.grade, `ccOnParadigmGradeChange(${i},this.value)`)}
-      <span class="cc-paradigm-vitality">${cost} Core | +${vitContrib} Vit</span>
+      <span class="cc-paradigm-vitality">${cost} Paradigm pts</span>
       ${isFirst ? '' : `<div class="cc-paradigm-del" onclick="ccRemoveParadigm(${i})" title="Remove">✕</div>`}
     </div>`;
   }).join('');
@@ -2584,11 +2363,12 @@ function ccGatherState() {
     design2:     document.getElementById('cc-design2')?.value || '',
     attrs:       { ...ccState.attrs },
     training:    { ...ccState.training },
-    growthSpend: { ...ccState.growthSpend },
+    growthSpend:    { ...ccState.growthSpend },
+    designVitality: ccState.designVitality || '',
     paradigms:   ccState.paradigms.map(p => ({ ...p })),
     skills:      ccState.skills.map(s => ({ ...s })),
-    origins:     [...ccState.origins],
-    originSkills: ccState.originSkills.map(s => [...s]),
+    originBudget: ccState.originBudget,
+    origins:      ccState.origins.map(o => ({ ...o, skillChoices: [...(o.skillChoices||[])] })),
     afRatio:     ccState.afRatio,
     passives:    document.getElementById('cc-passives')?.value || '',
     artifacts:   document.getElementById('cc-artifacts')?.value || '',
@@ -2637,19 +2417,21 @@ function ccBuildReadableText(s) {
   lines.push(hr);
   lines.push('POINTS');
   lines.push(hr);
-  lines.push(`Core     : ${tot.core - spent.core} remaining of ${tot.core} (${spent.core} spent)`);
-  lines.push(`Training : ${tot.training - spent.training} remaining of ${tot.training} (${spent.training} spent)`);
-  lines.push(`Ability  : ${tot.ability} of ${tot.ability} (0 spent)`);
-  lines.push(`Growth   : ${tot.growth - spent.growth} remaining of ${tot.growth} (${spent.growth} spent)`);
-  if (s.growthSpend && (s.growthSpend.core||s.growthSpend.training||s.growthSpend.ability)) {
+  lines.push(`Attribute : ${tot.attr - spent.attr} remaining of ${tot.attr} (${spent.attr} spent)`);
+  lines.push(`Paradigm  : ${tot.paradigm - spent.paradigm} remaining of ${tot.paradigm} (${spent.paradigm} spent)`);
+  lines.push(`Training  : ${tot.training - spent.training} remaining of ${tot.training} (${spent.training} spent)`);
+  lines.push(`Ability   : ${tot.ability} of ${tot.ability} (0 spent)`);
+  lines.push(`Growth    : ${tot.growth - spent.growth} remaining of ${tot.growth} (${spent.growth} spent)`);
+  if (s.growthSpend) {
     const gs = s.growthSpend;
-    if (gs.core)     lines.push(`  Converted ${gs.core} Growth → +${gs.core} Core`);
+    if (gs.attr)     lines.push(`  Converted ${gs.attr} Growth → +${gs.attr} Attribute`);
+    if (gs.paradigm) lines.push(`  Converted ${gs.paradigm} Growth → +${gs.paradigm} Paradigm`);
     if (gs.training) lines.push(`  Converted ${gs.training} Growth → +${gs.training} Training`);
     if (gs.ability)  lines.push(`  Converted ${gs.ability} Growth → +${gs.ability*5} Ability`);
   }
   lines.push('');
   lines.push(hr);
-  lines.push(`ATTRIBUTES | ${spent.core} Core Points Spent`);
+  lines.push(`ATTRIBUTES | ${spent.attr} Attribute Points Spent`);
   lines.push(hr);
   for (const [name, rank] of Object.entries(attrs)) {
     lines.push(`${pad(name, 12)}: ${rank} (${ccGradeVal(rank)})   ${CC_ATTR_COST[rank]||0} pts`);
@@ -2666,12 +2448,11 @@ function ccBuildReadableText(s) {
   lines.push(hr);
   lines.push('STATS');
   lines.push(hr);
-  // Vitality breakdown
-  const resolveVit = Math.floor(ccGradeVal(attrs.Resolve) * s.level);
-  const paraVit    = s.paradigms.length > 0 ? s.paradigms.reduce((sum,p) => sum + ccGradeVitSteps(p.grade)*(CC_PARADIGM_VITALITY[p.name]??10), 0) : 0;
+  const enduranceVal = ccGradeVal(attrs.Endurance);
+  const designScore  = CC_DESIGN_VIT_SCORES[s.designVitality] || CC_DESIGN_VIT_SCORES[ccParadigmDesign(s.paradigms[0]?.name||'')] || 16;
   lines.push(`Action Points   : ${ap}`);
   lines.push(`Reaction Points : ${rp}`);
-  lines.push(`Vitality        : ${vit}  (Resolve ${ccGradeVal(attrs.Resolve)} × Level ${s.level} = ${resolveVit}${paraVit ? ` + Paradigms ${paraVit}` : ''})`);
+  lines.push(`Vitality        : ${vit}  (Endurance ${enduranceVal} + Design ${designScore}) × Level ${s.level}`);
   lines.push(`Melee Attack    : ${melee}`);
   lines.push(`Ranged Attack   : ${ranged}`);
   lines.push(`Block           : ${block} (${blockDice})`);
@@ -2691,22 +2472,20 @@ function ccBuildReadableText(s) {
       lines.push(`${i === 0 ? '[Free] ' : '       '}${p.name} (${design}) — Grade: ${p.grade} — +${vStep} Vit`);
     });
   }
-  if (s.origins && s.origins.some(Boolean)) {
+  if (s.origins && s.origins.length > 0) {
     lines.push('');
     lines.push(hr);
-    lines.push('ORIGINS');
+    lines.push(`ORIGINS (${s.origins.length}/${s.originBudget||10} points)`);
     lines.push(hr);
-    const crSkillGrades = ['F','D','C','B','A','E','S','M-','M+'];
-    const skillGrade = crSkillGrades[Math.min(cr - 1, crSkillGrades.length - 1)];
-    s.origins.forEach((id, i) => {
-      const origin = CC_ORIGINS.find(o => o.id === id);
-      if (!origin) { lines.push(`Origin ${i+1}: —`); return; }
-      let line = `Origin ${i+1}: ${origin.label} (${origin.bonus}`;
-      if (id === 'skilled') line += ` at ${skillGrade}`;
-      line += ')';
+    const skillGrade = ccOriginSkillGrade(cr);
+    s.origins.forEach((o, i) => {
+      const def = CC_ORIGINS.find(x => x.id === (o.id||o));
+      if (!def) return;
+      let line = `${i+1}. ${def.label} — ${def.bonus}`;
+      if ((o.id||o) === 'skilled') line += ` (Grade ${skillGrade})`;
       lines.push(line);
-      if (id === 'skilled' && s.originSkills?.[i]) {
-        s.originSkills[i].filter(Boolean).forEach(sk => lines.push(`  - ${sk}`));
+      if ((o.id||o) === 'skilled' && o.skillChoices) {
+        o.skillChoices.filter(Boolean).forEach(sk => lines.push(`   - ${sk}`));
       }
     });
   }
@@ -2752,16 +2531,16 @@ function ccBuildReadableText(s) {
 }
 
 function ccPointsSpentFromState(s) {
-  let core = 0, training = 0;
-  for (const rank of Object.values(s.attrs)) core += CC_ATTR_COST[rank] ?? 0;
+  let attr = 0, training = 0, paradigm = 0;
+  for (const rank of Object.values(s.attrs)) attr += CC_ATTR_COST[rank] ?? 0;
   for (const rank of Object.values(s.training || {})) training += CC_ATTR_COST[rank] ?? 0;
   s.paradigms.forEach((p, i) => {
     const costTable = i === 0 ? CC_PARA_FIRST_COST : CC_PARA_EXTRA_COST;
-    core += costTable[p.grade] ?? 0;
+    paradigm += costTable[p.grade] ?? 0;
   });
   const gs = s.growthSpend || {};
-  const growthSpent = (gs.core||0) + (gs.training||0) + (gs.ability||0);
-  return { core, training, ability: 0, growth: growthSpent, artifact: 0, facet: 0 };
+  const growthSpent = (gs.attr||0) + (gs.paradigm||0) + (gs.training||0) + (gs.ability||0);
+  return { attr, paradigm, training, ability: 0, growth: growthSpent, artifact: 0, facet: 0 };
 }
 
 function ccExportCharacter() {
@@ -2818,29 +2597,50 @@ function ccApplyImport(s) {
   const d2 = document.getElementById('cc-design2');
   if (d2) d2.value = s.design2 || '';
 
-  // Origins
-  ccState.origins = Array.isArray(s.origins) ? [...s.origins] : ['','',''];
-  ccState.originSkills = Array.isArray(s.originSkills)
-    ? s.originSkills.map(sl => Array.isArray(sl) ? [...sl] : ['','',''])
-    : [['','',''],['','',''],['','','']];
+  // Origins — support both new format (array of objects) and old (array of strings)
+  ccState.originBudget = s.originBudget || 10;
+  if (Array.isArray(s.origins) && s.origins.length && typeof s.origins[0] === 'object') {
+    ccState.origins = s.origins.map(o => ({ id: o.id||'', skillChoices: o.skillChoices||[] }));
+  } else if (Array.isArray(s.origins)) {
+    // Old format: array of id strings
+    ccState.origins = s.origins.filter(Boolean).map(id => ({ id, skillChoices: [] }));
+  } else {
+    ccState.origins = [];
+  }
+  // Restore budget selector UI
+  const budgetSel = document.querySelector('#panel-character select[onchange*="ccOnOriginBudget"]');
+  if (budgetSel) budgetSel.value = String(ccState.originBudget);
   ccState.afRatio = (s.afRatio >= 1 && s.afRatio <= 5) ? s.afRatio : 3;
   const afSel = document.getElementById('cc-af-ratio');
   if (afSel) afSel.value = ccState.afRatio;
-  // Attributes
-  const validAttrs = ['Power','Finesse','Resolve','Intensity','Awareness'];
+  // Attributes (now includes Endurance)
+  const validAttrs = ['Power','Finesse','Endurance','Resolve','Intensity','Awareness'];
   for (const a of validAttrs) ccState.attrs[a] = s.attrs?.[a] || 'F';
+
+  // Design vitality choice
+  ccState.designVitality = s.designVitality || '';
 
   // Training
   for (const t of CC_TRAINING_FIELDS) ccState.training[t] = s.training?.[t] || 'F';
 
-  // Growth spend
-  ccState.growthSpend = { core: s.growthSpend?.core||0, training: s.growthSpend?.training||0, ability: s.growthSpend?.ability||0 };
+  // Growth spend (new keys; handle old saves gracefully)
+  ccState.growthSpend = {
+    attr:     s.growthSpend?.attr     || s.growthSpend?.core     || 0,
+    paradigm: s.growthSpend?.paradigm || 0,
+    training: s.growthSpend?.training || 0,
+    ability:  s.growthSpend?.ability  || 0,
+  };
 
   // Paradigms
   ccState.paradigms = (s.paradigms || []).map(p => ({ name: p.name, grade: p.grade || 'F' }));
 
   // Skills
-  ccState.skills = (s.skills || []).map(sk => ({ ...sk, name: sk.name || '', grade: sk.grade || 'CR' }));
+  const importCR = ccCalcCR(ccState.level);
+  ccState.skills = (s.skills || []).map(sk => ({
+    ...sk,
+    name: sk.name || '',
+    grade: (sk.grade === 'CR' && sk.fromOrigin) ? ccOriginSkillGrade(importCR) : (sk.grade || 'F'),
+  }));
 
   // Text fields
   const passEl = document.getElementById('cc-passives');
@@ -2901,7 +2701,7 @@ function ccRenderSkills() {
       : `<input class="cc-skill-name" type="text" placeholder="Skill name..." value="${s.name.replace(/"/g,'&quot;')}"
            onchange="ccOnSkillNameChange(${i},this.value)" oninput="ccOnSkillNameChange(${i},this.value)">`;
     const gradeEl = isOrigin
-      ? `<span class="cc-skill-origin-grade">CR ${cr}</span>`
+      ? `<span class="cc-skill-origin-grade">${s.grade !== 'CR' ? s.grade : ccOriginSkillGrade(cr)}</span>`
       : ccSkillGradeSelectHTML(`skill-grade-${i}`, s.grade, `ccOnSkillGradeChange(${i},this.value)`);
     const delEl = isOrigin
       ? `<div class="cc-skill-del cc-skill-del-locked" title="Set by Origin">⬡</div>`
@@ -2917,7 +2717,9 @@ function ccOnOriginSkillSelectChange(skillIdx, val) {
   if (!sk || !sk.fromOrigin) return;
   sk.name = val;
   sk.skillType = '';
-  ccState.originSkills[sk.originSlot][sk.originSkillIdx] = val;
+  // Update skillChoices on the origin entry
+  const originEntry = ccState.origins[sk.originSlot];
+  if (originEntry) originEntry.skillChoices[sk.originSkillIdx] = val;
   ccRenderSkills();
 }
 
@@ -2958,56 +2760,96 @@ function ccRenderOrigins() {
   const countEl   = document.getElementById('cc-origins-count');
   if (!container) return;
 
-  const filled = ccState.origins.filter(Boolean).length;
-  if (countEl) countEl.textContent = `(${filled}/3)`;
+  const spent    = ccState.origins.length;
+  const budget   = ccState.originBudget;
+  const remaining = budget - spent;
+  if (countEl) countEl.textContent = `(${spent}/${budget} points spent)`;
 
-  container.innerHTML = [0,1,2].map(i => {
-    const val = ccState.origins[i] || '';
+  const optionsHTML = CC_ORIGINS.map(o =>
+    `<option value="${o.id}">${o.label} — ${o.bonus}</option>`
+  ).join('');
+
+  const rows = ccState.origins.map((o, i) => {
+    const def = CC_ORIGINS.find(x => x.id === o.id) || {};
     return `<div class="cc-origin-row">
-      <span class="cc-origin-label">Origin ${i+1}</span>
+      <span class="cc-origin-label">#${i+1}</span>
       <select class="cc-origin-select" onchange="ccOnOriginChange(${i},this.value)">
-        <option value="">— Choose —</option>
-        ${CC_ORIGINS.map(o =>
-          `<option value="${o.id}" ${o.id === val ? 'selected' : ''}>${o.label} — ${o.bonus}</option>`
+        ${CC_ORIGINS.map(x =>
+          `<option value="${x.id}" ${x.id === o.id ? 'selected' : ''}>${x.label} — ${x.bonus}</option>`
         ).join('')}
       </select>
+      <div class="cc-paradigm-del" onclick="ccRemoveOrigin(${i})" title="Remove">✕</div>
     </div>`;
   }).join('');
+
+  const addBtn = remaining > 0
+    ? `<button class="btn-open-paradigms" onclick="ccAddOrigin()">＋ Add Origin (${remaining} pt${remaining !== 1 ? 's' : ''} left)</button>`
+    : `<div class="cc-placeholder">All ${budget} origin points spent.</div>`;
+
+  container.innerHTML = rows + `<div style="margin-top:4px;">${addBtn}</div>`;
+}
+
+function ccAddOrigin() {
+  if (ccState.origins.length >= ccState.originBudget) return;
+  const firstId = CC_ORIGINS[0].id;
+  ccState.origins.push({ id: firstId, skillChoices: [] });
+  // If default is skilled, add skill rows
+  if (firstId === 'skilled') ccSyncOriginSkills(ccState.origins.length - 1);
+  ccRenderAll();
+}
+
+function ccRemoveOrigin(idx) {
+  // Remove skill rows tied to this slot and shift indices
+  ccState.skills = ccState.skills.filter(s => !(s.fromOrigin && s.originSlot === idx));
+  // Shift originSlot indices for entries after idx
+  ccState.skills.forEach(s => { if (s.fromOrigin && s.originSlot > idx) s.originSlot--; });
+  ccState.origins.splice(idx, 1);
+  ccRenderAll();
 }
 
 function ccOnOriginChange(idx, val) {
-  const prev = ccState.origins[idx];
-  ccState.origins[idx] = val;
-
-  // Remove any skills that were added for this origin slot
+  ccState.origins[idx].id = val;
+  ccState.origins[idx].skillChoices = [];
+  // Remove old skill rows for this slot
   ccState.skills = ccState.skills.filter(s => !(s.fromOrigin && s.originSlot === idx));
-
-  // If Skilled, add 3 blank origin skill entries
-  if (val === 'skilled') {
-    ccState.originSkills[idx] = ['','',''];
-    for (let j = 0; j < 3; j++) {
-      ccState.skills.push({ name: '', grade: 'CR', fromOrigin: true, originSlot: idx, originSkillIdx: j });
-    }
-  } else {
-    ccState.originSkills[idx] = ['','',''];
-  }
-
+  if (val === 'skilled') ccSyncOriginSkills(idx);
   ccRenderOrigins();
   ccRenderPointsBar();
   ccRenderSkills();
 }
 
+function ccSyncOriginSkills(slotIdx) {
+  const cr = ccCalcCR(ccState.level);
+  const grade = ccOriginSkillGrade(cr);
+  for (let j = 0; j < 3; j++) {
+    ccState.skills.push({ name: '', grade, fromOrigin: true, originSlot: slotIdx, originSkillIdx: j });
+  }
+}
+
 function ccOnOriginSkillChange(slotIdx, skillIdx, val) {
-  if (!ccState.originSkills[slotIdx]) ccState.originSkills[slotIdx] = ['','',''];
-  ccState.originSkills[slotIdx][skillIdx] = val;
-  // Update the matching skill entry
   const sk = ccState.skills.find(s => s.fromOrigin && s.originSlot === slotIdx && s.originSkillIdx === skillIdx);
   if (sk) sk.name = val;
+  if (ccState.origins[slotIdx]) {
+    ccState.origins[slotIdx].skillChoices[skillIdx] = val;
+  }
 }
 
 function ccRenderAFSlider() {
   const sel = document.getElementById('cc-af-ratio');
   if (sel) sel.value = ccState.afRatio;
+}
+
+function ccOnOriginBudget(val) {
+  ccState.originBudget = parseInt(val, 10);
+  // If we now have more spent than budget, trim from the end
+  while (ccState.origins.length > ccState.originBudget) {
+    const idx = ccState.origins.length - 1;
+    ccState.skills = ccState.skills.filter(s => !(s.fromOrigin && s.originSlot === idx));
+    ccState.origins.pop();
+  }
+  ccRenderOrigins();
+  ccRenderPointsBar();
+  ccRenderSkills();
 }
 
 function ccOnAFSlider(val) {
@@ -3162,7 +3004,7 @@ renderBank();
 renderAll();
 renderSavedList();
 renderAdditiveGains();
-renderAdvantageGains();
+
 renderStanceCosts();
 </script>
 </body>
